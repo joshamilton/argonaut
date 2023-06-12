@@ -1,0 +1,8 @@
+input                  :  "/Users/emilytrybulec/Documents/nextflow/samplesheet_test.csv"
+fastq                  :  "/Users/emilytrybulec/Documents/nextflow/Mo_191_small.fastq"
+outdir                 :  "OUTDIR"
+db                     :  "/Users/emilytrybulec/Documents/nextflow/centrifuge_db/"
+busco_lineages_path    :  "metazoa_odb10"
+summary_txt            :  "/Users/emilytrybulec/Documents/nextflow/sequencing_summary_PAM25097_ab58fe1c_a47ef4ef.txt.cyberducksegment/*.cyberducksegment"
+mode                   :  "--nano-raw"
+min_read_length        :  "500"
