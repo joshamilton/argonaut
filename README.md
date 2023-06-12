@@ -23,13 +23,6 @@
 6. Polishing QC([`BUSCO`],[`Quast`],[`Minimap2`],[`PycoQC`])
 
 
-## Usage
-
-> **Note**
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
-> to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
-> with `-profile test` before running the workflow on actual data.
-
 <!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
      Explain what rows and columns represent. For instance (please edit as appropriate):
 
@@ -51,8 +44,9 @@ Now, you can run the pipeline using:
 <!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
 
 ```bash
-nextflow run nf-core/genomeassembly \
-   -profile <docker/singularity/.../institute> \
+nextflow run genomeassembly \
+   -params-file genomeassembly/params.yaml \
+   -profile <docker/singularity/test/.../institute> \
    --input samplesheet.csv \
    --outdir <OUTDIR>
 ```
@@ -60,15 +54,9 @@ nextflow run nf-core/genomeassembly \
 > **Warning:**
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
 > provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
-> see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
-
-For more details, please refer to the [usage documentation](https://nf-co.re/genomeassembly/usage) and the [parameter documentation](https://nf-co.re/genomeassembly/parameters).
 
 ## Pipeline output
 
-To see the the results of a test run with a full size dataset refer to the [results](https://nf-co.re/genomeassembly/results) tab on the nf-core website pipeline page.
-For more details about the output files and reports, please refer to the
-[output documentation](https://nf-co.re/genomeassembly/output).
 
 ## Credits
 
@@ -76,13 +64,23 @@ nf-core/genomeassembly was originally written by emilytrybulec.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
-<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
+University of Connecticut:
+Biodiversity and Conservation Genomics Center
+     Jill Wegrzyn
+     Cynthia Webster
+     Rachel O’Neill
+     Michelle Neitzey
+Computational Biology Core
+     Noah Reid
+     Gabe Barrett
+
+nf-core Community
+Zbigniew Trybulec
+
 
 ## Contributions and Support
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
-
-For further information or help, don't hesitate to get in touch on the [Slack `#genomeassembly` channel](https://nfcore.slack.com/channels/genomeassembly) (you can join with [this invite](https://nf-co.re/join/slack)).
 
 ## Citations
 
@@ -92,8 +90,6 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 <!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
-
-You can cite the `nf-core` publication as follows:
 
 > **The nf-core framework for community-curated bioinformatics pipelines.**
 >
