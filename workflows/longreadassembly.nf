@@ -42,12 +42,14 @@ if (params.db) { ch_db = file(params.db) } else { exit 1, 'Centrifuge database n
 // MODULES
 //include { CENTRIFUGE_FILTER } from '../modules/local/centrifuge/filter/main'
 // SUBWORKFLOWS
-include { INPUT_CHECK } from '../subworkflows/local/input_check'
-//include { READ_QC } from '../subworkflows/local/read_qc'
-//include { ASSEMBLY } from '../subworkflows/local/assembly'
-//include { QC_1 } from '../subworkflows/local/qc_1'
-//include { POLISH } from '../subworkflows/local/polish'
-
+include { INPUT_CHECK } from '../subworkflows/local/01_input_check'
+include { READ_QC } from '../subworkflows/local/02_read_qc'
+//include { ASSEMBLY } from '../subworkflows/local/03_assembly'
+//include { QC_1 } from '../subworkflows/local/04_qc_1'
+//include { POLISH } from '../subworkflows/local/05_polish'
+//include { QC_2 } from '../subworkflows/local/06_qc_2'
+//include { PURGE } from '../subworkflows/local/07_purge'
+//include { QC_3 } from '../subworkflows/local/08_qc_3'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
@@ -79,7 +81,7 @@ include { NANOPLOT                      } from '../modules/nf-core/nanoplot/main
 // Info required for completion email and summary
 //def multiqc_report = []
 
-workflow GENOMEASSEMBLY {
+workflow LONGREADASSEMBLY {
 
     ch_versions = Channel.empty()
 
@@ -89,10 +91,10 @@ workflow GENOMEASSEMBLY {
     ch_data = INPUT_CHECK ( ch_input )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
-    //READ_QC (
-   //     ch_data.reads, params.fastq, params.db
-    //)
-   // ch_versions = ch_versions.mix(READ_QC.out.versions)
+    READ_QC (
+        ch_data.reads, params.fastq, params.db
+    )
+    ch_versions = ch_versions.mix(READ_QC.out.versions)
 
     //ASSEMBLY (
     //    ch_data.reads, ch_fastq_out

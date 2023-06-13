@@ -16,6 +16,7 @@ workflow ASSEMBLY {
 
         //add option to add manual assembly as input (params.manual_assembly)
 
+        //add masurca short read option
 
     emit:
     // TODO nf-core: edit emitted channels

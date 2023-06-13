@@ -2,7 +2,7 @@
 def helpMessage() {
 	log.info"""
 	========================================================================================
-                 EASEL - Efficient, Accurate Scalable Eukaryotic modeLs
+        GenomeAssembly- a computational tool for de novo eukaryotic genome assembly
 	========================================================================================
  	
 	Usage:
@@ -57,15 +57,17 @@ WorkflowMain.initialise(workflow, params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { GENOMEASSEMBLY } from './workflows/genomeassembly'
+include { LONGREADASSEMBLY } from './workflows/longreadassembly'
+//include { SHORTREADASSEMBLY } from './workflows/shortreadassembly
 
 //
-// WORKFLOW: Run main nf-core/genomeassembly analysis pipeline
+// WORKFLOW: Run main genomeassembly analysis pipeline
 //
-workflow NFCORE_GENOMEASSEMBLY {
-    GENOMEASSEMBLY ()
+workflow GENOMEASSEMBLY {
+    LONGREADASSEMBLY ()
 }
-
+//add conditional statement to allow for short read / hybrid assembly
+//need second short read workflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN ALL WORKFLOWS
@@ -77,7 +79,7 @@ workflow NFCORE_GENOMEASSEMBLY {
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    NFCORE_GENOMEASSEMBLY ()
+    GENOMEASSEMBLY ()
 }
 
 /*
