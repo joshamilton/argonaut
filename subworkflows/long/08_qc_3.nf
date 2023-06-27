@@ -1,4 +1,4 @@
-include { QUAST } from '../../modules/nf-core/quast/main'  
+include { QUAST } from '../../modules/local/quast'  
 include { BUSCO } from '../../modules/nf-core/busco/main' 
 include { PYCOQC } from '../../modules/nf-core/pycoqc/main'  
 include { MINIMAP2_INDEX } from '../../modules/nf-core/minimap2/index/main' 

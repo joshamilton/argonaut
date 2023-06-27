@@ -2,6 +2,7 @@ include { FASTP } from '../../modules/nf-core/fastp/main'
 include { FASTQC } from '../../modules/nf-core/fastqc/main'
 include { KRAKEN2_KRAKEN2 } from '../../modules/nf-core/kraken2/kraken2/main'
 include { GENOMESCOPE2 } from '../../modules/nf-core/genomescope2/main'
+include { SMUDGEPLOT } from '../../modules/local/smudgeplot'
 
 workflow READ_QC {
 

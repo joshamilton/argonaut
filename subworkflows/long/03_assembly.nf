@@ -1,6 +1,7 @@
 include { GUNZIP } from '../../modules/nf-core/gunzip/main' 
-include { FLYE } from '../../modules/nf-core/flye/main'
 include { NANOPLOT } from '../../modules/nf-core/nanoplot/main'
+include { FLYE } from '../../modules/nf-core/flye/main'
+include { MASURCA } from '../../modules/local/masurca'
 
 workflow ASSEMBLY {
 
