@@ -65,9 +65,12 @@ include { LONGREADASSEMBLY } from './workflows/longreadassembly'
 //
 workflow GENOMEASSEMBLY {
     LONGREADASSEMBLY ()
+
+	if ( params.shortread == true ) {
+		SHORTREAD
+	}
 }
-//add conditional statement to allow for short read / hybrid assembly
-//need second short read workflow
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN ALL WORKFLOWS
