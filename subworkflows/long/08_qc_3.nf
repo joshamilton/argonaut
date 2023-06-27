@@ -1,0 +1,5 @@
+include { QUAST } from '../../modules/nf-core/quast/main'  
+include { BUSCO } from '../../modules/nf-core/busco/main' 
+include { PYCOQC } from '../../modules/nf-core/pycoqc/main'  
+include { MINIMAP2_INDEX } from '../../modules/nf-core/minimap2/index/main' 
+include { MINIMAP2_ALIGN } from '../../modules/nf-core/minimap2/align/main'   

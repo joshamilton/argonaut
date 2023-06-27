@@ -11,12 +11,12 @@ WorkflowGenomeassembly.initialise(params, log)
 
 // TODO nf-core: Add all file path parameters for the pipeline to the list below
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.fastq, params.db ]
+def checkPathParamList = [ params.input, params.db ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
-if (params.fastq) { ch_fastq = file(params.fastq) } else { exit 1, 'Input reads in fastq format not specified!' }
+//if (params.fastq) { ch_fastq = file(params.fastq) } else { exit 1, 'Input reads in fastq format not specified!' }
 if (params.db) { ch_db = file(params.db) } else { exit 1, 'Centrifuge database not specified!' }
 
 /*
@@ -44,9 +44,9 @@ if (params.db) { ch_db = file(params.db) } else { exit 1, 'Centrifuge database n
 // SUBWORKFLOWS
 include { INPUT_CHECK } from '../subworkflows/local/01_input_check'
 include { READ_QC } from '../subworkflows/local/02_read_qc'
-//include { ASSEMBLY } from '../subworkflows/local/03_assembly'
-//include { QC_1 } from '../subworkflows/local/04_qc_1'
-//include { POLISH } from '../subworkflows/local/05_polish'
+include { ASSEMBLY } from '../subworkflows/local/03_assembly'
+include { QC_1 } from '../subworkflows/local/04_qc_1'
+include { POLISH } from '../subworkflows/local/05_polish'
 //include { QC_2 } from '../subworkflows/local/06_qc_2'
 //include { PURGE } from '../subworkflows/local/07_purge'
 //include { QC_3 } from '../subworkflows/local/08_qc_3'
@@ -59,16 +59,21 @@ include { READ_QC } from '../subworkflows/local/02_read_qc'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { CENTRIFUGE_CENTRIFUGE                      } from '../modules/nf-core/centrifuge/centrifuge/main'
-include { CENTRIFUGE_KREPORT                      } from '../modules/nf-core/centrifuge/kreport/main'
+include { CENTRIFUGE_CENTRIFUGE         } from '../modules/nf-core/centrifuge/centrifuge/main'
+include { CENTRIFUGE_KREPORT            } from '../modules/nf-core/centrifuge/kreport/main'
 include { NANOPLOT                      } from '../modules/nf-core/nanoplot/main'
-//include { FLYE                      } from '../modules/nf-core/flye/main'
-//include { MINIMAP2_ALIGN                      } from '../modules/nf-core/minimap2/align/main'
-//include { MINIMAP2_INDEX                      } from '../modules/nf-core/minimap2/index/main'
-//include { BUSCO                      } from '../modules/nf-core/busco/main'
-//include { QUAST                      } from '../modules/nf-core/quast/main'
+include { BIOAWK                        } from '../modules/nf-core/bioawk/main' 
+include { GUNZIP                        } from '../modules/nf-core/gunzip/main' 
+include { FLYE                          } from '../modules/nf-core/flye/main'
+//include { MINIMAP2_ALIGN              } from '../modules/nf-core/minimap2/align/main'
+//include { MINIMAP2_INDEX              } from '../modules/nf-core/minimap2/index/main'
+//include { BUSCO                       } from '../modules/nf-core/busco/main'
+//include { QUAST                       } from '../modules/nf-core/quast/main'
 //include { MEDAKA                      } from '../modules/nf-core/medaka/main'                                
-//include { FASTQC                      } from '../modules/nf-core/fastqc/main'
+//include { PURGEDUPS_PURGEDUPS         } from '../modules/nf-core/purgedups/purgedups/main' 
+//include { PURGEDUPS_PBCSTAT           } from '../modules/nf-core/purgedups/pbcstat/main' 
+//include { PURGEDUPS_CALCUTS           } from '../modules/nf-core/purgedups/calcuts/main'    
+
 //include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 //include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
@@ -81,33 +86,43 @@ include { NANOPLOT                      } from '../modules/nf-core/nanoplot/main
 // Info required for completion email and summary
 //def multiqc_report = []
 
-workflow LONGREADASSEMBLY {
+workflow GENOMEASSEMBLY {
 
     ch_versions = Channel.empty()
-
-    //
-    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    //
+    
     ch_data = INPUT_CHECK ( ch_input )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
+    ch_db = Channel.fromPath(params.centrifuge_db)
+
     READ_QC (
-        ch_data.reads, params.fastq, params.db
+        ch_data.reads, ch_db
     )
     ch_versions = ch_versions.mix(READ_QC.out.versions)
+    
+    //assembly of decontam fastq and length filtered fastq (if specified)
+    ASSEMBLY (
+        READ_QC.out[0]
+    )
+    ch_versions = ch_versions.mix(ASSEMBLY.out.versions)
 
-    //ASSEMBLY (
-    //    ch_data.reads, ch_fastq_out
-   // )
-   // ch_versions = ch_versions.mix(ASSEMBLY.out.versions)
+    ch_summtxt = Channel.fromPath(params.summary_txt)
 
-   // QC_1 (
-   //     FLYE.out.fasta
+    QC_1 (
+        ASSEMBLY.out[0], ASSEMBLY.out[1], ch_summtxt
+    )
+    ch_versions = ch_versions.mix(QC_1.out.versions)
+
+    POLISH (
+       ASSEMBLY.out[0], ASSEMBLY.out[1]
+    )
+
+    //QC_2 (
+    //    POLISH.out[0], ASSEMBLY.out[1], QC_1.out[0]
     //)
-   // ch_versions = ch_versions.mix(QC_1.out.versions)
 
-    //POLISH (
-    //   ch_data.reads, FLYE.out.fasta
+   // PURGE (
+   //     POLISH.out[0], ASSEMBLY.out[1]
    // )
 
 
