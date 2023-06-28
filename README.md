@@ -73,16 +73,25 @@ nf-core/genomeassembly was originally written by emilytrybulec.
 We thank the following people for their extensive assistance in the development of this pipeline:
 
 > University of Connecticut:
+
 > Biodiversity and Conservation Genomics Center
+
      > Jill Wegrzyn
+
      > Cynthia Webster
+
      > Rachel O’Neill
+
      > Michelle Neitzey
+
 > Computational Biology Core
+
      > Noah Reid
+
      > Gabe Barrett
 
 > nf-core Community
+
 > Zbigniew Trybulec
 
 
