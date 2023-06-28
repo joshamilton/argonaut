@@ -13,14 +13,20 @@
 
 <!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
-1. Read QC([`Nanoplot`](link to nanoplot))
-2. Contaminant Filtering([`Centrifuge`](link to centrifuge))
-3. Assembly([`Flye`](link to flye info))
+1. Read QC([`Nanoplot`],[`Centrifuge`],[`Bioawk`],[`Kmerfreq`])
+3. Assembly([`Flye`])
 4. Assembly QC([`BUSCO`],[`Quast`],[`Minimap2`],[`PycoQC`])
 5. Polishing([`Medaka`])
 6. Polishing QC([`BUSCO`],[`Quast`],[`Minimap2`],[`PycoQC`])
+7. Purge([`PurgeDups`])
+8. Final QC([`BUSCO`],[`Quast`],[`PycoQC`])
+
+If short reads are inputted as well, 
+9. Short Read QC([`Fastp`],[`Kraken`],[`FastQC`],[`Genomescope`],[`Smudgeplot`])
+10. Hybrid Assembly([`MaSuRCA`])
+11. Alignment([`BWA`])
+12. Polishing([`POLCA`])
 
 
 <!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
@@ -47,7 +53,6 @@ Now, you can run the pipeline using:
 nextflow run genomeassembly \
    -params-file genomeassembly/params.yaml \
    -profile <docker/singularity/test/.../institute> \
-   --input samplesheet.csv \
    --outdir <OUTDIR>
 ```
 
