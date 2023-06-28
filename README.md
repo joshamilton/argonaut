@@ -15,18 +15,21 @@
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
 
 1. Read QC([`Nanoplot`],[`Centrifuge`],[`Bioawk`],[`Kmerfreq`])
-3. Assembly([`Flye`])
-4. Assembly QC([`BUSCO`],[`Quast`],[`Minimap2`],[`PycoQC`])
-5. Polishing([`Medaka`])
-6. Polishing QC([`BUSCO`],[`Quast`],[`Minimap2`],[`PycoQC`])
-7. Purge([`PurgeDups`])
-8. Final QC([`BUSCO`],[`Quast`],[`PycoQC`])
+2. Assembly([`Flye`])
+3. Assembly QC([`BUSCO`],[`Quast`],[`Minimap2`],[`PycoQC`])
+4. Polishing([`Medaka`])
+5. Polishing QC([`BUSCO`],[`Quast`],[`Minimap2`],[`PycoQC`])
+6. Purge([`PurgeDups`])
+7. Final QC([`BUSCO`],[`Quast`],[`PycoQC`])
+
+
 
 If short reads are inputted as well, 
-> 9. Short Read QC([`Fastp`],[`Kraken`],[`FastQC`],[`Genomescope`],[`Smudgeplot`])
-> 10. Hybrid Assembly([`MaSuRCA`])
-> 11. Alignment([`BWA`])
-> 12. Polishing([`POLCA`])
+
+8. Short Read QC([`Fastp`],[`Kraken`],[`FastQC`],[`Genomescope`],[`Smudgeplot`])
+9. Hybrid Assembly([`MaSuRCA`])
+10. Alignment([`BWA`])
+11. Polishing([`POLCA`])
 
 
 <!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
