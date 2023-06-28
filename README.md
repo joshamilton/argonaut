@@ -23,10 +23,10 @@
 8. Final QC([`BUSCO`],[`Quast`],[`PycoQC`])
 
 If short reads are inputted as well, 
-9. Short Read QC([`Fastp`],[`Kraken`],[`FastQC`],[`Genomescope`],[`Smudgeplot`])
-10. Hybrid Assembly([`MaSuRCA`])
-11. Alignment([`BWA`])
-12. Polishing([`POLCA`])
+> 9. Short Read QC([`Fastp`],[`Kraken`],[`FastQC`],[`Genomescope`],[`Smudgeplot`])
+> 10. Hybrid Assembly([`MaSuRCA`])
+> 11. Alignment([`BWA`])
+> 12. Polishing([`POLCA`])
 
 
 <!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
