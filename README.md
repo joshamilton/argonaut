@@ -14,43 +14,46 @@
 <!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
 
-1. Read QC([`Nanoplot`],[`Centrifuge`],[`Bioawk`],[`Kmerfreq`])
-2. Assembly([`Flye`])
-3. Assembly QC([`BUSCO`],[`Quast`],[`Minimap2`],[`PycoQC`])
-4. Polishing([`Medaka`])
-5. Polishing QC([`BUSCO`],[`Quast`],[`Minimap2`],[`PycoQC`])
-6. Purge([`PurgeDups`])
-7. Final QC([`BUSCO`],[`Quast`],[`PycoQC`])
+
+## Pipeline Summary
+
+Long Read Assembly
+1. Read QC and Contaminant Filtering([`Nanoplot`](https://github.com/wdecoster/NanoPlot),[`Centrifuge`](https://ccb.jhu.edu/software/centrifuge/))
+2. Assembly([`Flye`](https://github.com/fenderglass/Flye),[`MaSuRCA`](https://github.com/alekseyzimin/masurca) )
+3. Assembly QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
+4. Polish([`Medaka`](https://github.com/nanoporetech/medaka))
+5. Polish QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
+6. Purge([`PurgeDups`](https://github.com/dfguan/purge_dups))
+7. Final QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
+
+Short Read Assembly (optional)
+1. Read QC, Contaminant Filtering, Adaptor Trimming([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/),[`GenomeScope`](http://qb.cshl.edu/genomescope/),[`Kraken2`](https://ccb.jhu.edu/software/kraken2/),[`FastP`](https://github.com/OpenGene/fastp))
+2. Align([`BWA`](https://bio-bwa.sourceforge.net/bwa.shtml))
+3. Polish([`POLCA`](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007981))
 
 
+First, prepare a samplesheet with your long read input data that looks as follows:
 
-If short reads are inputted as well, 
-
-8. Short Read QC([`Fastp`],[`Kraken`],[`FastQC`],[`Genomescope`],[`Smudgeplot`])
-9. Hybrid Assembly([`MaSuRCA`])
-10. Alignment([`BWA`])
-11. Polishing([`POLCA`])
-
-
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
-
-First, prepare a samplesheet with your input data that looks as follows:
-
-`samplesheet.csv`:
+`longread_samplesheet.csv`:
 
 ```csv
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+sample,fastq_1,fastq_2,single_end
+CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,,TRUE
 ```
 
 Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
 
--->
+If short reads are available, prepare a second samplesheet with your short read input data that looks as follows:
+
+`shortread_samplesheet.csv`:
+
+```csv
+sample,fastq_1,fastq_2,single_end
+CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,FALSE
+```
+
 
 Now, you can run the pipeline using:
-
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
 
 ```bash
 nextflow run genomeassembly \
@@ -72,7 +75,7 @@ nf-core/genomeassembly was originally written by emilytrybulec.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
-University of Connecticut:
+> University of Connecticut:
 <pre>
 Biodiversity and Conservation Genomics Center
 
