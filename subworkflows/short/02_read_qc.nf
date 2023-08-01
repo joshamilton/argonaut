@@ -1,10 +1,17 @@
+include { GZIP } from '../../modules/local/gzip'
 include { FASTP } from '../../modules/nf-core/fastp/main'
 include { FASTQC } from '../../modules/nf-core/fastqc/main'
 include { KRAKEN2_KRAKEN2 } from '../../modules/nf-core/kraken2/kraken2/main'
-include { GENOMESCOPE2 } from '../../modules/nf-core/genomescope2/main'
-include { SMUDGEPLOT } from '../../modules/local/smudgeplot'
+include { FASTQC_2 } from '../../modules/local/fastqc2/main'
+include { FASTQC_3 } from '../../modules/local/fastqc3/main'
+include { GUNZIP } from '../../modules/nf-core/gunzip/main'
 
-workflow READ_QC {
+//include { GENOMESCOPE2 } from '../../modules/nf-core/genomescope2/main'
+//include { JELLYFISH_KMER } from '../../modules/local/jellyfish_kmer'
+//include { JELLYFISH_HIST } from '../../modules/local/jellyfish_hist'
+//include { SEQTK_SEQ } from '../../modules/nf-core/seqtk/seq/main'
+
+workflow READ_QC2 {
 
     take:
         shortreads  // channel: [ val(meta), [ reads ] ]
@@ -14,17 +21,40 @@ workflow READ_QC {
     
     ch_versions = Channel.empty()
 
-        FASTP(reads)
+        //zipping files for downstream processing
+        GZIP(shortreads)
 
-        KRAKEN2_KRAKEN2()
-        shortreads_filt = KRAKEN2_KRAKEN2.out.fastq_unmapped
+        //qc raw short reads
+        FASTQC(shortreads)
 
+        //adapter trimming
+        FASTP(GZIP.out.gzip, params.adapter_fasta, params.save_trimmed_fail, params.save_merged)
+
+        //qc adapter trimmed short reads
+        FASTQC_2(FASTP.out.reads)
+
+        //decontamination of trimmed short reads
+        KRAKEN2_KRAKEN2(FASTP.out.reads, ch_db, params.save_output_fastqs, params.save_reads_assignment)
+
+        FASTQC_3(KRAKEN2_KRAKEN2.out.unclassified_reads_fastq)
+
+        GUNZIP(KRAKEN2_KRAKEN2.out.unclassified_reads_fastq)
+
+        //if ( params.short_fasta == false ) { 
+        //SEQTK_SEQ(KRAKEN2_KRAKEN2.out.unclassified_reads_fastq)
+        //JELLYFISH_KMER(SEQTK_SEQ.out.fastx)
+        //}
+        //else {
+        //JELLYFISH_KMER(KRAKEN2_KRAKEN2.out.unclassified_reads_fastq)
+        //}
+
+        //JELLYFISH_HIST(JELLYFISH_KMER.out.shortkmer)
         
+        //GENOMESCOPE2(JELLYFISH_HIST.out.shortkmer_hist)
 
     emit:
-        fastq_filt         // channel: [ val(meta), [ decontaminated fastq (and decontam+length filtered fastq) ] ]
-        nanoplot_reads_out   = NANOPLOT.out.html
-        centrifuge_out       = CENTRIFUGE_KREPORT.out.kreport
-        
+        filt_shortreads = KRAKEN2_KRAKEN2.out.unclassified_reads_fastq   // channel: [ val(meta), [ decontaminated and adaptor trimmed short reads ] ]
+        unzip_filt_shortreads = GUNZIP.out.gunzip
+
     versions = ch_versions                     // channel: [ versions.yml ]
 }

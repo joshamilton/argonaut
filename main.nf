@@ -10,7 +10,6 @@ def helpMessage() {
 	
 	Required arguments:
 		--input				 Path to samplesheet with input (*.csv)
-		--fastq					 Path to SRA accession list (*.fastq)
 		--db				 Relevant Centrifuge database as source of contaminant screening
 		--busco_lineages_path					 Relevant lineage for BUSCO evaluation (ex. )
 
@@ -40,7 +39,6 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-params.fastq = WorkflowMain.getGenomeAttribute(params, 'fastq')
 params.db = WorkflowMain.getGenomeAttribute(params, 'db')
 
 /*
@@ -57,20 +55,14 @@ WorkflowMain.initialise(workflow, params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { LONGREADASSEMBLY } from './workflows/longreadassembly'
-//include { SHORTREADASSEMBLY } from './workflows/shortreadassembly
+include { GENOMEASSEMBLY } from './workflows/readassembly'
 
 //
 // WORKFLOW: Run main genomeassembly analysis pipeline
 //
-workflow GENOMEASSEMBLY {
-    LONGREADASSEMBLY ()
-
-	if ( params.shortread == true ) {
-		SHORTREAD
-	}
+workflow GENASSEMBLYCOMPLETE {
+    GENOMEASSEMBLY ()
 }
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN ALL WORKFLOWS
@@ -82,7 +74,7 @@ workflow GENOMEASSEMBLY {
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    GENOMEASSEMBLY ()
+    GENASSEMBLYCOMPLETE ()
 }
 
 /*

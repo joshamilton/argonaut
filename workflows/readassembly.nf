@@ -11,14 +11,14 @@ WorkflowGenomeassembly.initialise(params, log)
 
 // TODO nf-core: Add all file path parameters for the pipeline to the list below
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.db ]
+def checkPathParamList = [ params.longinput, params.centrifuge_db ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
-//if (params.fastq) { ch_fastq = file(params.fastq) } else { exit 1, 'Input reads in fastq format not specified!' }
-if (params.db) { ch_db = file(params.db) } else { exit 1, 'Centrifuge database not specified!' }
-
+if (params.longinput) { ch_longinput = file(params.longinput) } else { exit 1, 'Input samplesheet not specified!' }
+if (params.shortinput) { ch_shortinput = file(params.shortinput) }
+if (params.centrifuge_db) { ch_db = file(params.centrifuge_db) } else { exit 1, 'Centrifuge database not specified!' }
+//if (params.summary_txt) {ch_sequencing_summary = file(params.sequencing_summary) } else { ch_sequencing_summary = []}
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
@@ -43,13 +43,19 @@ if (params.db) { ch_db = file(params.db) } else { exit 1, 'Centrifuge database n
 //include { CENTRIFUGE_FILTER } from '../modules/local/centrifuge/filter/main'
 // SUBWORKFLOWS
 include { INPUT_CHECK } from '../subworkflows/long/01_input_check'
-include { READ_QC } from '../subworkflows/long/02_read_qc'
+include { READ_QC } from '../subworkflows/long/02a_read_qc'
+include { LENGTH_FILT } from '../subworkflows/long/02b_length_filter'
 include { ASSEMBLY } from '../subworkflows/long/03_assembly'
 include { QC_1 } from '../subworkflows/long/04_qc_1'
 include { POLISH } from '../subworkflows/long/05_polish'
-//include { QC_2 } from '../subworkflows/local/06_qc_2'
-//include { PURGE } from '../subworkflows/local/07_purge'
-//include { QC_3 } from '../subworkflows/local/08_qc_3'
+//include { QC_2 } from '../subworkflows/long/06_qc_2'
+//include { PURGE } from '../subworkflows/long/07_purge'
+//include { QC_3 } from '../subworkflows/long/08_qc_3'
+
+include { INPUT_CHECK2 } from '../subworkflows/short/01_input_check'
+include { READ_QC2 } from '../subworkflows/short/02_read_qc'
+include { ALIGN } from '../subworkflows/short/03_align'
+//include { POLISH2 } from '../subworkflows/short/04_polish'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
@@ -59,22 +65,7 @@ include { POLISH } from '../subworkflows/long/05_polish'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { CENTRIFUGE_CENTRIFUGE         } from '../modules/nf-core/centrifuge/centrifuge/main'
-include { CENTRIFUGE_KREPORT            } from '../modules/nf-core/centrifuge/kreport/main'
-include { NANOPLOT                      } from '../modules/nf-core/nanoplot/main'
-include { BIOAWK                        } from '../modules/nf-core/bioawk/main' 
-include { GUNZIP                        } from '../modules/nf-core/gunzip/main' 
-include { FLYE                          } from '../modules/nf-core/flye/main'
-//include { MINIMAP2_ALIGN              } from '../modules/nf-core/minimap2/align/main'
-//include { MINIMAP2_INDEX              } from '../modules/nf-core/minimap2/index/main'
-//include { BUSCO                       } from '../modules/nf-core/busco/main'
-//include { QUAST                       } from '../modules/nf-core/quast/main'
-//include { MEDAKA                      } from '../modules/nf-core/medaka/main'                                
-//include { PURGEDUPS_PURGEDUPS         } from '../modules/nf-core/purgedups/purgedups/main' 
-//include { PURGEDUPS_PBCSTAT           } from '../modules/nf-core/purgedups/pbcstat/main' 
-//include { PURGEDUPS_CALCUTS           } from '../modules/nf-core/purgedups/calcuts/main'    
 
-//include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 //include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 /*
@@ -90,31 +81,69 @@ workflow GENOMEASSEMBLY {
 
     ch_versions = Channel.empty()
     
-    ch_data = INPUT_CHECK ( ch_input )
+    ch_data = INPUT_CHECK ( ch_longinput )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
-    ch_db = Channel.fromPath(params.centrifuge_db)
+    ch_centrifuge_db = Channel.fromPath(params.centrifuge_db)
 
+    //decontamination and quality checking of long reads
     READ_QC (
-        ch_data.reads, ch_db
+        ch_data.reads, ch_centrifuge_db
     )
     ch_versions = ch_versions.mix(READ_QC.out.versions)
-    
-    //assembly of decontam fastq and length filtered fastq (if specified)
-    ASSEMBLY (
+
+    LENGTH_FILT (
         READ_QC.out[0]
     )
+
+    //adaptor trimming and decontamination of short reads if available
+    if ( params.shortread == true ) {
+
+        ch_shortdata = INPUT_CHECK2 ( ch_shortinput )
+        ch_versions = ch_versions.mix(INPUT_CHECK2.out.versions)
+
+        ch_kraken_db = Channel.fromPath(params.kraken_db)
+
+        READ_QC2 (ch_shortdata.reads, ch_kraken_db)
+        ch_versions = ch_versions.mix(READ_QC2.out.versions)
+
+        //assembly inputting everything + shortreads
+        ASSEMBLY (
+        LENGTH_FILT.out[0], READ_QC2.out[1], READ_QC.out[3]
+        )
     ch_versions = ch_versions.mix(ASSEMBLY.out.versions)
+    }
+    else {
+        ch_shortdata = Channel.empty() 
 
-    ch_summtxt = Channel.fromPath(params.summary_txt)
+        //assembly of decontam fastq and length filtered fastq (if specified)
+        ASSEMBLY (
+        LENGTH_FILT.out[0], [], READ_QC.out[3]
+        )
+    }
+    
+   ch_summtxt = Channel.fromPath(params.summary_txt)
 
-    QC_1 (
-        ASSEMBLY.out[0], ASSEMBLY.out[1], ch_summtxt
+    if ( params.shortread == true ) {
+
+        QC_1 (
+            ASSEMBLY.out[0], ASSEMBLY.out[1], ch_summtxt, READ_QC2.out[0]
+        )
+        ch_versions = ch_versions.mix(QC_1.out.versions)
+    }
+    else {
+        QC_1 (
+            ASSEMBLY.out[0], ASSEMBLY.out[1], ch_summtxt, []
+        )
+        ch_versions = ch_versions.mix(QC_1.out.versions)
+    }
+
+    ALIGN(
+        ASSEMBLY.out[0]
     )
-    ch_versions = ch_versions.mix(QC_1.out.versions)
-
+    
     POLISH (
-       ASSEMBLY.out[0], ASSEMBLY.out[1]
+        ASSEMBLY.out[0], ASSEMBLY.out[1]
     )
 
     //QC_2 (
@@ -124,6 +153,11 @@ workflow GENOMEASSEMBLY {
    // PURGE (
    //     POLISH.out[0], ASSEMBLY.out[1]
    // )
+
+   // if ( params.shortread == true ) {
+   //     POLISH2 (
+   //     )
+
 
 
     //

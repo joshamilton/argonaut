@@ -19,7 +19,7 @@
 
 Long Read Assembly
 1. Read QC and Contaminant Filtering([`Nanoplot`](https://github.com/wdecoster/NanoPlot),[`Centrifuge`](https://ccb.jhu.edu/software/centrifuge/))
-2. Assembly([`Flye`](https://github.com/fenderglass/Flye),[`MaSuRCA`](https://github.com/alekseyzimin/masurca) )
+2. Assembly([`Flye`](https://github.com/fenderglass/Flye),[`MaSuRCA`](https://github.com/alekseyzimin/masurca),[`Canu`](https://github.com/marbl/canu))
 3. Assembly QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
 4. Polish([`Medaka`](https://github.com/nanoporetech/medaka))
 5. Polish QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
@@ -27,7 +27,7 @@ Long Read Assembly
 7. Final QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
 
 Short Read Assembly (optional)
-1. Read QC, Contaminant Filtering, Adaptor Trimming([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/),[`GenomeScope`](http://qb.cshl.edu/genomescope/),[`Kraken2`](https://ccb.jhu.edu/software/kraken2/),[`FastP`](https://github.com/OpenGene/fastp))
+1. Read QC, Contaminant Filtering, Adaptor Trimming([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/),[`GenomeScope`](http://qb.cshl.edu/genomescope/),[`Kraken2`](https://ccb.jhu.edu/software/kraken2/),[`FastP`](https://github.com/OpenGene/fastp),[`Jellyfish`](https://github.com/gmarcais/Jellyfish))
 2. Align([`BWA`](https://bio-bwa.sourceforge.net/bwa.shtml))
 3. Polish([`POLCA`](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007981))
 
@@ -38,7 +38,7 @@ First, prepare a samplesheet with your long read input data that looks as follow
 
 ```csv
 sample,fastq_1,fastq_2,single_end
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,,TRUE
+CONTROL_REP1,AEG588A1_S1_L002.fastq.gz,,TRUE
 ```
 
 Each row represents a fastq file (single-end) or a pair of fastq files (paired end).

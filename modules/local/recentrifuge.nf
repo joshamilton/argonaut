@@ -1,12 +1,11 @@
-process POLCA {
+process RECENTRIFUGE {
 tag "$meta.id"
     label 'process_medium'
 
-    container 'staphb/masurca:4.1.0'
+    container 'replikation/recentrifuge'
 
     input:
-    tuple val(meta), path(longreads) //path_to/longreads.gz
-    tuple val(meta), path(shortreads) //path_to/pe_R1.fa,/path_to/pe_R2.fa
+    tuple val(meta), path(reads) //path_to/longreads.gz
 
     output:
     tuple val(meta), path("*.vcf")     , emit: vcf

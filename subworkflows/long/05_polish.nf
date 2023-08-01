@@ -9,13 +9,10 @@ workflow POLISH {
 
     ch_versions = Channel.empty() 
 
-        ch_assembly_reads = Channel.empty() 
-        ch_assembly_reads.concat(fastq_filt, flye_assembly.map{it[1]}).view()
-
-        MEDAKA (ch_assembly_reads)
-
+        MEDAKA (fastq_filt, flye_assembly)
 
     emit:
+    
         flye_assembly_polished      = MEDAKA.out.assembly           
         
     versions = ch_versions                     // channel: [ versions.yml ]
