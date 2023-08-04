@@ -9,7 +9,7 @@ def helpMessage() {
 	nextflow run nf-core-genomeassembly -params-file params.yaml
 	
 	Required arguments:
-		--input				 Path to samplesheet with input (*.csv)
+		--longinput				 Path to samplesheet with input (*.csv)
 		--db				 Relevant Centrifuge database as source of contaminant screening
 		--busco_lineages_path					 Relevant lineage for BUSCO evaluation (ex. )
 

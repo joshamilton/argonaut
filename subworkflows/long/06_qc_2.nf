@@ -60,11 +60,11 @@ workflow QC_2 {
     }
 
     emit:
-        ch_index
-        ch_align_bam
-        ch_align_paf
-        ch_quast
-        ch_busco
+        ch_polished_index
+        ch_polished_align_bam
+        ch_polished_align_paf
+        ch_polished_quast
+        ch_polished_busco
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }

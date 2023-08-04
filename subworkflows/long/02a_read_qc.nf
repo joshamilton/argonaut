@@ -4,7 +4,8 @@ include { NANOPLOT } from '../../modules/nf-core/nanoplot/main'
 include { KMER_FREQ } from '../../modules/local/kmerfreq'
 include { GCE } from '../../modules/local/gce'
 include { EXTRACT } from '../../modules/local/extract_genome_size'
-
+include { RECENTRIFUGE_C } from '../../modules/local/recentrifuge/centrifuge'
+include { SEQKIT_GREP } from '../../modules/local/seqkit/grep/main'
 
 workflow READ_QC {
 
@@ -16,6 +17,8 @@ workflow READ_QC {
     main:
     
     ch_versions = Channel.empty()
+
+        reads.view()
 
         NANOPLOT(reads)
 
@@ -31,14 +34,19 @@ workflow READ_QC {
              CENTRIFUGE_KREPORT           ( CENTRIFUGE_CENTRIFUGE.out.results, ch_db )
         }
 
-        //fastq_filt
-         //   .map { file -> tuple(file.baseName, file)  }
-          //  .set { filtered_fastq }
+        SEQKIT_GREP(CENTRIFUGE_CENTRIFUGE.out.results, reads)
 
-        //filtered_fastq.view()
+        RECENTRIFUGE_C(CENTRIFUGE_CENTRIFUGE.out.results, params.rcf_db)
+
+        fastq_filt           = SEQKIT_GREP.out.filter
+
+        fastq_filt
+            .map { file -> tuple([id:file.baseName, single_end:true], file)  }
+            .set { filtered_fastq }
+        filtered_fastq.view()
 
     emit:
-        fastq_filt           = CENTRIFUGE_CENTRIFUGE.out.fastq_unmapped // channel: [ val(meta), path(decontaminated fastq) ]
+        filtered_fastq    // channel: [ val(meta), path(decontaminated fastq) ]
         nanoplot_reads_out   = NANOPLOT.out.html
         centrifuge_out       = CENTRIFUGE_KREPORT.out.kreport
         est_genome_size      = EXTRACT.out.genome_size_est

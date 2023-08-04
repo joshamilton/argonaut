@@ -150,12 +150,12 @@
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
                         "installed_by": ["modules"]
                     },
-                    "seqtk/seq": {
+                    "seqkit/grep": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "fd08c25c759d5d1f30422e73c9be153dbf657724",
                         "installed_by": ["modules"]
                     },
-                    "tabix/bgzip": {
+                    "seqtk/seq": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
                         "installed_by": ["modules"]

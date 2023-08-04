@@ -11,7 +11,7 @@ include { SAMTOOLS_INDEX } from '../../modules/nf-core/samtools/index/main'
 workflow QC_1 {
 
     take:
-        flye_assembly // channel: [ val(meta), path(flye assembly.fasta) ]
+        assemblies // channel: [ val(meta), path(flye assembly.fasta) ]
         fastq_filt // channel: [ val(meta), path(filtered long reads) ]
         summarytxt // channel from params.summarytxt
         shortreads
@@ -20,26 +20,25 @@ workflow QC_1 {
 
     ch_versions = Channel.empty() 
 
-    if ( params.flye == true ) {
         // build index
-        MINIMAP2_INDEX(flye_assembly)
+        MINIMAP2_INDEX(assemblies)
         ch_versions = ch_versions.mix(MINIMAP2_INDEX.out.versions)
         ch_index = MINIMAP2_INDEX.out.index
 
         // align reads
-        MINIMAP2_ALIGN(fastq_filt, flye_assembly.map{it[1]}, params.bam_format, params.cigar_paf_format, params.cigar_bam)
+        MINIMAP2_ALIGN(fastq_filt, assemblies.map{it[1]}, params.bam_format, params.cigar_paf_format, params.cigar_bam)
         ch_align_bam = MINIMAP2_ALIGN.out.bam
         ch_align_paf = MINIMAP2_ALIGN.out.paf
         
         // run quast
         QUAST(
-            flye_assembly.map{it -> it[1]}.collect() // this has to be aggregated because of how QUAST makes the output directory for reporting stats
+            assemblies.map{it -> it[1]}.collect() // this has to be aggregated because of how QUAST makes the output directory for reporting stats
         )
         ch_quast = QUAST.out.results
         ch_versions = ch_versions.mix(QUAST.out.versions)
 
         // run BUSCO
-        BUSCO(flye_assembly, params.busco_lineage, [], [])
+        BUSCO(assemblies, params.busco_lineage, [], [])
         ch_busco = BUSCO.out.batch_summary
         ch_versions = ch_versions.mix(BUSCO.out.versions)
 
@@ -60,9 +59,8 @@ workflow QC_1 {
         }
 
         MERQURY (
-            flye_assembly, MERYL_COUNT.out.meryl_db
+            assemblies, MERYL_COUNT.out.meryl_db
         )
-    }
 
     emit:
         ch_index
