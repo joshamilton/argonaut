@@ -25,6 +25,7 @@ Long Read Assembly
 5. Polish QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
 6. Purge([`PurgeDups`](https://github.com/dfguan/purge_dups))
 7. Final QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
+8. Scaffolding([`RagTag`](https://github.com/malonge/RagTag))
 
 Short Read Assembly (optional)
 1. Read QC, Contaminant Filtering, Adaptor Trimming([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/),[`GenomeScope`](http://qb.cshl.edu/genomescope/),[`Kraken2`](https://ccb.jhu.edu/software/kraken2/),[`FastP`](https://github.com/OpenGene/fastp),[`Jellyfish`](https://github.com/gmarcais/Jellyfish))
