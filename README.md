@@ -54,7 +54,7 @@ sample,fastq_1,fastq_2,single_end
 CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,FALSE
 ```
 
-Specify your type of input, assemblers to run, and more in the nextflow.config file. Ensure that the file is correct, especially regarding the boolean statements about input and assembly. Construct a params.yaml file to specify paths to your samplesheets and databases. An example params.yaml is available for your reference.
+Specify your type of input, assemblers to run, and more in the [`nextflow.config`](https://github.com/emilytrybulec/genomeassembly/blob/9ffc81e56f1b7ade3e31cfac6280b8f6d446c8cb/nextflow.config) file. Ensure that the file is correct, especially regarding the boolean statements about input and assembly. Construct a params.yaml file to specify paths to your samplesheets and databases. An example [`params.yaml`](https://github.com/emilytrybulec/genomeassembly/blob/9ffc81e56f1b7ade3e31cfac6280b8f6d446c8cb/params.yaml) is available for your reference.
 
 Now, you can run the pipeline using:
 
