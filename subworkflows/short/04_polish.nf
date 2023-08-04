@@ -1,23 +1,21 @@
 include { POLCA } from '../../modules/local/polca'  
 
-workflow POLISH {
+workflow POLISH2 {
 
     take:
         flye_assembly
-        fastq_filt
+        shortreads
+        
     main:
 
     ch_versions = Channel.empty() 
 
-        ch_assembly_reads = Channel.empty() 
-        ch_assembly_reads.concat(fastq_filt, flye_assembly.map{it[1]}).view()
-
-        POLCA (ch_assembly_reads)
+        POLCA (flye_assembly, shortreads)
 
 
     emit:
     
-        flye_assembly_polished      = MEDAKA.out.assembly           
+        flye_assembly_polished      = POLCA.out.sr_polished_assembly           
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }

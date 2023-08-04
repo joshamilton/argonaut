@@ -5,9 +5,9 @@ include { BWAMEM2_MEM } from '../../modules/nf-core/bwamem2/mem/main'
 workflow ALIGN {
 
     take:
-        filt_shortreads
         flye_assembly // channel: [ val(meta), path(assembly.fasta) ] ideally all assemblies
-
+        filt_shortreads
+        
     main:
 
     ch_versions = Channel.empty() 
