@@ -32,6 +32,7 @@ Short Read Assembly (optional)
 2. Align([`BWA`](https://bio-bwa.sourceforge.net/bwa.shtml))
 3. Polish([`POLCA`](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007981))
 
+## Running the Pipeline
 
 First, prepare a samplesheet with your long read input data that looks as follows:
 
