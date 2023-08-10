@@ -27,11 +27,9 @@ workflow ASSEMBLY {
 
             flye_assembly
                 .map { file -> tuple([id: file.baseName], file)  }
-                .set { flye_assembly }
-
-            assemblies
-                .concat(flye_assembly)
+                .set { assemblies }
                 .view()
+                
         }
         if ( params.canu == true ) {
             println "assembling with canu!"
@@ -40,24 +38,30 @@ workflow ASSEMBLY {
 
             canu_assembly
                 .map { file -> tuple([id: file.baseName], file)  }
-                .set { canu_assembly }
+                .set { c_assembly }
 
             assemblies
-                .concat(canu_assembly)
-                .view()
+                .concat(c_assembly)
+                .collect()
+                .set { assemblies }
+                
+            assemblies.view()
         }
-        if ( params.shortread == true ) {
+        if ( params.masurca == true ) {
             println "assembling with maSuRCA!"
             MASURCA(longreads, shortreads)
             masurca_assembly    = MASURCA.out.fasta
 
             masurca_assembly
                 .map { file -> tuple([id: file.baseName], file)  }
-                .set { masurca_assembly }
+                .set { m_assembly }
 
             assemblies
-                .concat(masurca_assembly)
-                .view()
+                .concat(m_assembly)
+                .collect()
+                .set { assemblies }
+                
+            assemblies.view()
         }
         if ( params.ex_assembly == true ) {
             println "inputting existing assembly!"
@@ -65,11 +69,14 @@ workflow ASSEMBLY {
 
             existing_assembly
                 .map { file -> tuple([id: file.baseName], file)  }
-                .set { existing_assembly }
+                .set { ex_assembly }
 
             assemblies
-                .concat(existing_assembly)
-                .view()
+                .concat(ex_assembly)
+                .collect()
+                .set { assemblies }
+                
+            assemblies.view()
         }
 
     emit:

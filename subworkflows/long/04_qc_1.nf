@@ -7,7 +7,6 @@ include { MERYL_COUNT } from '../../modules/nf-core/meryl/count/main'
 include { MERQURY } from '../../modules/nf-core/merqury/main' 
 include { SAMTOOLS_INDEX } from '../../modules/nf-core/samtools/index/main' 
 
-
 workflow QC_1 {
 
     take:
@@ -39,7 +38,7 @@ workflow QC_1 {
 
         // run BUSCO
         BUSCO(assemblies, params.busco_lineage, [], [])
-        ch_busco = BUSCO.out.batch_summary
+        ch_busco = BUSCO.out.short_summaries_txt
         ch_versions = ch_versions.mix(BUSCO.out.versions)
 
         SAMTOOLS_INDEX (MINIMAP2_ALIGN.out.bam)
@@ -61,6 +60,7 @@ workflow QC_1 {
         MERQURY (
             assemblies, MERYL_COUNT.out.meryl_db
         )
+        ch_merqury = MERQURY.out.assembly_qv
 
     emit:
         ch_index
@@ -68,6 +68,8 @@ workflow QC_1 {
         ch_align_paf
         ch_quast
         ch_busco
+        ch_merqury
+        ch_summarytxt
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }

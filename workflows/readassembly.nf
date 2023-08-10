@@ -11,11 +11,11 @@ WorkflowGenomeassembly.initialise(params, log)
 
 // TODO nf-core: Add all file path parameters for the pipeline to the list below
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.longinput, params.centrifuge_db ]
+def checkPathParamList = [ params.input, params.centrifuge_db ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
-if (params.longinput) { ch_longinput = file(params.longinput) } else { exit 1, 'Input samplesheet not specified!' }
+if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 if (params.shortinput) { ch_shortinput = file(params.shortinput) }
 if (params.centrifuge_db) { ch_db = file(params.centrifuge_db) } else { exit 1, 'Centrifuge database not specified!' }
 //if (params.summary_txt) {ch_sequencing_summary = file(params.sequencing_summary) } else { ch_sequencing_summary = []}
@@ -51,11 +51,12 @@ include { POLISH } from '../subworkflows/long/05_polish'
 //include { QC_2 } from '../subworkflows/long/06_qc_2'
 //include { PURGE } from '../subworkflows/long/07_purge'
 //include { QC_3 } from '../subworkflows/long/08_qc_3'
+//include { SCAFFOLD } from '../subworkflows/long/09_scaffold'
 
 include { INPUT_CHECK2 } from '../subworkflows/short/01_input_check'
 include { READ_QC2 } from '../subworkflows/short/02_read_qc'
-include { ALIGN } from '../subworkflows/short/03_align'
-//include { POLISH2 } from '../subworkflows/short/04_polish'
+//include { ALIGN } from '../subworkflows/short/03_align'
+include { POLISH2 } from '../subworkflows/short/04_polish'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
@@ -81,7 +82,7 @@ workflow GENOMEASSEMBLY {
 
     ch_versions = Channel.empty()
     
-    ch_data = INPUT_CHECK ( ch_longinput )
+    ch_data = INPUT_CHECK ( ch_input )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
     ch_centrifuge_db = Channel.fromPath(params.centrifuge_db)
@@ -95,6 +96,7 @@ workflow GENOMEASSEMBLY {
     LENGTH_FILT (
         READ_QC.out[0]
     )
+    ch_versions = ch_versions.mix(LENGTH_FILT.out.versions)
 
     //adaptor trimming and decontamination of short reads if available
     if ( params.shortread == true ) {
@@ -109,9 +111,9 @@ workflow GENOMEASSEMBLY {
 
         //assembly inputting everything + shortreads
         ASSEMBLY (
-        LENGTH_FILT.out[0], READ_QC2.out[1], READ_QC.out[3]
+        LENGTH_FILT.out[0], ch_shortdata.reads, READ_QC.out[3]
         )
-    ch_versions = ch_versions.mix(ASSEMBLY.out.versions)
+        ch_versions = ch_versions.mix(ASSEMBLY.out.versions)
     }
     else {
         ch_shortdata = Channel.empty() 
@@ -120,6 +122,7 @@ workflow GENOMEASSEMBLY {
         ASSEMBLY (
         LENGTH_FILT.out[0], [], READ_QC.out[3]
         )
+        ch_versions = ch_versions.mix(ASSEMBLY.out.versions)   
     }
     
    ch_summtxt = Channel.fromPath(params.summary_txt)
@@ -127,7 +130,7 @@ workflow GENOMEASSEMBLY {
     if ( params.shortread == true ) {
 
         QC_1 (
-            ASSEMBLY.out[0], ASSEMBLY.out[1], ch_summtxt, READ_QC2.out[0]
+            ASSEMBLY.out[0], LENGTH_FILT.out[0], ch_summtxt, READ_QC2.out[0]
         )
         ch_versions = ch_versions.mix(QC_1.out.versions)
     }
@@ -138,27 +141,53 @@ workflow GENOMEASSEMBLY {
         ch_versions = ch_versions.mix(QC_1.out.versions)
     }
 
-    ALIGN(
-        ASSEMBLY.out[0]
-    )
     
-    POLISH (
-        ASSEMBLY.out[0], ASSEMBLY.out[1]
-    )
+
+    //polish flye assembly with medaka
+    if ( params.flye == true ) {
+        POLISH (
+            ASSEMBLY.out[3], ASSEMBLY.out[1]
+        )
+        ch_versions = ch_versions.mix(POLISH.out.versions)
+    }
+
+    //align flye assembly to short reads and polish with POLCA if short reads are available
+    if ( params.flye == true && params.shortread == true) {
+    //ALIGN (
+    //    ASSEMBLY.out[3], READ_QC2.out[1]
+    //)
+    //ch_versions = ch_versions.mix(ALIGN.out.versions)
+    
+        POLISH2 (
+            ASSEMBLY.out[3], READ_QC2.out[1] //replace with aligned flye assembly (which one?)
+        )
+    ch_versions = ch_versions.mix(POLISH2.out.versions)
+    }
+
+    //combine polished flye assemblies w other assemblies
 
     //QC_2 (
-    //    POLISH.out[0], ASSEMBLY.out[1], QC_1.out[0]
+    //    ASSEMBLY.out[0].concat(POLISH.out[0]), ASSEMBLY.out[1], QC_1.out[6], QC_1.out[3], QC_1.out[4], QC_1.out[5]
     //)
+    //ch_versions = ch_versions.mix(QC_2.out.versions)
 
    // PURGE (
    //     POLISH.out[0], ASSEMBLY.out[1]
    // )
+   // ch_versions = ch_versions.mix(PURGE.out.versions)
 
-   // if ( params.shortread == true ) {
-   //     POLISH2 (
-   //     )
+   // QC_3 (
+     //   PURGE.out[0], ASSEMBLY.out[1], QC_1.out[0]
+    //)
+       // ch_versions = ch_versions.mix(QC_3.out.versions)
 
-
+    //if ( params.ragtag_scaffold == true ) {
+       // ch_reference = Channel.fromPath(params.ragtag_reference)
+      //  SCAFFOLD (
+            //PURGE.out[0], ch_reference
+        //)
+       // ch_versions = ch_versions.mix(SCAFFOLD.out.versions)
+    //}
 
     //
     // MODULE: Run FastQC

@@ -26,7 +26,7 @@ process QUAST {
     """
     quast.py \\
         --output-dir quast \\
-        *.fasta.gz \\
+        *.fasta \\
         --threads $task.cpus \\
         $args
 

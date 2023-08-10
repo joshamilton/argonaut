@@ -5,18 +5,17 @@ tag "$meta.id"
     container 'staphb/masurca:4.1.0'
 
     input:
-    tuple val(meta), path(longreads) //path_to/longreads.gz
+    tuple val(meta), path(assembly) //path_to/assembly.fasta
     tuple val(meta), path(shortreads) //path_to/pe_R1.fa,/path_to/pe_R2.fa
 
     output:
-    tuple val(meta), path("*.vcf")     , emit: vcf
-    tuple val(meta), path("*.report")  , emit: report
+    tuple val(meta), path("*.fasta")     , emit: sr_polished_assembly
     path "versions.yml"                , emit: versions
 
     script:
     def VERSION = '4.1.0'
     """
-    /MaSuRCA-4.1.0/polca.sh -t 6 -a $longreads -r $shortreads
+    polca.sh -t 6 -a $assembly -r '$shortreads'
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -9,6 +9,7 @@ workflow PURGE {
         paf_alignment // channel: val(meta), path(polished assembly alignment to reads)
         flye_assembly_polished
         fastq_filt
+        
     main:
 
     ch_versions = Channel.empty()

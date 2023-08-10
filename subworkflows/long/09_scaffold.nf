@@ -4,12 +4,14 @@ workflow SCAFFOLD {
 
     take:
         assemblies // channel: val(meta), path(polished assembly alignment to reads)
+        reference
 
     main:
 
     ch_versions = Channel.empty()
 
-        RAGTAG (assemblies)
+        //optional scaffolding with the same species or most closely related species available
+        RAGTAG (assemblies, reference)
 
     emit:
     

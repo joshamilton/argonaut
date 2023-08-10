@@ -1,4 +1,4 @@
-process FASTQC_2 {
+process FASTQC_3 {
     tag "$meta.id"
     label 'process_medium'
 

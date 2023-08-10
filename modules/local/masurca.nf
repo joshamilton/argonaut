@@ -1,22 +1,26 @@
 process MASURCA {
     tag "$meta.id"
-    label 'process_high'
+    label 'process_xeon'
 
-    container 'staphb/masurca:4.1.0'
-
+    container 'staphb/masurca'
+    
     input:
     tuple val(meta), path(longreads) //path_to/longreads.gz
-    tuple val(meta), path(shortreads) //path_to/pe_R1.fa,/path_to/pe_R2.fa
+    tuple val(meta), path(shortreads) //path_to/pe_R1.fa /path_to/pe_R2.fa
 
     output:
-    tuple val(meta), path("*.fasta")   , emit: fasta
+    path("*.fasta")                    , emit: fasta
     path "versions.yml"                , emit: versions
 
     script:
     def VERSION = '4.1.0'
-    
+    def sr
+    def prefix = task.ext.prefix ?: "masurca_${meta.id}"
     """
-    /MaSuRCA-4.1.0/bin/masurca -t 32 -i $shortreads -r $longreads
+    sr=\$(echo '${shortreads}' | sed -e "s/ /,/g")
+    masurca -t 32 -i \$sr -r $longreads
+
+    mv *scf.fasta ${prefix}.fasta
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

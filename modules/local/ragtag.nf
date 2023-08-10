@@ -1,4 +1,4 @@
-process KMER_FREQ {
+process RAGTAG {
     tag "$meta.id"
     label 'process_high'
 
@@ -8,6 +8,7 @@ process KMER_FREQ {
 
     input:
     tuple val(meta), path(fasta)
+    tuple val(meta), path(reference)
 
     output:
     tuple val(meta), path("*.scaffold.fasta")              , emit: scaffolded_assembly
@@ -18,7 +19,7 @@ process KMER_FREQ {
     def VERSION = '2.1.0'
 
     """
-    ragtag.py scaffold {fasta} -f 1000 -o {outdir}
+    ragtag.py scaffold $reference $fasta -f 1000 -o .
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
