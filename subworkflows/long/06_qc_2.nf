@@ -22,31 +22,29 @@ workflow QC_2 {
     ch_versions = Channel.empty() 
 
         // build index
-        MINIMAP2_INDEX(assemblies)
+        MINIMAP2_INDEX(polished_flye_assembly)
         ch_versions = ch_versions.mix(MINIMAP2_INDEX.out.versions)
         ch_index = MINIMAP2_INDEX.out.index
 
         // align reads
-        MINIMAP2_ALIGN(fastq_filt, assemblies.map{it[1]}, params.bam_format, params.cigar_paf_format, params.cigar_bam)
+        MINIMAP2_ALIGN(fastq_filt, polished_flye_assembly.map{it[1]}, params.bam_format, params.cigar_paf_format, params.cigar_bam)
         ch_align_bam = MINIMAP2_ALIGN.out.bam
         ch_align_paf = MINIMAP2_ALIGN.out.paf
         
         // run quast
         QUAST(
-            assemblies.map{it -> it[1]}.collect() // this has to be aggregated because of how QUAST makes the output directory for reporting stats
+            polished_flye_assembly.map{it -> it[1]}.collect() // this has to be aggregated because of how QUAST makes the output directory for reporting stats
         )
-        ch_quast2 = QUAST.out.results
         ch_quast
-            .concat(ch_quast2)
-            .view()
+            .concat(QUAST.out.results)
+            .set { ch_quast }
         ch_versions = ch_versions.mix(QUAST.out.versions)
 
         // run BUSCO
-        BUSCO(assemblies, params.busco_lineage, [], [])
-        ch_busco2 = BUSCO.out.short_summaries_txt
+        BUSCO(polished_flye_assembly, params.busco_lineage, [], [])
         ch_busco
-            .concat(ch_busco2)
-            .view()
+            .concat(BUSCO.out.short_summaries_txt)
+            .set { ch_busco }
         ch_versions = ch_versions.mix(BUSCO.out.versions)
 
         SAMTOOLS_INDEX (MINIMAP2_ALIGN.out.bam)
@@ -66,18 +64,20 @@ workflow QC_2 {
         }
 
         MERQURY (
-            assemblies, MERYL_COUNT.out.meryl_db
+            polished_flye_assembly, MERYL_COUNT.out.meryl_db
         )
-        ch_merqury2 = MERQURY.out.assembly_qv
         ch_merqury
-            .concat(ch_merqury2)
+            .concat(MERQURY.out.assembly_qv)
+            .set { ch_merqury }
+        ch_versions = ch_versions.mix(MERQURY.out.versions)
 
     emit:
-        ch_polished_index
-        ch_polished_align_bam
-        ch_polished_align_paf
-        ch_polished_quast
-        ch_polished_busco
+        ch_index
+        ch_align_bam
+        ch_align_paf
+        ch_quast
+        ch_busco
+        ch_merqury
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
