@@ -1,28 +1,32 @@
-include { PURGEDUPS_PBCSTAT } from '../../modules/nf-core/purgedups/pbcstat/main' 
-include { PURGEDUPS_CALCUTS } from '../../modules/nf-core/purgedups/calcuts/main' 
-include { PURGEDUPS_PURGEDUPS } from '../../modules/nf-core/purgedups/purgedups/main'
-
+include { ALIGN } from '../../modules/local/purgehap' 
+include { HISTOGRAM } from '../../modules/local/purgehap' 
+include { PURGE } from '../../modules/local/purgehap' 
 
 workflow PURGE {
 
     take:
-        paf_alignment // channel: val(meta), path(polished assembly alignment to reads)
-        flye_assembly_polished
-        fastq_filt
+        assembly
+        subreads
         
     main:
 
     ch_versions = Channel.empty()
 
-        PURGEDUPS_PBCSTAT (paf_alignment)
+        if ( ! (params.low && params.mid && params.high )) {
 
-        PURGEDUPS_CALCUTS (PURGEDUPS_PBCSTAT.out.stat)
+        ALIGN(assembly, subreads)
+        HISTOGRAM(assembly, ALIGN.out.aligned)
+        assemblies_polished_purged      = Channel.empty()
 
-        PURGEDUPS_PURGEDUPS (PURGEDUPS_PBCSTAT.out.basecov, PURGEDUPS_CALCUTS.out.cutoff, paf_alignment)
+        } else {
+        
+        PURGE(assembly, HISTOGRAM.out.hist)
+        assemblies_polished_purged      = PURGE.out.purged           
+
+        }
 
     emit:
-    
-        flye_assembly_polished_purged      = PURGEDUPS_PURGEDUPS.out.bed           
+        assemblies_polished_purged
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }

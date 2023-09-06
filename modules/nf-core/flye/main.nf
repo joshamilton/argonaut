@@ -10,11 +10,12 @@ process FLYE {
     input:
     tuple val(meta), path(reads)
     val mode
+    tuple val(meta), path(genome_size_est)
 
     output:
-    tuple val(meta), path("*.fasta.gz"), emit: fasta
-    tuple val(meta), path("*.gfa.gz")  , emit: gfa
-    tuple val(meta), path("*.gv.gz")   , emit: gv
+    path("*.fasta"), emit: fasta
+    tuple val(meta), path("*.gfa")  , emit: gfa
+    tuple val(meta), path("*.gv")   , emit: gv
     tuple val(meta), path("*.txt")     , emit: txt
     tuple val(meta), path("*.log")     , emit: log
     tuple val(meta), path("*.json")    , emit: json
@@ -25,21 +26,22 @@ process FLYE {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "flye_${meta.id}"
+    def size
     def valid_mode = ["--pacbio-raw", "--pacbio-corr", "--pacbio-hifi", "--nano-raw", "--nano-corr", "--nano-hq"]
     if ( !valid_mode.contains(mode) )  { error "Unrecognised mode to run Flye. Options: ${valid_mode.join(', ')}" }
     """
+    size=\$(echo "\$(<${genome_size_est})")
     flye \\
         $mode \\
         $reads \\
         --out-dir . \\
         --threads \\
         $task.cpus \\
+        --genome-size \$size \\
         $args
 
-    gzip -c assembly.fasta > ${prefix}.assembly.fasta.gz
-    gzip -c assembly_graph.gfa > ${prefix}.assembly_graph.gfa.gz
-    gzip -c assembly_graph.gv > ${prefix}.assembly_graph.gv.gz
+    mv assembly.fasta ${prefix}.fasta
     mv assembly_info.txt ${prefix}.assembly_info.txt
     mv flye.log ${prefix}.flye.log
     mv params.json ${prefix}.params.json

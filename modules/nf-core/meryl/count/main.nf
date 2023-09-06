@@ -11,7 +11,7 @@ process MERYL_COUNT {
     tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("*.meryldb"), emit: meryl_db
+    tuple val(meta), path("*filtered.meryl"), emit: meryl_db
     path "versions.yml"               , emit: versions
 
     when:
@@ -20,13 +20,18 @@ process MERYL_COUNT {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def kmernum = '21'
     """
     for READ in $reads; do
         meryl count \\
             threads=$task.cpus \\
+            k=$kmernum \\
             $args \\
             $reads \\
-            output read.\${READ%.f*}.meryldb
+            output kmer_db.meryl
+
+        meryl greater-than 1 \\
+            output kmer_db.filtered.meryl kmer_db.meryl
     done
 
     cat <<-END_VERSIONS > versions.yml

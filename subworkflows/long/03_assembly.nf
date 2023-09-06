@@ -27,9 +27,10 @@ workflow ASSEMBLY {
 
             flye_assembly
                 .map { file -> tuple([id: file.baseName], file)  }
-                .set { assemblies }
-                .view()
-                
+                .set { f_assembly }       
+        }
+        else {
+            f_assembly = Channel.empty() 
         }
         if ( params.canu == true ) {
             println "assembling with canu!"
@@ -39,13 +40,9 @@ workflow ASSEMBLY {
             canu_assembly
                 .map { file -> tuple([id: file.baseName], file)  }
                 .set { c_assembly }
-
-            assemblies
-                .concat(c_assembly)
-                .collect()
-                .set { assemblies }
-                
-            assemblies.view()
+        }
+        else {
+            c_assembly = Channel.empty() 
         }
         if ( params.masurca == true ) {
             println "assembling with maSuRCA!"
@@ -55,13 +52,9 @@ workflow ASSEMBLY {
             masurca_assembly
                 .map { file -> tuple([id: file.baseName], file)  }
                 .set { m_assembly }
-
-            assemblies
-                .concat(m_assembly)
-                .collect()
-                .set { assemblies }
-                
-            assemblies.view()
+        }
+        else {
+            m_assembly = Channel.empty() 
         }
         if ( params.ex_assembly == true ) {
             println "inputting existing assembly!"
@@ -70,20 +63,22 @@ workflow ASSEMBLY {
             existing_assembly
                 .map { file -> tuple([id: file.baseName], file)  }
                 .set { ex_assembly }
-
-            assemblies
-                .concat(ex_assembly)
-                .collect()
-                .set { assemblies }
-                
-            assemblies.view()
+        }
+        else {
+            ex_assembly = Channel.empty() 
         }
 
+        assemblies
+            .concat(f_assembly, c_assembly, m_assembly, ex_assembly)
+            .set { all_assemblies }
+        
+        all_assemblies.view()
+
     emit:
-        assemblies  
+        all_assemblies  
         longreads   
         nanoplot_filtered_out   = NANOPLOT.out.html
-        flye_assembly
+        f_assembly
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }

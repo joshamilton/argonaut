@@ -9,6 +9,8 @@ process PYCOQC {
 
     input:
     tuple val(meta), path(summary)
+    tuple val(meta), path(inbam)
+    tuple val(meta), path(inbai)
 
     output:
     tuple val(meta), path("*.html"), emit: html
@@ -19,14 +21,14 @@ process PYCOQC {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+
     """
     pycoQC \\
-        $args \\
-        -f $summary \\
-        -o ${prefix}.html \\
-        -j ${prefix}.json
+        -f ${summary} \\
+        -o ${meta.id}.html \\
+        -j ${meta.id}.json \\
+        -a ${inbam} \\
+        --skip_coverage_plot
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

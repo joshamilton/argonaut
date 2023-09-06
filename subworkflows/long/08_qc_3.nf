@@ -6,7 +6,6 @@ include { MINIMAP2_ALIGN } from '../../modules/nf-core/minimap2/align/main'
 include { MERYL_COUNT } from '../../modules/nf-core/meryl/count/main' 
 include { MERQURY } from '../../modules/nf-core/merqury/main' 
 include { SAMTOOLS_INDEX } from '../../modules/nf-core/samtools/index/main' 
-include { OUTPUT } from '../../modules/local/output' 
 
 workflow QC_3 {
 
@@ -30,7 +29,6 @@ workflow QC_3 {
         // align reads
         MINIMAP2_ALIGN(fastq_filt, assemblies.map{it[1]}, params.bam_format, params.cigar_paf_format, params.cigar_bam)
         ch_align_bam = MINIMAP2_ALIGN.out.bam
-        ch_align_paf = MINIMAP2_ALIGN.out.paf
         
         // run quast
         QUAST(
@@ -72,8 +70,6 @@ workflow QC_3 {
             .set { ch_merqury }
         ch_versions = ch_versions.mix(MERQURY.out.versions)
 
-        OUTPUT (ch_quast, ch_busco, ch_merqury)
-
     emit:
         ch_index
         ch_align_bam
@@ -81,7 +77,6 @@ workflow QC_3 {
         ch_quast
         ch_busco
         ch_merqury
-        assembly_stats  =   OUTPUT.out.assemblyStats
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }

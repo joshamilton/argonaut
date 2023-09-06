@@ -14,6 +14,7 @@ workflow QC_1 {
         fastq_filt // channel: [ val(meta), path(filtered long reads) ]
         summarytxt // channel from params.summarytxt
         shortreads
+        genome_size_est
 
     main:
 
@@ -25,13 +26,13 @@ workflow QC_1 {
         ch_index = MINIMAP2_INDEX.out.index
 
         // align reads
-        MINIMAP2_ALIGN(fastq_filt, assemblies.map{it[1]}, params.bam_format, params.cigar_paf_format, params.cigar_bam)
+        MINIMAP2_ALIGN(fastq_filt, assemblies, params.bam_format, params.cigar_paf_format, params.cigar_bam)
         ch_align_bam = MINIMAP2_ALIGN.out.bam
         ch_align_paf = MINIMAP2_ALIGN.out.paf
-        
+
         // run quast
         QUAST(
-            assemblies.map{it -> it[1]}.collect() // this has to be aggregated because of how QUAST makes the output directory for reporting stats
+            assemblies // this has to be aggregated because of how QUAST makes the output directory for reporting stats
         )
         ch_quast = QUAST.out.results
         ch_versions = ch_versions.mix(QUAST.out.versions)
@@ -58,7 +59,7 @@ workflow QC_1 {
         }
 
         MERQURY (
-            assemblies, MERYL_COUNT.out.meryl_db
+            assemblies, MERYL_COUNT.out.meryl_db, genome_size_est
         )
         ch_merqury = MERQURY.out.assembly_qv
 

@@ -45,9 +45,9 @@ workflow READ_QC2 {
         FASTQC_3(KRAKEN2_KRAKEN2.out.unclassified_reads_fastq)
 
         JELLYFISH_KMER(GUNZIP.out.gunzip, params.kmer_num)
-        JELLYFISH_HIST(JELLYFISH_KMER.out.shortkmer)
+        JELLYFISH_HIST(JELLYFISH_KMER.out.shortkmer, params.kmer_num)
         
-        GENOMESCOPE2(JELLYFISH_HIST.out.shortkmer_hist, params.kmer_num)
+        GENOMESCOPE2(JELLYFISH_HIST.out.shortkmer_hist)
 
     emit:
         filt_shortreads = KRAKEN2_KRAKEN2.out.unclassified_reads_fastq   // channel: [ val(meta), [ decontaminated and adaptor trimmed short reads ] ]

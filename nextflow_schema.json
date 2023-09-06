@@ -239,9 +239,8 @@
             "default": true,
             "description": "Boolean whether long reads are available for assembly"
         },
-        "longinput": {
-            "type": "string",
-            "default": null
+        "input": {
+            "type": "string"
         },
         "shortread": {
             "type": "boolean",
@@ -249,17 +248,14 @@
         },
         "shortinput": {
             "type": "string",
-            "default": "null",
             "description": "Path to comma-separated file containing information about the short reads"
         },
         "summary_txt": {
             "type": "string",
-            "default": "null",
             "description": "Path to sequencing summary from Nanopore (*.txt)"
         },
         "centrifuge_db": {
             "type": "string",
-            "default": "null",
             "description": "Path to centrifuge database containing contaminant sequences"
         },
         "save_unaligned": {
@@ -287,7 +283,8 @@
         },
         "flye_mode": {
             "type": "string",
-            "default": null
+            "default": "None",
+            "description": "Mode of long read sequencing (ex. \"--nano-raw\")"
         },
         "canu": {
             "type": "boolean",
@@ -295,11 +292,21 @@
         },
         "canu_mode": {
             "type": "string",
-            "default": null
+            "default": "None",
+            "description": "Mode of long read sequencing (ex. \"-nanopore\")"
+        },
+        "masurca": {
+            "type": "boolean",
+            "default": true,
+            "description": "Option to run MaSuRCA assembly (requires long and short reads)"
         },
         "ex_assembly": {
             "type": "boolean",
             "description": "Option to input existing assembly in *.fasta format"
+        },
+        "existing_assembly": {
+            "type": "string",
+            "description": "Path to existing assembly in *.fasta format"
         },
         "bam_format": {
             "type": "boolean",
@@ -337,7 +344,8 @@
         },
         "kraken_db": {
             "type": "string",
-            "default": null
+            "default": "None",
+            "description": "Path to Kraken2 database containing contaminant sequences"
         },
         "save_output_fastqs": {
             "type": "boolean",
@@ -348,6 +356,24 @@
             "type": "boolean",
             "default": true,
             "description": "Kraken2 option to save a file containing taxonomic classification of each input read"
+        },
+        "rcf_db": {
+            "type": "string",
+            "description": "Path to Recentrifuge database containing contaminant information"
+        },
+        "kmer_num": {
+            "type": "integer",
+            "default": 21,
+            "description": "Kmer size for genome size estimation (ex. 21)"
+        },
+        "ragtag_scaffold": {
+            "type": "boolean",
+            "default": true,
+            "description": "Option to run scaffolding on polished and purged assemblies"
+        },
+        "ragtag_reference": {
+            "type": "string",
+            "description": "Path to reference genome for scaffolding (must be the same species or closely related)"
         }
     }
 }

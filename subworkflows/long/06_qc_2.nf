@@ -10,30 +10,36 @@ include { SAMTOOLS_INDEX } from '../../modules/nf-core/samtools/index/main'
 workflow QC_2 {
 
     take:
-        polished_flye_assembly // channel: [ val(meta), path(flye assembly.fasta) ]
+        polished_assemblies // channel: [ val(meta), path(flye assembly.fasta) ]
         fastq_filt // channel: [ val(meta), path(filtered reads) ]
         summarytxt // channel from params.summarytxt
         ch_quast
         ch_busco
         ch_merqury
-
+        shortreads
+        ch_align_paf
+        genome_size_est
     main:
 
     ch_versions = Channel.empty() 
 
         // build index
-        MINIMAP2_INDEX(polished_flye_assembly)
+        MINIMAP2_INDEX(polished_assemblies)
         ch_versions = ch_versions.mix(MINIMAP2_INDEX.out.versions)
         ch_index = MINIMAP2_INDEX.out.index
 
         // align reads
-        MINIMAP2_ALIGN(fastq_filt, polished_flye_assembly.map{it[1]}, params.bam_format, params.cigar_paf_format, params.cigar_bam)
-        ch_align_bam = MINIMAP2_ALIGN.out.bam
-        ch_align_paf = MINIMAP2_ALIGN.out.paf
+        MINIMAP2_ALIGN(fastq_filt, polished_assemblies, params.bam_format, params.cigar_paf_format, params.cigar_bam)
+        
+        ch_bam = MINIMAP2_ALIGN.out.bam
+
+        ch_align_paf
+            .concat(MINIMAP2_ALIGN.out.paf)
+            .set { paf_alignment }
         
         // run quast
         QUAST(
-            polished_flye_assembly.map{it -> it[1]}.collect() // this has to be aggregated because of how QUAST makes the output directory for reporting stats
+            polished_assemblies
         )
         ch_quast
             .concat(QUAST.out.results)
@@ -41,19 +47,18 @@ workflow QC_2 {
         ch_versions = ch_versions.mix(QUAST.out.versions)
 
         // run BUSCO
-        BUSCO(polished_flye_assembly, params.busco_lineage, [], [])
+        BUSCO(polished_assemblies, params.busco_lineage, [], [])
         ch_busco
             .concat(BUSCO.out.short_summaries_txt)
             .set { ch_busco }
         ch_versions = ch_versions.mix(BUSCO.out.versions)
 
-        SAMTOOLS_INDEX (MINIMAP2_ALIGN.out.bam)
-    
-        // create summary txt channel with meta id and run pycoQC
+        SAMTOOLS_INDEX (ch_bam)
+
         ch_summarytxt = summarytxt.map { file -> tuple(file.baseName, file) }
-        
+
         PYCOQC (
-            ch_summarytxt, MINIMAP2_ALIGN.out.bam, SAMTOOLS_INDEX.out.bai
+            ch_summarytxt, ch_bam, SAMTOOLS_INDEX.out.bai
         )
         ch_versions = ch_versions.mix(PYCOQC.out.versions)
 
@@ -64,7 +69,7 @@ workflow QC_2 {
         }
 
         MERQURY (
-            polished_flye_assembly, MERYL_COUNT.out.meryl_db
+            polished_assemblies, MERYL_COUNT.out.meryl_db, genome_size_est
         )
         ch_merqury
             .concat(MERQURY.out.assembly_qv)
@@ -73,8 +78,8 @@ workflow QC_2 {
 
     emit:
         ch_index
-        ch_align_bam
-        ch_align_paf
+        ch_bam
+        paf_alignment
         ch_quast
         ch_busco
         ch_merqury

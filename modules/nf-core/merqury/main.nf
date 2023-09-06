@@ -8,7 +8,9 @@ process MERQURY {
         'biocontainers/merqury:1.3--hdfd78af_1' }"
 
     input:
-    tuple val(meta), path(meryl_db), path(assembly)
+    tuple val(meta), path(assembly)
+    tuple val(meta), path(meryl_db)
+    tuple val(meta), path(genome_size_est)
 
     output:
     tuple val(meta), path("*_only.bed")          , emit: assembly_only_kmers_bed
@@ -26,6 +28,7 @@ process MERQURY {
     tuple val(meta), path("${prefix}.qv")        , emit: assembly_qv
     tuple val(meta), path("${prefix}.*.qv")      , emit: scaffold_qv
     tuple val(meta), path("*.hist.ploidy")       , emit: read_ploidy
+    tuple val(meta), path("best_kmer_num.txt")   , emit: kmer
     path "versions.yml"                          , emit: versions
 
     when:
@@ -35,6 +38,7 @@ process MERQURY {
     // def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
     def VERSION = 1.3
+    def genome_size
     """
     # Nextflow changes the container --entrypoint to /bin/bash (container default entrypoint: /usr/local/env-execute)
     # Check for container variable initialisation script and source it.
@@ -45,6 +49,10 @@ process MERQURY {
     fi
     # limit meryl to use the assigned number of cores.
     export OMP_NUM_THREADS=$task.cpus
+
+    genome_size=\$(echo "\$(<${genome_size_est})")
+
+    best_k.sh $genome_size 0.1 > best_kmer_num.txt
 
     merqury.sh \\
         $meryl_db \\

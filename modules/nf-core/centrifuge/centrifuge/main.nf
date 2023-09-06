@@ -19,7 +19,7 @@ process CENTRIFUGE_CENTRIFUGE {
     tuple val(meta), path('*results.txt')                , emit: results
     tuple val(meta), path('*.sam')                       , optional: true, emit: sam
     tuple val(meta), path('*.mapped.fastq{,.1,.2}.gz')   , optional: true, emit: fastq_mapped
-    tuple val(meta), path('*.unmapped.fastq{,.1,.2}.gz') , optional: true, emit: fastq_unmapped
+    path('*.unmapped.fastq{,.1,.2}.gz') , optional: true, emit: fastq_unmapped
     path "versions.yml"                                  , emit: versions
 
     when:
@@ -27,7 +27,7 @@ process CENTRIFUGE_CENTRIFUGE {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "filtered_${meta.id}"
     def paired = meta.single_end ? "-U ${reads}" :  "-1 ${reads[0]} -2 ${reads[1]}"
     def unaligned = ''
     def aligned = ''
@@ -52,6 +52,8 @@ process CENTRIFUGE_CENTRIFUGE {
         $aligned \\
         $sam_output \\
         $args
+
+    echo "Processing file: ${meta.id}"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
