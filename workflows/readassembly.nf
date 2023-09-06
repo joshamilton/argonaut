@@ -135,7 +135,7 @@ workflow GENOMEASSEMBLY {
     }
     else {
         QC_1 (
-            ASSEMBLY.out[0], LENGTH_FILT.out[0], ch_summtxt, []
+            ASSEMBLY.out[0], LENGTH_FILT.out[0], ch_summtxt, [], READ_QC.out[3]
         )
     ch_versions = ch_versions.mix(QC_1.out.versions)
     }
@@ -183,7 +183,7 @@ workflow GENOMEASSEMBLY {
     }
 
     QC_2 (
-        polished_assemblies, ASSEMBLY.out[1], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], genome_size_est
+        polished_assemblies, ASSEMBLY.out[1], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], READ_QC.out[3]
     )
     ch_versions = ch_versions.mix(QC_2.out.versions)
 
