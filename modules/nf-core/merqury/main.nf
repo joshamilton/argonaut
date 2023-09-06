@@ -52,7 +52,7 @@ process MERQURY {
 
     genome_size=\$(echo "\$(<${genome_size_est})")
 
-    best_k.sh $genome_size 0.1 > best_kmer_num.txt
+    best_k.sh \$genome_size 0.1 > best_kmer_num.txt
 
     merqury.sh \\
         $meryl_db \\
