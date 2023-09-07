@@ -19,13 +19,14 @@ process MEDAKA {
     task.ext.when == null || task.ext.when
 
     script:
-    //def args = task.ext.args ?: ''
+    def args = task.ext.args ?: ''
     //def prefix = task.ext.prefix ?: "${meta.id}"
     """
     medaka_consensus \\
         -t $task.cpus \\
         -i $reads \\
         -d $assembly \\
+        $args
     
     cd medaka
     mv consensus.fasta medaka_flyepolish.fasta
