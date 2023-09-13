@@ -112,8 +112,7 @@ workflow GENOMEASSEMBLY {
         )
         all_assemblies   = ASSEMBLY.out[0]
     ch_versions = ch_versions.mix(ASSEMBLY.out.versions)
-    }
-    else {
+    } else {
         ch_shortdata = Channel.empty() 
 
         //assembly of decontam fastq and length filtered fastq (if specified)
@@ -132,8 +131,7 @@ workflow GENOMEASSEMBLY {
             ASSEMBLY.out[0], LENGTH_FILT.out[0], ch_summtxt, READ_QC2.out[0], READ_QC.out[3]
         )
     ch_versions = ch_versions.mix(QC_1.out.versions)
-    }
-    else {
+    } else {
         QC_1 (
             ASSEMBLY.out[0], LENGTH_FILT.out[0], ch_summtxt, [], READ_QC.out[3]
         )
@@ -174,8 +172,7 @@ workflow GENOMEASSEMBLY {
         polished_assemblies.view()
 
     ch_versions = ch_versions.mix(POLISH2.out.versions)
-    }
-    else {
+    } else {
         medaka_polish
             .concat(all_assemblies)
             .set{ polished_assemblies }
@@ -187,8 +184,7 @@ workflow GENOMEASSEMBLY {
         polished_assemblies, ASSEMBLY.out[1], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], READ_QC.out[3]
     )
     ch_versions = ch_versions.mix(QC_2.out.versions)
-    }
-    else{
+    } else {
     QC_2 (
         polished_assemblies, ASSEMBLY.out[1], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], , QC_1.out[2], READ_QC.out[3]
     )
