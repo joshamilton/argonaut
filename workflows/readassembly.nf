@@ -198,7 +198,7 @@ workflow GENOMEASSEMBLY {
     DUPS (
         polished_assemblies, LENGTH_FILT.out[0]
     )
-    ch_versions = ch_versions.mix(PURGE.out.versions)
+    ch_versions = ch_versions.mix(DUPS.out.versions)
 
    // QC_3 (
      //   PURGE.out[0], ASSEMBLY.out[1], QC_1.out[0]
