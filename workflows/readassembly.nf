@@ -182,10 +182,18 @@ workflow GENOMEASSEMBLY {
         polished_assemblies.view()
     }
 
+    if ( params.shortread == true ) {
     QC_2 (
         polished_assemblies, ASSEMBLY.out[1], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], READ_QC.out[3]
     )
     ch_versions = ch_versions.mix(QC_2.out.versions)
+    }
+    else{
+    QC_2 (
+        polished_assemblies, ASSEMBLY.out[1], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], , QC_1.out[2], READ_QC.out[3]
+    )
+    ch_versions = ch_versions.mix(QC_2.out.versions)
+    }
 
     PURGE (
         polished_assemblies, LENGTH_FILT.out[0]
