@@ -2,7 +2,7 @@ include { ALIGN } from '../../modules/local/purgehap'
 include { HISTOGRAM } from '../../modules/local/purgehap' 
 include { PURGE } from '../../modules/local/purgehap' 
 
-workflow PURGE {
+workflow DUPS {
 
     take:
         assembly

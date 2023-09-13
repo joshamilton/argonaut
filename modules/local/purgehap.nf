@@ -25,7 +25,6 @@ process ALIGN {
 process HISTOGRAM {
     tag "$meta.id"
     label 'process_medium'
-    publishDir 'histogram', mode: 'copy'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/purge_haplotigs:1.1.2--hdfd78af_0' :
@@ -47,13 +46,15 @@ process HISTOGRAM {
 process PURGE {
     tag "$meta.id"
     label 'process_medium'
-    publishDir 'purged', mode: 'copy'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/purge_haplotigs:1.1.2--hdfd78af_0' :
         'biocontainers/purge_haplotigs:1.1.2--hdfd78af_0' }"
         
     input:
+    val low
+    val mid
+    val high
     tuple val(meta), path(assembly)
     tuple val(meta), path(gencov)
 
@@ -62,7 +63,7 @@ process PURGE {
 
     """
     purge_haplotigs cov -in $gencov \
-        -low $params.low -mid $params.mid -high $params.high
+        -low $low -mid $mid -high $high
     purge_haplotigs purge -t $task.cpus -g $assembly -c coverage_stats.csv
     """
 }

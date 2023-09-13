@@ -47,7 +47,7 @@ include { ASSEMBLY } from '../subworkflows/long/03_assembly'
 include { QC_1 } from '../subworkflows/long/04_qc_1'
 include { POLISH } from '../subworkflows/long/05_polish'
 include { QC_2 } from '../subworkflows/long/06_qc_2'
-include { PURGE } from '../subworkflows/long/07_purge'
+include { DUPS } from '../subworkflows/long/07_purge'
 //include { QC_3 } from '../subworkflows/long/08_qc_3'
 //include { SCAFFOLD } from '../subworkflows/long/09_scaffold'
 
@@ -112,7 +112,8 @@ workflow GENOMEASSEMBLY {
         )
         all_assemblies   = ASSEMBLY.out[0]
     ch_versions = ch_versions.mix(ASSEMBLY.out.versions)
-    } else {
+    }
+    else {
         ch_shortdata = Channel.empty() 
 
         //assembly of decontam fastq and length filtered fastq (if specified)
@@ -131,7 +132,8 @@ workflow GENOMEASSEMBLY {
             ASSEMBLY.out[0], LENGTH_FILT.out[0], ch_summtxt, READ_QC2.out[0], READ_QC.out[3]
         )
     ch_versions = ch_versions.mix(QC_1.out.versions)
-    } else {
+    }
+    else {
         QC_1 (
             ASSEMBLY.out[0], LENGTH_FILT.out[0], ch_summtxt, [], READ_QC.out[3]
         )
@@ -172,7 +174,8 @@ workflow GENOMEASSEMBLY {
         polished_assemblies.view()
 
     ch_versions = ch_versions.mix(POLISH2.out.versions)
-    } else {
+    }
+    else {
         medaka_polish
             .concat(all_assemblies)
             .set{ polished_assemblies }
@@ -184,14 +187,15 @@ workflow GENOMEASSEMBLY {
         polished_assemblies, ASSEMBLY.out[1], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], READ_QC.out[3]
     )
     ch_versions = ch_versions.mix(QC_2.out.versions)
-    } else {
+    }
+    else{
     QC_2 (
-        polished_assemblies, ASSEMBLY.out[1], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], , QC_1.out[2], READ_QC.out[3]
+        polished_assemblies, ASSEMBLY.out[1], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], [], QC_1.out[2], READ_QC.out[3]
     )
     ch_versions = ch_versions.mix(QC_2.out.versions)
     }
 
-    PURGE (
+    DUPS (
         polished_assemblies, LENGTH_FILT.out[0]
     )
     ch_versions = ch_versions.mix(PURGE.out.versions)
