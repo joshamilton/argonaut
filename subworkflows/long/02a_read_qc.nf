@@ -1,3 +1,4 @@
+include { GUNZIP } from '../../modules/nf-core/gunzip/main'
 include { CENTRIFUGE_CENTRIFUGE } from '../../modules/nf-core/centrifuge/centrifuge/main'
 include { CENTRIFUGE_KREPORT } from '../../modules/nf-core/centrifuge/kreport/main'
 include { NANOPLOT } from '../../modules/nf-core/nanoplot/main'
@@ -19,6 +20,10 @@ workflow READ_QC {
     ch_versions = Channel.empty()
 
         reads.view()
+
+        if(reads.endsWith(".gz")) {
+            GUNZIP(reads)
+        }
 
         NANOPLOT(reads)
 
