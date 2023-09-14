@@ -21,7 +21,7 @@ workflow READ_QC {
 
         reads.view()
 
-        if(reads.endsWith(".gz")) {
+        if(reads.getName.endsWith(".gz")) {
             GUNZIP(reads)
         }
 
