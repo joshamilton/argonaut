@@ -78,7 +78,7 @@ nextflow run emilytrybulec/genomeassembly \
 
 ## Credits
 
-nf-core/genomeassembly was originally written by emilytrybulec.
+emilytrybulec/genomeassembly was originally written by Emily Trybulec.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
