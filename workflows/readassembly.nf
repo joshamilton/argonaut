@@ -47,9 +47,10 @@ include { ASSEMBLY } from '../subworkflows/long/03_assembly'
 include { QC_1 } from '../subworkflows/long/04_qc_1'
 include { POLISH } from '../subworkflows/long/05_polish'
 include { QC_2 } from '../subworkflows/long/06_qc_2'
-include { DUPS } from '../subworkflows/long/07_purge'
-//include { QC_3 } from '../subworkflows/long/08_qc_3'
-//include { SCAFFOLD } from '../subworkflows/long/09_scaffold'
+include { HAPS } from '../subworkflows/long/07_purge'
+include { QC_3 } from '../subworkflows/long/08_qc_3'
+include { SCAFFOLD } from '../subworkflows/long/09_scaffold'
+include { QC_4 } from '../subworkflows/long/10_qc_4'
 
 include { INPUT_CHECK2 } from '../subworkflows/short/01_input_check'
 include { READ_QC2 } from '../subworkflows/short/02_read_qc'
@@ -83,43 +84,38 @@ workflow GENOMEASSEMBLY {
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
     ch_centrifuge_db = Channel.fromPath(params.centrifuge_db)
-
+    
     //decontamination and quality checking of long reads
-    READ_QC (
-        ch_data.reads, ch_centrifuge_db
-    )
+    READ_QC (ch_data.reads, ch_centrifuge_db)
     ch_versions = ch_versions.mix(READ_QC.out.versions)
 
-    LENGTH_FILT (
-        READ_QC.out[0]
-    )
+    if (params.manual_genome_size){
+        genome_size = params.manual_genome_size
+    } else {
+        genome_size = READ_QC.out[3]
+    }
+    
+    LENGTH_FILT (READ_QC.out[0])
     ch_versions = ch_versions.mix(LENGTH_FILT.out.versions)
 
     //adaptor trimming and decontamination of short reads if available
     if ( params.shortread == true ) {
-
         ch_shortdata = INPUT_CHECK2 ( ch_shortinput )
     ch_versions = ch_versions.mix(INPUT_CHECK2.out.versions)
 
         ch_kraken_db = Channel.fromPath(params.kraken_db)
-
         READ_QC2 (ch_shortdata.reads, ch_kraken_db)
     ch_versions = ch_versions.mix(READ_QC2.out.versions)
 
         //assembly inputting everything + shortreads
-        ASSEMBLY (
-        LENGTH_FILT.out[0], ch_shortdata.reads, READ_QC.out[3]
-        )
+        ASSEMBLY (LENGTH_FILT.out[0], ch_shortdata.reads, genome_size)
         all_assemblies   = ASSEMBLY.out[0]
     ch_versions = ch_versions.mix(ASSEMBLY.out.versions)
     }
     else {
         ch_shortdata = Channel.empty() 
-
-        //assembly of decontam fastq and length filtered fastq (if specified)
-        ASSEMBLY (
-        LENGTH_FILT.out[0], [], READ_QC.out[3]
-        )
+        //assembly of decontam and length filtered (if specified) fastq (LONG READ ONLY)
+        ASSEMBLY (LENGTH_FILT.out[0], [], genome_size)
         all_assemblies   = ASSEMBLY.out[0]
     ch_versions = ch_versions.mix(ASSEMBLY.out.versions)   
     }
@@ -127,16 +123,10 @@ workflow GENOMEASSEMBLY {
    ch_summtxt = Channel.fromPath(params.summary_txt)
 
     if ( params.shortread == true ) {
-
-        QC_1 (
-            ASSEMBLY.out[0], LENGTH_FILT.out[0], ch_summtxt, READ_QC2.out[0], READ_QC.out[3]
-        )
+        QC_1 (ASSEMBLY.out[0], LENGTH_FILT.out[0], ch_summtxt, READ_QC2.out[0], READ_QC.out[4])
     ch_versions = ch_versions.mix(QC_1.out.versions)
-    }
-    else {
-        QC_1 (
-            ASSEMBLY.out[0], LENGTH_FILT.out[0], ch_summtxt, [], READ_QC.out[3]
-        )
+    } else {
+        QC_1 (ASSEMBLY.out[0], LENGTH_FILT.out[0], ch_summtxt, [], READ_QC.out[4])
     ch_versions = ch_versions.mix(QC_1.out.versions)
     }
 
@@ -144,9 +134,7 @@ workflow GENOMEASSEMBLY {
 
     //polish flye assembly with medaka
     if ( params.flye == true ) {
-        POLISH (
-            ASSEMBLY.out[3], ASSEMBLY.out[1]
-        )
+        POLISH (ASSEMBLY.out[3], ASSEMBLY.out[1], params.model)
         lr_polish   = POLISH.out[0]
 
         lr_polish
@@ -158,9 +146,7 @@ workflow GENOMEASSEMBLY {
 
     //align flye assembly to short reads and polish with POLCA if short reads are available
     if ( params.flye == true && params.shortread == true) {
-        POLISH2 (
-            ASSEMBLY.out[3], READ_QC2.out[1] //replace with aligned flye assembly (which one?)
-        )
+        POLISH2 (ASSEMBLY.out[3], READ_QC2.out[1])
         sr_polish   = POLISH2.out[0]
 
         sr_polish
@@ -171,50 +157,50 @@ workflow GENOMEASSEMBLY {
         polca_polish
             .concat(medaka_polish, all_assemblies)
             .set{ polished_assemblies }
-        polished_assemblies.view()
 
     ch_versions = ch_versions.mix(POLISH2.out.versions)
-    }
-    else {
+    } else {
         medaka_polish
             .concat(all_assemblies)
             .set{ polished_assemblies }
-        polished_assemblies.view()
     }
 
     if ( params.shortread == true ) {
-    QC_2 (
-        polished_assemblies, ASSEMBLY.out[1], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], READ_QC.out[3]
-    )
+        QC_2 (polished_assemblies, ASSEMBLY.out[1], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], READ_QC.out[4])
     ch_versions = ch_versions.mix(QC_2.out.versions)
-    }
-    else{
-    QC_2 (
-        polished_assemblies, ASSEMBLY.out[1], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], [], QC_1.out[2], READ_QC.out[3]
-    )
+    } else {
+        QC_2 (polished_assemblies, ASSEMBLY.out[1], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], [], QC_1.out[2], READ_QC.out[4])
     ch_versions = ch_versions.mix(QC_2.out.versions)
     }
 
-    DUPS (
-        polished_assemblies, LENGTH_FILT.out[0]
-    )
-    ch_versions = ch_versions.mix(DUPS.out.versions)
+    HAPS (polished_assemblies, LENGTH_FILT.out[0])
+    ch_versions = ch_versions.mix(HAPS.out.versions)
 
-   // QC_3 (
-     //   PURGE.out[0], ASSEMBLY.out[1], QC_1.out[0]
-    //)
-       // ch_versions = ch_versions.mix(QC_3.out.versions)
+    if ( params.shortread == true ) {
+        QC_3 (HAPS.out[0], ASSEMBLY.out[1], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], READ_QC2.out[0], READ_QC.out[4])
+    ch_versions = ch_versions.mix(QC_3.out.versions)
+    } else {
+        QC_3 (HAPS.out[0], ASSEMBLY.out[1], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], [], READ_QC.out[4])  
+    }
+        
+    if ( params.ragtag_scaffold == true ) {
+    ch_reference = Channel.fromPath(params.ragtag_reference)
+        SCAFFOLD (HAPS.out[0], ch_reference)
+    ch_versions = ch_versions.mix(SCAFFOLD.out.versions)
+    }
 
-    //if ( params.ragtag_scaffold == true ) {
-       // ch_reference = Channel.fromPath(params.ragtag_reference)
-      //  SCAFFOLD (
-            //PURGE.out[0], ch_reference
-        //)
-       // ch_versions = ch_versions.mix(SCAFFOLD.out.versions)
-    //}
+    if (params.ragtag_scaffold == true && params.shortread == true) {
+        QC_4 (SCAFFOLD.out[0], ASSEMBLY.out[1], ch_summtxt, QC_3.out[1], QC_3.out[2], QC_3.out[3], READ_QC2.out[0], READ_QC.out[4]) 
+    } else if (params.ragtag_scaffold == true && params.shortread != true){
+        QC_4 (SCAFFOLD.out[0], ASSEMBLY.out[1], ch_summtxt, QC_3.out[1], QC_3.out[2], QC_3.out[3], [], READ_QC.out[4])  
+    }
 
-    //OUTPUT (ch_quast, ch_busco, ch_merqury)
-   // assembly_stats  =   OUTPUT.out.assemblyStats
+    if ( params.ragtag_scaffold == true ) {
+        OUTPUT (QC_4.out[1], QC_4.out[2], QC_4.out[3])
+    } else {
+        OUTPUT (QC_3.out[1], QC_3.out[2], QC_3.out[3])
+    }
+    assembly_stats  =   OUTPUT.out.assemblyStats
     //
     // MODULE: Run FastQC
     //
