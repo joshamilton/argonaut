@@ -4,12 +4,13 @@ process MEDAKA {
 
     conda "bioconda::medaka=1.4.4"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/medaka:1.4.4--py38h130def0_0' :
-        'biocontainers/medaka:1.4.4--py38h130def0_0' }"
+        'https://depot.galaxyproject.org/singularity/medaka:1.8.0--py39h771796b_0' :
+        'biocontainers/medaka:1.8.0--py39h771796b_0' }"
 
     input:
     tuple val(meta), path(reads)
     tuple val(meta), path(assembly)
+    val model
 
     output:
     path("*polish.fa")              , emit: assembly
@@ -26,6 +27,7 @@ process MEDAKA {
         -t $task.cpus \\
         -i $reads \\
         -d $assembly \\
+        -m $model
         $args
     
     cd medaka

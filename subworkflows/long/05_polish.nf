@@ -5,11 +5,12 @@ workflow POLISH {
     take:
         flye_assembly
         fastq_filt
+        model
     main:
 
     ch_versions = Channel.empty() 
 
-        MEDAKA (fastq_filt, flye_assembly)
+        MEDAKA (fastq_filt, flye_assembly, model)
 
     emit:
     
