@@ -1,9 +1,9 @@
-# nf-core/genomeassembly: Documentation
+# emilytrybulec/genomeassembly: Documentation
 
 The nf-core/genomeassembly documentation is split into the following pages:
 
 - [Usage](usage.md)
-  - An overview of how the pipeline works, how to run it and a description of all of the different command-line flags.
+  - An overview of how the pipeline works and how to run it.
 - [Output](output.md)
   - An overview of the different results produced by the pipeline and how to interpret them.
 

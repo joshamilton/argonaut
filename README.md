@@ -13,26 +13,28 @@
 
 <!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
+<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
 
 ## Pipeline Summary
 
 Long Read Assembly
-1. Read QC and Contaminant Filtering([`Nanoplot`](https://github.com/wdecoster/NanoPlot),[`Centrifuge`](https://ccb.jhu.edu/software/centrifuge/))
-2. Assembly([`Flye`](https://github.com/fenderglass/Flye),[`MaSuRCA`](https://github.com/alekseyzimin/masurca),[`Canu`](https://github.com/marbl/canu))
+1. A: Read QC and Contaminant Filtering([`Nanoplot`](https://github.com/wdecoster/NanoPlot),[`KmerFreq`](https://github.com/fanagislab/kmerfreq), [`GCE`](https://github.com/fanagislab/GCE), [`Centrifuge`](https://ccb.jhu.edu/software/centrifuge/), [`Recentrifuge`](https://github.com/khyox/recentrifuge))
+1. B: Length Filtering (optional)([`Bioawk`](https://github.com/lh3/bioawk), [`Nanoplot`](https://github.com/wdecoster/NanoPlot))
+2. Assembly([`Flye`](https://github.com/fenderglass/Flye),[`MaSuRCA`](https://github.com/alekseyzimin/masurca), [`Canu`](https://github.com/marbl/canu))
 3. Assembly QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
 4. Polish([`Medaka`](https://github.com/nanoporetech/medaka))
 5. Polish QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
-6. Purge([`PurgeDups`](https://github.com/dfguan/purge_dups))
-7. Final QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
-8. Scaffolding([`RagTag`](https://github.com/malonge/RagTag))
+6. Purge([`PurgeHaplotigs`](https://bitbucket.org/mroachawri/purge_haplotigs/src/master/))
+7. Purge QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
+8. Scaffolding (optional)([`RagTag`](https://github.com/malonge/RagTag))
+9. Final QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
 
 Short Read Assembly (optional)
-1. Read QC, Contaminant Filtering, Adaptor Trimming([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/),[`GenomeScope`](http://qb.cshl.edu/genomescope/),[`Kraken2`](https://ccb.jhu.edu/software/kraken2/),[`FastP`](https://github.com/OpenGene/fastp),[`Jellyfish`](https://github.com/gmarcais/Jellyfish))
+1. Read QC, Contaminant Filtering, Adaptor Trimming([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/),[`GenomeScope`](http://qb.cshl.edu/genomescope/),[`Jellyfish`](https://github.com/gmarcais/Jellyfish),[`Kraken2`](https://ccb.jhu.edu/software/kraken2/), [`Recentrifuge`](https://github.com/khyox/recentrifuge),[`FastP`](https://github.com/OpenGene/fastp))
 2. Align([`BWA`](https://bio-bwa.sourceforge.net/bwa.shtml))
 3. Polish([`POLCA`](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007981))
-
-## Running the Pipeline
+Hybrid assembly is conducted within the long read assembly subworkflow, and downstream quality checking is also conducted in the long read QC subworkflows.
 
 First, prepare a samplesheet with your long read input data that looks as follows:
 
@@ -40,7 +42,7 @@ First, prepare a samplesheet with your long read input data that looks as follow
 
 ```csv
 sample,fastq_1,fastq_2,single_end
-CONTROL_REP1,AEG588A1_S1_L002.fastq.gz,,TRUE
+CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq,,TRUE
 ```
 
 Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
@@ -51,18 +53,20 @@ If short reads are available, prepare a second samplesheet with your short read 
 
 ```csv
 sample,fastq_1,fastq_2,single_end
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,FALSE
+CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq,AEG588A1_S1_L002_R2_001.fastq,FALSE
 ```
 
-Specify your type of input, assemblers to run, and more in the [`nextflow.config`](https://github.com/emilytrybulec/genomeassembly/blob/9ffc81e56f1b7ade3e31cfac6280b8f6d446c8cb/nextflow.config) file. Ensure that the file is correct, especially regarding the boolean statements about input and assembly. Construct a params.yaml file to specify paths to your samplesheets and databases. An example [`params.yaml`](https://github.com/emilytrybulec/genomeassembly/blob/9ffc81e56f1b7ade3e31cfac6280b8f6d446c8cb/params.yaml) is available for your reference.
+Next, create a params.yaml file to specify the paths to your samplesheet(s), contaminant databases, etc. Most likely, a config file will also need to be made to modify the default settings of the pipeline. Please look through the [nextflow.config](nextflow.config) file to browse the defaults and specify which you would like to change in you my_config file. More information is located in the [usage](usage.md) section.
 
 Now, you can run the pipeline using:
 
+
 ```bash
-nextflow run genomeassembly \
-   -params-file genomeassembly/params.yaml \
-   -profile <docker/singularity/test/.../institute> \
-   --outdir <OUTDIR>
+nextflow run emilytrybulec/genomeassembly \
+  -r main \
+  -params-file params.yaml \
+  -c my_config \
+  -profile singularity,xanadu \
 ```
 
 > **Warning:**
@@ -79,26 +83,16 @@ nf-core/genomeassembly was originally written by emilytrybulec.
 We thank the following people for their extensive assistance in the development of this pipeline:
 
 > University of Connecticut:
-<pre>
-Biodiversity and Conservation Genomics Center
-
-     Jill Wegrzyn
-
-     Cynthia Webster
-
-     Rachel O’Neill
-
-     Michelle Neitzey
-
-Computational Biology Core
-
-     Noah Reid
-
-     Gabe Barrett
-</pre>
+> Biodiversity and Conservation Genomics Center
+     > Jill Wegrzyn
+     > Cynthia Webster
+     > Rachel O’Neill
+     > Michelle Neitzey
+> Computational Biology Core
+     > Noah Reid
+     > Gabe Barrett
 
 > nf-core Community
-
 > Zbigniew Trybulec
 
 

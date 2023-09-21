@@ -55,6 +55,9 @@ include { QC_4 } from '../subworkflows/long/10_qc_4'
 include { INPUT_CHECK2 } from '../subworkflows/short/01_input_check'
 include { READ_QC2 } from '../subworkflows/short/02_read_qc'
 include { POLISH2 } from '../subworkflows/short/03_polish'
+
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
@@ -201,17 +204,10 @@ workflow GENOMEASSEMBLY {
         OUTPUT (QC_3.out[1], QC_3.out[2], QC_3.out[3])
     }
     assembly_stats  =   OUTPUT.out.assemblyStats
-    //
-    // MODULE: Run FastQC
-    //
-   // FASTQC (
-   //     INPUT_CHECK.out.reads
-   // )
-   // ch_versions = ch_versions.mix(FASTQC.out.versions.first())
 
-   // CUSTOM_DUMPSOFTWAREVERSIONS (
-   //     ch_versions.unique().collectFile(name: 'collated_versions.yml')
-   // )
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
+    )
 
     //
     // MODULE: MultiQC

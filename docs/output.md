@@ -1,12 +1,10 @@
-# nf-core/genomeassembly: Output
+# emilytrybulec/genomeassembly: Output
 
 ## Introduction
 
-This document describes the output produced by the pipeline. Most of the plots are taken from the MultiQC report, which summarises results at the end of the pipeline.
+This document describes the output produced by the pipeline. All of the programs being run will have their own folder in the output directory specified by your params.yaml file.
 
-The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
-
-<!-- TODO nf-core: Write this documentation describing your workflow's output -->
+The directories created after the pipeline has finished will depend on which options are selected in the configuration and which programs are run. All paths are relative to the top-level results directory.
 
 ## Pipeline overview
 
