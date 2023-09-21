@@ -17,8 +17,8 @@ process ALIGN {
     """
     samtools fastq $subreads | \
         minimap2 -t ${task.cpus} -ax map-pb --secondary=no $contigs - \
-        | samtools sort -m 10G -o ${subreads.baseName}.aligned.bam
-    samtools index ${subreads.baseName}.aligned.bam
+        | samtools sort -m 10G -o ${contigs.baseName}.aligned.bam
+    samtools index ${contigs.baseName}.aligned.bam
     """
 }
 
@@ -56,10 +56,10 @@ process PURGE {
     val mid
     val high
     tuple val(meta), path(assembly)
-    tuple val(meta), path(gencov)
+    path gencov
 
     output:
-    tuple val(meta), path("curated.*"), emit: purged
+    tuple val(meta), path("curated.artefacts.fasta"), emit: purged
 
     """
     purge_haplotigs cov -in $gencov \

@@ -19,7 +19,7 @@ process RAGTAG {
     def VERSION = '2.1.0'
 
     """
-    ragtag.py scaffold $reference $fasta -f 1000 -o .
+    ragtag.py scaffold $reference $fasta -f 1000 -o ${fasta.baseName}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
