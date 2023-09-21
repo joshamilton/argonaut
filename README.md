@@ -56,7 +56,7 @@ sample,fastq_1,fastq_2,single_end
 CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq,AEG588A1_S1_L002_R2_001.fastq,FALSE
 ```
 
-Next, create a params.yaml file to specify the paths to your samplesheet(s), contaminant databases, etc. Most likely, a config file will also need to be made to modify the default settings of the pipeline. Please look through the [nextflow.config](nextflow.config) file to browse the defaults and specify which you would like to change in you my_config file. More information is located in the [usage](usage.md) section.
+Next, create a params.yaml file to specify the paths to your samplesheet(s), contaminant databases, etc. Most likely, a config file will also need to be made to modify the default settings of the pipeline. Please look through the [nextflow.config](nextflow.config) file to browse the defaults and specify which you would like to change in you my_config file. More information is located in the [usage](docs/usage.md) section.
 
 Now, you can run the pipeline using:
 
