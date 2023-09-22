@@ -1,4 +1,4 @@
-include { RAGTAG } from '../../modules/nf-core/purgedups/pbcstat/main' 
+include { RAGTAG } from '../../modules/local/ragtag' 
 
 workflow SCAFFOLD {
 

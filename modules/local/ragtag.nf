@@ -8,7 +8,7 @@ process RAGTAG {
 
     input:
     tuple val(meta), path(fasta)
-    tuple val(meta), path(reference)
+    path reference
 
     output:
     path "*.fasta"             , emit: scaffolded_assembly
