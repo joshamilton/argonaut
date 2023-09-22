@@ -74,7 +74,7 @@ nextflow run emilytrybulec/genomeassembly \
 > provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
 
 ## Pipeline output
-
+All of the output from the programs run in the pipeline pipeline will be located in the out directory specified in params.yaml. Information about interpreting output is located in the [output](docs/output.md) section.
 
 ## Credits
 
