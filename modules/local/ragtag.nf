@@ -11,7 +11,7 @@ process RAGTAG {
     tuple val(meta), path(reference)
 
     output:
-    tuple val(meta), path("*.scaffold.fasta")              , emit: scaffolded_assembly
+    path "*.fasta"             , emit: scaffolded_assembly
     tuple val(meta), path("*.stats")                 , emit: summary
     path  "versions.yml"                           , emit: versions
 
@@ -20,6 +20,8 @@ process RAGTAG {
 
     """
     ragtag.py scaffold $reference $fasta -f 1000 -o ${fasta.baseName}
+
+    mv ragtag.scaffold.fasta ragtag.scaffold.${fasta.baseName}.fasta
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -65,5 +65,7 @@ process PURGE {
     purge_haplotigs cov -in $gencov \
         -low $low -mid $mid -high $high
     purge_haplotigs purge -t $task.cpus -g $assembly -c coverage_stats.csv
+
+    mv curated.fasta purge_${assembly.baseName}.fasta
     """
 }

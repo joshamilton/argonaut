@@ -20,8 +20,11 @@ workflow HAPS {
         } else if (params.low && params.mid && params.high){
 
         PURGE(params.low, params.mid, params.high, assembly, params.gencov)
-        assemblies_polished_purged      = PURGE.out.purged           
+        purged_assemblies      = PURGE.out.purged           
         
+        purged_assemblies
+                .map { file -> tuple([id: file.baseName], file)  }
+                .set { assemblies_polished_purged }
         }
 
     emit:
