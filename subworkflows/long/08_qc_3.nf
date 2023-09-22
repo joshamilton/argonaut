@@ -16,6 +16,8 @@ workflow QC_3 {
         ch_quast
         ch_busco
         ch_merqury
+        shortreads
+        genome_size_est
 
     main:
 
@@ -27,12 +29,12 @@ workflow QC_3 {
         ch_index = MINIMAP2_INDEX.out.index
 
         // align reads
-        MINIMAP2_ALIGN(fastq_filt, assemblies.map{it[1]}, params.bam_format, params.cigar_paf_format, params.cigar_bam)
-        ch_align_bam = MINIMAP2_ALIGN.out.bam
+        MINIMAP2_ALIGN(fastq_filt, assemblies, params.bam_format, params.cigar_paf_format, params.cigar_bam)
+        ch_bam = MINIMAP2_ALIGN.out.bam
         
         // run quast
         QUAST(
-            assemblies.map{it -> it[1]}.collect() // this has to be aggregated because of how QUAST makes the output directory for reporting stats
+            assemblies
         )
         ch_quast
             .concat(QUAST.out.results)
@@ -46,13 +48,12 @@ workflow QC_3 {
             .set { ch_busco }
         ch_versions = ch_versions.mix(BUSCO.out.versions)
 
-        SAMTOOLS_INDEX (MINIMAP2_ALIGN.out.bam)
-    
-        // create summary txt channel with meta id and run pycoQC
+        SAMTOOLS_INDEX (ch_bam)
+
         ch_summarytxt = summarytxt.map { file -> tuple(file.baseName, file) }
-        
+
         PYCOQC (
-            ch_summarytxt, MINIMAP2_ALIGN.out.bam, SAMTOOLS_INDEX.out.bai
+            ch_summarytxt, ch_bam, SAMTOOLS_INDEX.out.bai
         )
         ch_versions = ch_versions.mix(PYCOQC.out.versions)
 
@@ -63,17 +64,19 @@ workflow QC_3 {
         }
 
         MERQURY (
-            assemblies, MERYL_COUNT.out.meryl_db
+            assemblies, MERYL_COUNT.out.meryl_db, genome_size_est, params.tolerable_collision
         )
         ch_merqury
             .concat(MERQURY.out.assembly_qv)
             .set { ch_merqury }
         ch_versions = ch_versions.mix(MERQURY.out.versions)
 
+        ch_quast.view()
+        ch_busco.view()
+        ch_merqury.view()
+
     emit:
         ch_index
-        ch_align_bam
-        ch_align_paf
         ch_quast
         ch_busco
         ch_merqury

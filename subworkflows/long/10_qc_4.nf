@@ -71,10 +71,6 @@ workflow QC_4 {
             .set { ch_merqury }
         ch_versions = ch_versions.mix(MERQURY.out.versions)
 
-        ch_quast.view()
-        ch_busco.view()
-        ch_merqury.view()
-
     emit:
         ch_index
         ch_quast
