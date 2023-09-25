@@ -21,6 +21,7 @@ process RAGTAG {
     """
     ragtag.py scaffold $reference $fasta -f 1000 -o ${fasta.baseName}
 
+    cd ${fasta.baseName}
     mv ragtag.scaffold.fasta ragtag.scaffold.${fasta.baseName}.fasta
 
     cat <<-END_VERSIONS > versions.yml

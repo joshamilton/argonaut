@@ -12,10 +12,16 @@ workflow SCAFFOLD {
 
         //optional scaffolding with the same species or most closely related species available
         RAGTAG (assemblies, reference)
+        scaffolded_assemblies = RAGTAG.out.scaffolded_assembly           
 
+        scaffolded_assemblies
+                .map { file -> tuple([id: file.baseName], file)  }
+                .set { assembly_polished_purged_scaffolded }
+
+        
     emit:
     
-        assembly_polished_purged_scaffolded      = RAGTAG.out.scaffolded_assembly           
+        assembly_polished_purged_scaffolded               
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
