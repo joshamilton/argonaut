@@ -11,6 +11,7 @@ process MERQURY {
     tuple val(meta), path(assembly)
     tuple val(meta), path(meryl_db)
     tuple val(meta), path(genome_size_est)
+    val tolerable_collision
 
     output:
     tuple val(meta), path("*_only.bed")          , emit: assembly_only_kmers_bed
@@ -52,7 +53,7 @@ process MERQURY {
 
     genome_size=\$(echo "\$(<${genome_size_est})")
 
-    best_k.sh \$genome_size 0.1 > best_kmer_num.txt
+    /usr/local/share/merqury/best_k.sh \$genome_size $tolerable_collision > best_kmer_num.txt
 
     merqury.sh \\
         $meryl_db \\
