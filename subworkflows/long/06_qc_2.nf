@@ -69,7 +69,7 @@ workflow QC_2 {
         }
 
         MERQURY (
-            polished_assemblies, MERYL_COUNT.out.meryl_db, genome_size_est
+            polished_assemblies, MERYL_COUNT.out.meryl_db, genome_size_est, params.tolerable_collision
         )
         ch_merqury
             .concat(MERQURY.out.assembly_qv)
