@@ -5,11 +5,238 @@
     "description": "pipeline for ONT long read genome assembly",
     "type": "object",
     "definitions": {
+        "scaffolding_options": {
+            "title": "Scaffolding options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "ragtag_scaffold": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Option to run scaffolding on polished and purged assemblies"
+                },
+                "ragtag_reference": {
+                    "type": "string",
+                    "description": "Path to reference genome for scaffolding (must be the same species or closely related)"
+                }
+            }
+        },
+        "purge_options": {
+            "title": "Purge options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "low": {
+                    "type": "integer",
+                    "description": "Low threshold of purge histogram, must be inputted after histogram is generated to reduce erroneous duplication with purge"
+                },
+                "mid": {
+                    "type": "integer",
+                    "description": "Mid threshold of purge histogram, must be inputted after histogram is generated to reduce erroneous duplication with purge"
+                },
+                "high": {
+                    "type": "integer",
+                    "description": "High threshold of purge histogram, must be inputted after histogram is generated to reduce erroneous duplication with purge"
+                },
+                "gencov": {
+                    "type": "string",
+                    "description": "Path to purge histogram, must be inputted after histogram is generated to reduce erroneous duplication with purge"
+                }
+            }
+        },
+        "assembly_qc_options": {
+            "title": "Assembly QC options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "bam_format": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Minimap2 option to save alignment as *.bam file"
+                },
+                "cigar_paf_format": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Minimap2 option that output CIGAR should be in PAF format"
+                },
+                "cigar_bam": {
+                    "type": "boolean",
+                    "description": "Minimap2 option that output CIGAR should be in BAM format"
+                },
+                "tolerable_collision": {
+                    "type": "number",
+                    "default": 0.001,
+                    "description": "Tolerable collision rate for sequencing (ex. 0.001)"
+                }
+            }
+        },
+        "assembly_options": {
+            "title": "Assembly options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "flye": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Option to run flye assembly"
+                },
+                "flye_mode": {
+                    "type": "string",
+                    "default": "\"--nano-raw\"",
+                    "description": "Mode of long read sequencing (ex. \"--nano-raw\")"
+                },
+                "canu": {
+                    "type": "boolean",
+                    "description": "Option to run canu assembly (requires high quality reads with sufficient coverage)"
+                },
+                "canu_mode": {
+                    "type": "string",
+                    "default": "\"-nanopore\"",
+                    "description": "Mode of long read sequencing (ex. \"-nanopore\")"
+                },
+                "masurca": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Option to run MaSuRCA assembly (requires long and short reads)"
+                },
+                "ex_assembly": {
+                    "type": "boolean",
+                    "description": "Option to input existing assembly in *.fasta format"
+                },
+                "existing_assembly": {
+                    "type": "string",
+                    "description": "Path to existing assembly in *.fasta format"
+                }
+            }
+        },
+        "short_read_qc_options": {
+            "title": "Short read QC options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "adapter_fasta": {
+                    "type": "string",
+                    "default": "[]",
+                    "description": "Fastp option to provide a file with the adapter sequence (optional)"
+                },
+                "save_trimmed_fail": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Fastp option to save trimmed files that failed to pass trimming thresholds as *.fail.fastq.gz"
+                },
+                "save_merged": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Fastp option to save all merged reads to *.merged.fastq.gz"
+                },
+                "kraken_db": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "Path to Kraken2 database containing contaminant sequences"
+                },
+                "save_output_fastqs": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Kraken2 option to save classified and unclassified *.fastq files"
+                },
+                "save_reads_assignment": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Kraken2 option to save a file containing taxonomic classification of each input read"
+                }
+            }
+        },
+        "long_read_qc_options": {
+            "title": "Long read QC options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "centrifuge_db": {
+                    "type": "string",
+                    "description": "Path to centrifuge database containing contaminant sequences"
+                },
+                "save_unaligned": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Centrifuge option to save the unaligned sequences"
+                },
+                "save_aligned": {
+                    "type": "boolean",
+                    "description": "Centrifuge option to save the aligned sequences (contaminants)"
+                },
+                "sam_format": {
+                    "type": "boolean",
+                    "description": "Centrifuge option to save in sam format"
+                },
+                "min_readlength": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Option to set minimum read length for quality cutoff"
+                },
+                "busco_lineage": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "Lineage for BUSCO (ex. \"metazoa-odb10\")"
+                },
+                "rcf_db": {
+                    "type": "string",
+                    "description": "Path to Recentrifuge database containing contaminant information"
+                }
+            }
+        },
+        "assembly_input_options": {
+            "title": "Assembly input options",
+            "type": "object",
+            "description": "Define what kind of input data the pipeline should expect and where to find it.",
+            "default": "",
+            "properties": {
+                "longread": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Boolean whether long reads are available for assembly"
+                },
+                "input": {
+                    "type": "string",
+                    "description": "Path to comma-separated file containing information about the long reads"
+                },
+                "shortread": {
+                    "type": "boolean",
+                    "description": "Boolean whether short reads are available for assembly"
+                },
+                "shortinput": {
+                    "type": "string",
+                    "description": "Path to comma-separated file containing information about the short reads"
+                },
+                "summary_txt": {
+                    "type": "string",
+                    "description": "Path to sequencing summary from Nanopore (*.txt)"
+                },
+                "model": {
+                    "type": "string",
+                    "description": "ONT flow cell model (ex. \"r1041_e82_400bps_sup_g615\")"
+                },
+                "kmer_num": {
+                    "type": "integer",
+                    "default": 21,
+                    "description": "Kmer size for genome size estimation (ex. 21)"
+                },
+                "manual_genome_size": {
+                    "type": "string",
+                    "description": "Optional genome size input that overrides estimated genome size generated by the pipeline (ex. 1.1G)"
+                }
+            }
+        },
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
             "fa_icon": "fas fa-terminal",
-            "description": "Define where the pipeline should find input data and save output data.",
+            "description": "Define where the pipeline should save output data.",
             "required": ["outdir"],
             "properties": {
                 "outdir": {
@@ -24,11 +251,6 @@
                     "fa_icon": "fas fa-envelope",
                     "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
-                },
-                "multiqc_title": {
-                    "type": "string",
-                    "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
-                    "fa_icon": "fas fa-file-signature"
                 }
             }
         },
@@ -178,6 +400,11 @@
                     "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
                     "hidden": true
                 },
+                "multiqc_title": {
+                    "type": "string",
+                    "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
+                    "fa_icon": "fas fa-file-signature"
+                },
                 "multiqc_config": {
                     "type": "string",
                     "description": "Custom config file to supply to MultiQC.",
@@ -221,6 +448,27 @@
     },
     "allOf": [
         {
+            "$ref": "#/definitions/scaffolding_options"
+        },
+        {
+            "$ref": "#/definitions/purge_options"
+        },
+        {
+            "$ref": "#/definitions/assembly_qc_options"
+        },
+        {
+            "$ref": "#/definitions/assembly_options"
+        },
+        {
+            "$ref": "#/definitions/short_read_qc_options"
+        },
+        {
+            "$ref": "#/definitions/long_read_qc_options"
+        },
+        {
+            "$ref": "#/definitions/assembly_input_options"
+        },
+        {
             "$ref": "#/definitions/input_output_options"
         },
         {
@@ -232,148 +480,5 @@
         {
             "$ref": "#/definitions/generic_options"
         }
-    ],
-    "properties": {
-        "longread": {
-            "type": "boolean",
-            "default": true,
-            "description": "Boolean whether long reads are available for assembly"
-        },
-        "input": {
-            "type": "string"
-        },
-        "shortread": {
-            "type": "boolean",
-            "description": "Boolean whether short reads are available for assembly"
-        },
-        "shortinput": {
-            "type": "string",
-            "description": "Path to comma-separated file containing information about the short reads"
-        },
-        "summary_txt": {
-            "type": "string",
-            "description": "Path to sequencing summary from Nanopore (*.txt)"
-        },
-        "centrifuge_db": {
-            "type": "string",
-            "description": "Path to centrifuge database containing contaminant sequences"
-        },
-        "save_unaligned": {
-            "type": "boolean",
-            "default": true,
-            "description": "Centrifuge option to save the unaligned sequences"
-        },
-        "save_aligned": {
-            "type": "boolean",
-            "description": "Centrifuge option to save the aligned sequences (contaminants)"
-        },
-        "sam_format": {
-            "type": "boolean",
-            "description": "Centrifuge option to save in sam format"
-        },
-        "min_readlength": {
-            "type": "integer",
-            "default": 0,
-            "description": "Option to set minimum read length for quality cutoff"
-        },
-        "flye": {
-            "type": "boolean",
-            "default": true,
-            "description": "Option to run flye assembly"
-        },
-        "flye_mode": {
-            "type": "string",
-            "default": "None",
-            "description": "Mode of long read sequencing (ex. \"--nano-raw\")"
-        },
-        "canu": {
-            "type": "boolean",
-            "description": "Option to run canu assembly (requires high quality reads with sufficient coverage)"
-        },
-        "canu_mode": {
-            "type": "string",
-            "default": "None",
-            "description": "Mode of long read sequencing (ex. \"-nanopore\")"
-        },
-        "masurca": {
-            "type": "boolean",
-            "default": true,
-            "description": "Option to run MaSuRCA assembly (requires long and short reads)"
-        },
-        "ex_assembly": {
-            "type": "boolean",
-            "description": "Option to input existing assembly in *.fasta format"
-        },
-        "existing_assembly": {
-            "type": "string",
-            "description": "Path to existing assembly in *.fasta format"
-        },
-        "bam_format": {
-            "type": "boolean",
-            "default": true,
-            "description": "Minimap2 option to save alignment as *.bam file"
-        },
-        "cigar_paf_format": {
-            "type": "boolean",
-            "default": true,
-            "description": "Minimap2 option that output CIGAR should be in PAF format"
-        },
-        "cigar_bam": {
-            "type": "boolean",
-            "description": "Minimap2 option that output CIGAR should be in BAM format"
-        },
-        "busco_lineage": {
-            "type": "string",
-            "default": "None",
-            "description": "Lineage for BUSCO (ex. \"metazoa-odb10\")"
-        },
-        "adapter_fasta": {
-            "type": "string",
-            "default": "[]",
-            "description": "Fastp option to provide a file with the adapter sequence (optional)"
-        },
-        "save_trimmed_fail": {
-            "type": "boolean",
-            "default": true,
-            "description": "Fastp option to save trimmed files that failed to pass trimming thresholds as *.fail.fastq.gz"
-        },
-        "save_merged": {
-            "type": "boolean",
-            "default": true,
-            "description": "Fastp option to save all merged reads to *.merged.fastq.gz"
-        },
-        "kraken_db": {
-            "type": "string",
-            "default": "None",
-            "description": "Path to Kraken2 database containing contaminant sequences"
-        },
-        "save_output_fastqs": {
-            "type": "boolean",
-            "default": true,
-            "description": "Kraken2 option to save classified and unclassified *.fastq files"
-        },
-        "save_reads_assignment": {
-            "type": "boolean",
-            "default": true,
-            "description": "Kraken2 option to save a file containing taxonomic classification of each input read"
-        },
-        "rcf_db": {
-            "type": "string",
-            "description": "Path to Recentrifuge database containing contaminant information"
-        },
-        "kmer_num": {
-            "type": "integer",
-            "default": 21,
-            "description": "Kmer size for genome size estimation (ex. 21)"
-        },
-        "ragtag_scaffold": {
-            "type": "boolean",
-            "default": true,
-            "description": "Option to run scaffolding on polished and purged assemblies"
-        },
-        "ragtag_reference": {
-            "type": "string",
-            "description": "Path to reference genome for scaffolding (must be the same species or closely related)"
-        }
-    }
+    ]
 }
