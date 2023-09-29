@@ -32,9 +32,9 @@ sample,fastq_1,fastq_2,single_end
 Mo_short,SRR10443809_1.fastq,SRR10443809_2.fastq,FALSE
 ```
 
-| `sample`  | Custom sample name. 
-| `fastq_1` | Full path to FastQ file for ONT long reads or Illumina short reads 1. File has to be unzipped and have the extension ".fastq" or ".fq".                                                             |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq" or ".fq".                                                             |
+| `sample`  | Custom sample name.  
+| `fastq_1` | Full path to FastQ file for ONT long reads or Illumina short reads 1. File has to be unzipped and have the extension ".fastq" or ".fq".  
+| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq" or ".fq".
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
