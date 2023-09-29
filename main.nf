@@ -33,6 +33,7 @@ if (params.help){
 
 nextflow.enable.dsl = 2
 
+params.fastq = WorkflowMain.getGenomeAttribute(params, 'fastq')
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     VALIDATE & PRINT PARAMETER SUMMARY
