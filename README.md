@@ -85,14 +85,14 @@ We thank the following people for their extensive assistance in the development 
 University of Connecticut:  
   
 *Biodiversity and Conservation Genomics Center  
-     &nbsp*Jill Wegrzyn  
-     &nbsp*Cynthia Webster  
-     &nbsp*Rachel O’Neill  
-     &nbsp*Michelle Neitzey  
+&nbsp*Jill Wegrzyn  
+&nbsp*Cynthia Webster  
+&nbsp*Rachel O’Neill  
+&nbsp*Michelle Neitzey  
   
 *Computational Biology Core  
-     &nbsp*Noah Reid  
-     &nbsp*Gabe Barrett  
+&nbsp*Noah Reid  
+&nbsp*Gabe Barrett  
 
 nf-core Community  
   
