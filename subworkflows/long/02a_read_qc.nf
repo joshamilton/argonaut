@@ -19,12 +19,6 @@ workflow READ_QC {
     
     ch_versions = Channel.empty()
 
-        reads.view()
-
-        if(reads =~ /.gz/) {
-            GUNZIP(reads)
-        }
-
         NANOPLOT(reads)
 
         KMER_FREQ(reads)
