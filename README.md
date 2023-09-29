@@ -83,14 +83,16 @@ emilytrybulec/genomeassembly was originally written by Emily Trybulec.
 We thank the following people for their extensive assistance in the development of this pipeline:
 
 University of Connecticut:  
-*Biodiversity and Conservation Genomics Center 
-     *Jill Wegrzyn  
-     *Cynthia Webster  
-     *Rachel O’Neill  
-     *Michelle Neitzey  
+  
+*Biodiversity and Conservation Genomics Center  
+     &nbsp*Jill Wegrzyn  
+     &nbsp*Cynthia Webster  
+     &nbsp*Rachel O’Neill  
+     &nbsp*Michelle Neitzey  
+  
 *Computational Biology Core  
-     *Noah Reid  
-     *Gabe Barrett  
+     &nbsp*Noah Reid  
+     &nbsp*Gabe Barrett  
 
 nf-core Community  
   
