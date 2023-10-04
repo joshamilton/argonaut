@@ -102,6 +102,10 @@
 
   > Gurevich, A., Saveliev, V., Vyahhi, N., & Tesler, G. (2013). QUAST: quality assessment tool for genome assemblies. Bioinformatics (Oxford, England), 29(8), 1072–1075. https://doi.org/10.1093/bioinformatics/btt086
 
+- [Ragtag](https://github.com/malonge/RagTag)
+
+  > Alonge, M., Lebeigle, L., Kirsche, M., Jenike, K., Ou, S., Aganezov, S., Wang, X., Lippman, Z. B., Schatz, M. C., & Soyk, S. (2022). Automated assembly scaffolding using RagTag elevates a new tomato system for high-throughput genome editing. Genome biology, 23(1), 258. https://doi.org/10.1186/s13059-022-02823-7
+
 - [Recentrifuge](https://github.com/khyox/recentrifuge)
 
   > Martí J.M. (2019). Recentrifuge: Robust comparative analysis and contamination removal for metagenomics. PLOS Computational Biology 15(4): e1006967. https://doi.org/10.1371/journal.pcbi.1006967
