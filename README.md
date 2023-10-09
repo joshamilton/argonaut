@@ -94,9 +94,9 @@ University of Connecticut:
      * Noah Reid  
      * Gabe Barrett  
 
-nf-core Community  
+* nf-core Community  
   
-Zbigniew Trybulec
+* Zbigniew Trybulec
 
 
 ## Contributions and Support

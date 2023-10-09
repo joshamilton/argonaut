@@ -10,35 +10,54 @@ The directories created after the pipeline has finished will depend on which opt
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
-- [Busco](#busco) - Assembly quality checking for completeness
-- [Centrifuge](#centrifuge) - Contaminant detection for long reads
-- [Extract](#extract) - Extracting genome size estimation from kmerfreq and gce
-- [Fastp](#fastp) - Adapter trimming for short reads
-- [Fastqc](#fastqc) - Short read quality checking
-- [Flye](#flye) - Flye assembly
-- [GCE](#gce) - Genome size estimation using kmerfreq
-- [Genomescope2](#genomescope2) - Short read ploidy and genome size estimatation
-- [Gunzip](#gunzip/gzip) - Converting files from .gz to unzipped (no .gz)
-- [Gzip](#gunzip/gzip) - Converting files from unzipped to .gz
-- [Jellyfish](#jellyfish) - Short read kmer distribution
-- [Kmerfreq](#kmerfreq) - Long read kmer distribution for genome size estimation
-- [Kraken2](#kraken2) - Contaminant detection for short reads
-- [Length Filter](#lengthfilter) - Optional length filtering based on minimum read length parameter
-- [MaSuRCA](#masurca) - Hybrid assembly
-- [Medaka](#medaka) - Long read polishing of flye assembly
-- [Merqury](#merqury) - Assembly quality checking for accuracy
-- [Meryl](#meryl) - Building a database for merqury quality checking
-- [Minimap2](#minimap2) - Assemblies with aligned reads
-- [Nanoplot](#nanoplot) - Long read quality checking
-- [Output](#output) - Final quality stats (quast, busco, merqury) of all assemblies produced
-- [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
-- [POLCA](#polca) - Short read polishing of flye assembly
-- [Purge](#purge) - Purge haplotigs to reduce duplication
-- [PycoQC](#pycoqc) - Assembly quality checking with sequencing summary
-- [Quast](#quast) - Assembly quality checking for contiguity
-- [Recentrifuge](#recentrifuge) - Contaminant filtering visualization for short and long reads
-- [Samtools](#nanoplot) - Indexed Minimap2 alignments
-- [Seqkit](#seqkit) - Filtering contaminants detected by Centrifuge from long reads for downstream processing
+* LONG READ QC  
+  * [Centrifuge](#centrifuge) - Contaminant detection for long reads  
+  * [Genome Size Estimation] - Genome size estimation using kmerfreq and gce  
+    * [Kmerfreq](#kmerfreq)  
+    * [GCE](#gce)  
+  * [Length Filter](#lengthfilter) - Optional length filtering based on minimum read length parameter  
+  * [Nanoplot](#nanoplot) - Long read quality checking  
+  * [Recentrifuge](#recentrifuge) - Contaminant filtering visualization for short and long reads  
+  * [Seqkit](#seqkit) - Filtering contaminants detected by Centrifuge from long reads for downstream processing  
+  
+* SHORT READ QC  
+  * [Fastp](#fastp) - Adapter trimming for short reads  
+  * [Fastqc](#fastqc) - Short read quality checking  
+  * [Genomescope2](#genomescope2) - Short read ploidy and genome size estimatation  
+  * [Jellyfish](#jellyfish) - Short read kmer distribution  
+  * [Kraken2](#kraken2) - Contaminant detection for short reads  
+  * [Recentrifuge](#recentrifuge) - Contaminant filtering visualization for short and long reads  
+  
+* ASSEMBLY  
+  * [Canu] (#canu) - Canu assembly  
+  * [Flye](#flye) - Flye assembly  
+  * [MaSuRCA](#masurca) - Masurca assembly  
+  
+* ASSEMBLY QC  
+  * [Busco](#busco) - Assembly quality checking for completeness  
+  * [Merqury](#merqury) - Assembly quality checking for accuracy  
+  * [Meryl](#meryl) - Building a database for merqury quality checking  
+  * [Minimap2](#minimap2) - Assemblies with aligned reads  
+  * [PycoQC](#pycoqc) - Assembly quality checking with sequencing summary  
+  * [Quast](#quast) - Assembly quality checking for contiguity  
+  * [Samtools](#samtools) - Indexed Minimap2 alignments  
+  
+* POLISH  
+  * [Medaka](#medaka) - Long read polishing of flye assembly  
+  * [POLCA](#polca) - Short read (or long read) polishing of flye assembly  
+  
+* PURGE  
+  * [Align](#purge) - Alignment of raw reads to assemblies  
+  * [Histogram](#purge) - Histogram of read-depth vs count  
+  * [Purge](#purge) - Purged assembly using purge haplotigs to reduce duplication  
+  
+* OTHER  
+  * [Gunzip](#gunzip/gzip) - Converting files from .gz to unzipped (no .gz)  
+  * [Gzip](#gunzip/gzip) - Converting files from unzipped to .gz  
+  
+* [Output](#output) - Final quality stats (quast, busco, merqury) of all assemblies produced  
+* [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution  
+
 
 
 ### busco
@@ -56,23 +75,27 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 [BUSCO](https://busco.ezlab.org/) gives completeness quality metrics about your assemblies. It provides information about whether your assembly matches with known protein sequences for similar species. Please be sure to specify the correct BUSCO lineage for your species. For further reading and documentation see the [BUSCO user guide](https://busco.ezlab.org/busco_userguide.html).
 
+### canu
+
 ### centrifuge
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `centrifuge/`
-  - `centrifuge/`: Directory containting contaminant detection data
-    -`filtered_*.report.txt/`
-    -`filtered_*.results.txt/`
-    -`filtered_*.unmapped.fastq.gz/`: Centrifuge filtered reads (not used for downstream processing, as filtering with seqkit is more accurate)
-  - `kreport/`: Directory containing a kraken style report about the contaminants detected
-    -`*.txt`
+- `centrifuge/`  
+  - `centrifuge/`: Directory containting contaminant detection data  
+    -`filtered_*.report.txt/`  
+    -`filtered_*.results.txt/`  
+    -`filtered_*.unmapped.fastq.gz/`: Centrifuge filtered reads (not used for downstream processing, as filtering with seqkit is more accurate)  
+  - `kreport/`: Directory containing a kraken style text report about the contaminants detected
+  - `recentrifuge/`: Directory containting user friendly html visualization of contaminants detected
 
 </details>
 
 [Centrifuge](https://ccb.jhu.edu/software/centrifuge/) is a contaminant detection tool that generates a report summarizing which of your reads contain known bacterial, fungal, viral, etc. sequences. These reads are flagged and filtered from the reads used downstream, as they are likely contaminants. Please provide a centrifuge database containing contaminant sequences in params.yaml for the pipeline to run smoothly. For more information, please see the [Centrifuge manual](https://github.com/DaehwanKimLab/centrifuge/blob/master/MANUAL).
-Centrifuge results are summarized in the Recentrifuge out directory.
+
+[Recentrifuge](https://github.com/khyox/recentrifuge) is an interactive visualization tool for contaminant detection. An html report is generated that summarizes the results of centrifuge or kraken. For more information, see the [Recentrifuge wiki](https://github.com/khyox/recentrifuge/wiki).
+
 
 ### extract
 
@@ -231,12 +254,13 @@ The extract module uses awk and numfmt to isolate the genome size estimate for d
   - `*.kraken2.report.txt`
   - `*.unclassified_1.fastq.gz`
   - `*.unclassified_2.fastq.gz`
-
+- `recentrifuge/`: Directory containting user friendly html visualization of contaminants detected
 
 </details>
 
 [Kraken2](https://github.com/DerrickWood/kraken2/tree/master) is used to detect contaminant sequences in short reads. Reads flagged as contaminants are filtered from the reads used downstream. Please provide a kraken2 database containing contaminant sequences in params.yaml for the pipeline to run smoothly. For more information, please see the [Kraken2 user manual](https://github.com/DerrickWood/kraken2/blob/master/docs/MANUAL.markdown).
-Kraken2 results are summarized in the Recentrifuge out directory.
+
+[Recentrifuge](https://github.com/khyox/recentrifuge) is an interactive visualization tool for contaminant detection. An html report is generated that summarizes the results of centrifuge or kraken. For more information, see the [Recentrifuge wiki](https://github.com/khyox/recentrifuge/wiki).
 
 ### masurca
 

@@ -37,6 +37,7 @@ if (params.centrifuge_db) { ch_db = file(params.centrifuge_db) } else { exit 1, 
 */
 
 // MODULES
+include { MASURCA } from '../modules/local/masurca'
 include { OUTPUT } from '../modules/local/output' 
 
 // SUBWORKFLOWS
@@ -67,17 +68,13 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 //
 // MODULE: Installed directly from nf-core/modules
 //
-
-//include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
-// Info required for completion email and summary
-//def multiqc_report = []
 
 workflow GENOMEASSEMBLY {
 
@@ -101,39 +98,48 @@ workflow GENOMEASSEMBLY {
     LENGTH_FILT (READ_QC.out[0])
     ch_versions = ch_versions.mix(LENGTH_FILT.out.versions)
 
-    //adaptor trimming and decontamination of short reads if available
+    
     if ( params.shortread == true ) {
         ch_shortdata = INPUT_CHECK2 ( ch_shortinput )
     ch_versions = ch_versions.mix(INPUT_CHECK2.out.versions)
 
+        //adaptor trimming and decontamination of short reads if available
         ch_kraken_db = Channel.fromPath(params.kraken_db)
         READ_QC2 (ch_shortdata.reads, ch_kraken_db)
     ch_versions = ch_versions.mix(READ_QC2.out.versions)
 
-        //assembly inputting everything + shortreads
-        ASSEMBLY (LENGTH_FILT.out[0], ch_shortdata.reads, genome_size)
+        //assembly inputting long & short reads
+        ASSEMBLY (LENGTH_FILT.out[0], READ_QC2.out[0], genome_size)
         all_assemblies   = ASSEMBLY.out[0]
     ch_versions = ch_versions.mix(ASSEMBLY.out.versions)
     }
     else {
         ch_shortdata = Channel.empty() 
-        //assembly of decontam and length filtered (if specified) fastq (LONG READ ONLY)
+        //assembly of decontam and length filtered (if specified) long reads
         ASSEMBLY (LENGTH_FILT.out[0], [], genome_size)
-        all_assemblies   = ASSEMBLY.out[0]
+        assemblies   = ASSEMBLY.out[0]
     ch_versions = ch_versions.mix(ASSEMBLY.out.versions)   
+    }
+
+    //short read only assembly
+    if ( params.shortread == true && params.longread == false){
+        MASURCA (LENGTH_FILT.out[0], READ_QC2.out[0])
+        assemblies
+            .concat(MASURCA.out[0])
+            .set { all_assemblies }
+    } else {
+        assemblies.set{all_assemblies}
     }
     
    ch_summtxt = Channel.fromPath(params.summary_txt)
 
     if ( params.shortread == true ) {
-        QC_1 (ASSEMBLY.out[0], LENGTH_FILT.out[0], ch_summtxt, READ_QC2.out[0], READ_QC.out[4])
+        QC_1 (all_assemblies, LENGTH_FILT.out[0], ch_summtxt, READ_QC2.out[0], READ_QC.out[4])
     ch_versions = ch_versions.mix(QC_1.out.versions)
     } else {
-        QC_1 (ASSEMBLY.out[0], LENGTH_FILT.out[0], ch_summtxt, [], READ_QC.out[4])
+        QC_1 (all_assemblies, LENGTH_FILT.out[0], ch_summtxt, [], READ_QC.out[4])
     ch_versions = ch_versions.mix(QC_1.out.versions)
     }
-
-    
 
     //polish flye assembly with medaka
     if ( params.flye == true ) {
@@ -158,7 +164,7 @@ workflow GENOMEASSEMBLY {
         
         //combine polished flye assemblies w other assemblies
         polca_polish
-            .concat(medaka_polish, all_assemblies)
+            .concat(all_assemblies, medaka_polish)
             .set{ polished_assemblies }
 
     ch_versions = ch_versions.mix(POLISH2.out.versions)
@@ -167,6 +173,8 @@ workflow GENOMEASSEMBLY {
             .concat(all_assemblies)
             .set{ polished_assemblies }
     }
+
+    polished_assemblies.view()
 
     if ( params.shortread == true ) {
         QC_2 (polished_assemblies, ASSEMBLY.out[1], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], READ_QC.out[4])
@@ -199,10 +207,17 @@ workflow GENOMEASSEMBLY {
     }
 
     if ( params.ragtag_scaffold == true ) {
-        OUTPUT (QC_4.out[1], QC_4.out[2], QC_4.out[3])
+        ch_quast = QC_4.out[1]
+        ch_busco = QC_4.out[2]
+        ch_merqury = QC_4.out[3]
     } else {
-        OUTPUT (QC_3.out[1], QC_3.out[2], QC_3.out[3])
+        ch_quast = QC_3.out[1]
+        ch_busco = QC_3.out[2]
+        ch_merqury = QC_3.out[3]
     }
+
+    OUTPUT (ch_quast, ch_busco, ch_merqury)
+
     assembly_stats  =   OUTPUT.out.assemblyStats
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
