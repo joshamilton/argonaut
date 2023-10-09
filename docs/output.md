@@ -12,7 +12,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 * LONG READ QC  
   * [Centrifuge](#centrifuge) - Contaminant detection for long reads  
-  * [Genome Size Estimation] - Genome size estimation using kmerfreq and gce  
+  * Genome Size Estimation - Genome size estimation using kmerfreq and gce  
     * [Kmerfreq](#kmerfreq)  
     * [GCE](#gce)  
   * [Length Filter](#lengthfilter) - Optional length filtering based on minimum read length parameter  
@@ -29,14 +29,14 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   * [Recentrifuge](#recentrifuge) - Contaminant filtering visualization for short and long reads  
   
 * ASSEMBLY  
-  * [Canu] (#canu) - Canu assembly  
+  * [Canu](#canu) - Canu assembly  
   * [Flye](#flye) - Flye assembly  
   * [MaSuRCA](#masurca) - Masurca assembly  
   
 * ASSEMBLY QC  
   * [Busco](#busco) - Assembly quality checking for completeness  
   * [Merqury](#merqury) - Assembly quality checking for accuracy  
-  * [Meryl](#meryl) - Building a database for merqury quality checking  
+    * [Meryl](#meryl) - Building a database for merqury quality checking  
   * [Minimap2](#minimap2) - Assemblies with aligned reads  
   * [PycoQC](#pycoqc) - Assembly quality checking with sequencing summary  
   * [Quast](#quast) - Assembly quality checking for contiguity  
