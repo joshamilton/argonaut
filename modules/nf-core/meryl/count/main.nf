@@ -11,7 +11,7 @@ process MERYL_COUNT {
     tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("*filtered.meryl"), emit: meryl_db
+    path("*filtered.meryl")           , emit: meryl_db
     path "versions.yml"               , emit: versions
 
     when:
