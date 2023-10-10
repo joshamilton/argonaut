@@ -3,7 +3,6 @@ include { NANOPLOT } from '../../modules/nf-core/nanoplot/main'
 include { FLYE } from '../../modules/nf-core/flye/main' 
 include { MASURCA } from '../../modules/local/masurca'
 include { CANU } from '../../modules/nf-core/canu/main' 
-include { HIFIASM } from '../../modules/nf-core/hifiasm/main'
 
 workflow ASSEMBLY {
 
@@ -45,7 +44,7 @@ workflow ASSEMBLY {
         else {
             c_assembly = Channel.empty() 
         }
-        if ( params.masurca == true ) {
+        if ( params.masurca == true && params.shortread == true) {
             println "assembling with maSuRCA!"
             MASURCA(longreads, shortreads)
             masurca_assembly    = MASURCA.out.fasta
@@ -68,24 +67,10 @@ workflow ASSEMBLY {
         else {
             ex_assembly = Channel.empty() 
         }
-        //if ( params.hifiasm == true ) {
-        //    println "assembling with hifiasm!"
-         //   HIFIASM(longreads)
-         //   hifiasm_assembly    = HIFIASM.out.fasta
-
-         //   hifiasm_assembly
-         //       .map { file -> tuple([id: file.baseName], file)  }
-         //       .set { h_assembly }
-        //}
-        //else {
-           // h_assembly = Channel.empty() }
-
 
         assemblies
             .concat(f_assembly, c_assembly, m_assembly, ex_assembly)
             .set { all_assemblies }
-        
-        all_assemblies.view()
 
     emit:
         all_assemblies  
