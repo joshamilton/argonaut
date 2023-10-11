@@ -37,7 +37,6 @@ if (params.centrifuge_db) { ch_db = file(params.centrifuge_db) } else { exit 1, 
 */
 
 // MODULES
-include { MASURCA } from '../modules/local/masurca'
 include { OUTPUT } from '../modules/local/output' 
 
 // SUBWORKFLOWS
@@ -68,6 +67,7 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 //
 // MODULE: Installed directly from nf-core/modules
 //
+include { MASURCA } from '../modules/local/masurca'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 /*
@@ -177,10 +177,10 @@ workflow GENOMEASSEMBLY {
     polished_assemblies.view()
 
     if ( params.shortread == true ) {
-        QC_2 (polished_assemblies, ASSEMBLY.out[1], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], READ_QC.out[4])
+        QC_2 (polished_assemblies, ASSEMBLY.out[1], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], READ_QC.out[4], QC_1.out[7])
     ch_versions = ch_versions.mix(QC_2.out.versions)
     } else {
-        QC_2 (polished_assemblies, ASSEMBLY.out[1], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], [], QC_1.out[2], READ_QC.out[4])
+        QC_2 (polished_assemblies, ASSEMBLY.out[1], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], [], QC_1.out[2], READ_QC.out[4], QC_1.out[7])
     ch_versions = ch_versions.mix(QC_2.out.versions)
     }
 

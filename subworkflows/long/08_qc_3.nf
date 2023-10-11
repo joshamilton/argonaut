@@ -18,7 +18,8 @@ workflow QC_3 {
         ch_merqury
         shortreads
         genome_size_est
-
+        ch_meryl
+        
     main:
 
     ch_versions = Channel.empty() 
@@ -57,14 +58,8 @@ workflow QC_3 {
         )
         ch_versions = ch_versions.mix(PYCOQC.out.versions)
 
-        if ( params.shortread == true ) {
-            MERYL_COUNT ( shortreads ) }
-        else {
-            MERYL_COUNT ( fastq_filt )
-        }
-
         MERQURY (
-            assemblies, MERYL_COUNT.out.meryl_db, genome_size_est, params.tolerable_collision
+            assemblies, ch_meryl, genome_size_est, params.tolerable_collision
         )
         ch_merqury
             .concat(MERQURY.out.assembly_qv)

@@ -71,6 +71,7 @@ workflow QC_1 {
         ch_busco
         ch_merqury
         ch_summarytxt
+        ch_meryl = MERYL_COUNT.out.meryl_db
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
