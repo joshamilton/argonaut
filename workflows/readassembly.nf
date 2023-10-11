@@ -117,19 +117,17 @@ workflow GENOMEASSEMBLY {
         ch_shortdata = Channel.empty() 
         //assembly of decontam and length filtered (if specified) long reads
         ASSEMBLY (LENGTH_FILT.out[0], [], genome_size)
-        assemblies   = ASSEMBLY.out[0]
+        all_assemblies   = ASSEMBLY.out[0]
     ch_versions = ch_versions.mix(ASSEMBLY.out.versions)   
     }
 
     //short read only assembly
     if ( params.shortread == true && params.longread == false){
         MASURCA (LENGTH_FILT.out[0], READ_QC2.out[0])
-        assemblies
-            .concat(MASURCA.out[0])
+        MASURCA.out[0]
+            .concat(all_assemblies)
             .set { all_assemblies }
-    } else {
-        assemblies.set{all_assemblies}
-    }
+    } 
     
    ch_summtxt = Channel.fromPath(params.summary_txt)
 
