@@ -186,10 +186,10 @@ workflow GENOMEASSEMBLY {
     ch_versions = ch_versions.mix(HAPS.out.versions)
 
     if ( params.shortread == true ) {
-        QC_3 (HAPS.out[0], ASSEMBLY.out[1], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], READ_QC2.out[0], READ_QC.out[4])
+        QC_3 (HAPS.out[0], ASSEMBLY.out[1], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], READ_QC2.out[0], READ_QC.out[4], QC_1.out[7])
     ch_versions = ch_versions.mix(QC_3.out.versions)
     } else {
-        QC_3 (HAPS.out[0], ASSEMBLY.out[1], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], [], READ_QC.out[4])  
+        QC_3 (HAPS.out[0], ASSEMBLY.out[1], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], [], READ_QC.out[4], QC_1.out[7])  
     }
         
     if ( params.ragtag_scaffold == true ) {
@@ -199,9 +199,9 @@ workflow GENOMEASSEMBLY {
     }
 
     if (params.ragtag_scaffold == true && params.shortread == true) {
-        QC_4 (SCAFFOLD.out[0], ASSEMBLY.out[1], ch_summtxt, QC_3.out[1], QC_3.out[2], QC_3.out[3], READ_QC2.out[0], READ_QC.out[4]) 
+        QC_4 (SCAFFOLD.out[0], ASSEMBLY.out[1], ch_summtxt, QC_3.out[1], QC_3.out[2], QC_3.out[3], READ_QC2.out[0], READ_QC.out[4], QC_1.out[7]) 
     } else if (params.ragtag_scaffold == true && params.shortread != true){
-        QC_4 (SCAFFOLD.out[0], ASSEMBLY.out[1], ch_summtxt, QC_3.out[1], QC_3.out[2], QC_3.out[3], [], READ_QC.out[4])  
+        QC_4 (SCAFFOLD.out[0], ASSEMBLY.out[1], ch_summtxt, QC_3.out[1], QC_3.out[2], QC_3.out[3], [], READ_QC.out[4], QC_1.out[7])  
     }
 
     if ( params.ragtag_scaffold == true ) {
