@@ -4,7 +4,7 @@
 
 ## Introduction
 
-For the time being, the pipeline accepts unzipped fastq files for both short and long reads. Long reads are currently required to run the pipeline, preferable ONT reads, and short reads are optional.
+The pipeline accepts fastq files for both short and long reads. Long reads are currently required to run the pipeline, preferable ONT reads, and short reads are optional.
 
 ## Samplesheet input
 
@@ -16,7 +16,7 @@ input : '[path to samplesheet file]'
 
 ### Using long and short reads
 
-The `sample` identifiers are important for naming throughout the pipeline, and we recommend that specific sample names are used. The pipeline requires concatenated and unzipped raw reads before performing any downstream analysis. For best results, please provide the entire path to the reads.
+The `sample` identifiers are important for naming throughout the pipeline, and we recommend that specific sample names are used. The pipeline requires concatenated raw reads before performing any downstream analysis. For best results, please provide the entire path to the reads.
 Below is an example samplesheet for long reads:
 
 ```csv
@@ -33,8 +33,8 @@ Mo_short,SRR10443809_1.fastq,SRR10443809_2.fastq,FALSE
 ```
 
 | `sample`  | Custom sample name.  
-| `fastq_1` | Full path to FastQ file for ONT long reads or Illumina short reads 1. File has to be unzipped and have the extension ".fastq" or ".fq".  
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq" or ".fq".
+| `fastq_1` | Full path to FastQ file for ONT long reads or Illumina short reads 1. File must have the extension ".fastq" or ".fastq.qz".  
+| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File must have the extension ".fastq" or ".fastq.gz".
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
@@ -85,7 +85,9 @@ model                  :  "r1041_e82_400bps_sup_g615"
 ragtag_reference       :  "./assembly.fasta"
 <...>
 ```
-For best results, please provide full paths. Paths have been truncated for readability. 
+For best results, please provide full paths. Paths have been truncated for readability.  
+
+When providing a centrifuge database, please ensure that the path points to a DIRECTORY, not a file.
 
 Not all parameters are required, and the default settings can be modified for individualized use. If you would like to change any settings dictating which assemblers run, whether short reads are available, or options like length filtering and scaffolding, please create a config file and specify in the command with '-c'.
 

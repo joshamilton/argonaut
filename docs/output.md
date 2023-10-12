@@ -2,9 +2,9 @@
 
 ## Introduction
 
-This document describes the output produced by the pipeline. All of the programs being run will have their own folder in the output directory specified by your params.yaml file.
+This document describes the output produced by the pipeline. All of the programs being run will have their own folder in the output directory, nested within a folder describing which step each program is used for.
 
-The directories created after the pipeline has finished will depend on which options are selected in the configuration and which programs are run. All paths are relative to the top-level results directory.
+The directories created will depend on which options are selected in the configuration and which programs are run. All paths are relative to the top-level results directory.
 
 ## Pipeline overview
 
@@ -33,15 +33,6 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   * [Flye](#flye) - Flye assembly  
   * [MaSuRCA](#masurca) - Masurca assembly  
   
-* ASSEMBLY QC  
-  * [Busco](#busco) - Assembly quality checking for completeness  
-  * [Merqury](#merqury) - Assembly quality checking for accuracy  
-    * [Meryl](#meryl) - Building a database for merqury quality checking  
-  * [Minimap2](#minimap2) - Assemblies with aligned reads  
-  * [PycoQC](#pycoqc) - Assembly quality checking with sequencing summary  
-  * [Quast](#quast) - Assembly quality checking for contiguity  
-  * [Samtools](#samtools) - Indexed Minimap2 alignments  
-  
 * POLISH  
   * [Medaka](#medaka) - Long read polishing of flye assembly  
   * [POLCA](#polca) - Short read (or long read) polishing of flye assembly  
@@ -51,6 +42,15 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   * [Histogram](#purge) - Histogram of read-depth vs count  
   * [Purge](#purge) - Purged assembly using purge haplotigs to reduce duplication  
   
+* ASSEMBLY QC  
+  * [Busco](#busco) - Assembly quality checking for completeness  
+  * [Merqury](#merqury) - Assembly quality checking for accuracy  
+    * [Meryl](#meryl) - Building a database for merqury quality checking  
+  * [Minimap2](#minimap2) - Assemblies with aligned reads  
+  * [PycoQC](#pycoqc) - Assembly quality checking with sequencing summary  
+  * [Quast](#quast) - Assembly quality checking for contiguity  
+  * [Samtools](#samtools) - Indexed Minimap2 alignments  
+   
 * OTHER  
   * [Gunzip](#gunzip/gzip) - Converting files from .gz to unzipped (no .gz)  
   * [Gzip](#gunzip/gzip) - Converting files from unzipped to .gz  

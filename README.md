@@ -21,7 +21,7 @@
 Long Read Assembly
 1. Read QC and Contaminant Filtering([`Nanoplot`](https://github.com/wdecoster/NanoPlot),[`KmerFreq`](https://github.com/fanagislab/kmerfreq), [`GCE`](https://github.com/fanagislab/GCE), [`Centrifuge`](https://ccb.jhu.edu/software/centrifuge/), [`Recentrifuge`](https://github.com/khyox/recentrifuge))
 2. Length Filtering (optional)([`Bioawk`](https://github.com/lh3/bioawk), [`Nanoplot`](https://github.com/wdecoster/NanoPlot))
-3. Assembly([`Flye`](https://github.com/fenderglass/Flye),[`MaSuRCA`](https://github.com/alekseyzimin/masurca), [`Canu`](https://github.com/marbl/canu))
+3. Assembly([`Flye`](https://github.com/fenderglass/Flye), [`Canu`](https://github.com/marbl/canu))
 4. Assembly QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
 5. Polish([`Medaka`](https://github.com/nanoporetech/medaka))
 6. Polish QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
@@ -30,11 +30,13 @@ Long Read Assembly
 9. Scaffolding (optional)([`RagTag`](https://github.com/malonge/RagTag))
 10. Final QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
 
-Short Read Assembly (optional)
+Short Read and Hybrid Assembly
 1. Read QC, Contaminant Filtering, Adaptor Trimming([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/),[`GenomeScope`](http://qb.cshl.edu/genomescope/),[`Jellyfish`](https://github.com/gmarcais/Jellyfish),[`Kraken2`](https://ccb.jhu.edu/software/kraken2/), [`Recentrifuge`](https://github.com/khyox/recentrifuge),[`FastP`](https://github.com/OpenGene/fastp))
+2. Assembly([`MaSuRCA`](https://github.com/alekseyzimin/masurca))
 2. Align([`BWA`](https://bio-bwa.sourceforge.net/bwa.shtml))
 3. Polish([`POLCA`](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007981))
-Hybrid assembly is conducted within the long read assembly subworkflow, and downstream quality checking is also conducted in the long read QC subworkflows.
+
+Hybrid assembly is conducted within the long read assembly subworkflow, and downstream quality checking of short read and hybrid assemblies is also conducted in the long read QC subworkflows.
 
 First, prepare a samplesheet with your long read input data that looks as follows:
 
