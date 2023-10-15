@@ -21,7 +21,7 @@ workflow READ_QC {
 
         NANOPLOT(reads)
 
-        KMER_FREQ(reads)
+        KMER_FREQ(reads, params.kmer_num)
 
         GCE(KMER_FREQ.out.kmerstat, KMER_FREQ.out.kmernum)
 
@@ -42,13 +42,13 @@ workflow READ_QC {
         fastq_filt
             .map { file -> tuple([id:file.baseName, single_end:true], file)  }
             .set { filtered_fastq }
-        filtered_fastq.view()
 
     emit:
         filtered_fastq    // channel: [ val(meta), path(decontaminated fastq) ]
         nanoplot_reads_out   = NANOPLOT.out.html
         centrifuge_out       = CENTRIFUGE_KREPORT.out.kreport
         est_genome_size      = EXTRACT.out.genome_size_est
+        std_fmt_genome_size  = EXTRACT.out.standard_fmt_est
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
