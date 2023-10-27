@@ -1,5 +1,4 @@
 process OUTPUT {
-    tag "$meta.id"
     label 'process_low'
 
     input:
@@ -8,17 +7,19 @@ process OUTPUT {
     tuple val(meta), path(ch_merqury)
 
     output:
-    tuple val(meta), path("assemblyStats.txt")                 , emit: assemblyStats
+    tuple val(meta), path("*.assemblyStats.txt")       , emit: assemblyStats
    
     script: 
+    def prefix
     """
-    echo -ne "quast output\n" > assemblyStats.txt
-    less $ch_quast_tsv > assemblyStats.txt
+    prefix=\$(awk 'NR==1 {print \$2}' $ch_quast_tsv)
+    echo -ne "quast output\n" >> \$prefix.assemblyStats.txt
+    less $ch_quast_tsv >> \$prefix.assemblyStats.txt
 
-    echo -ne "busco score\n" > assemblyStats.txt
-    grep -A 17 'Results:' $ch_busco > assemblyStats.txt
+    echo -ne "\n busco score\n" >> \$prefix.assemblyStats.txt
+    grep -A 17 'Results:' $ch_busco >> \$prefix.assemblyStats.txt
 
-    echo -ne "merqury score\n" > assemblyStats.txt
-    awk '{ print \$4 }' $ch_merqury > assemblyStats.txt
+    echo -ne "merqury quality score\n" >> \$prefix.assemblyStats.txt
+    awk '{ print \$4 }' $ch_merqury >> \$prefix.assemblyStats.txt
     """
 }

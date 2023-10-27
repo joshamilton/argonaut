@@ -1,4 +1,5 @@
 process QUAST {
+    tag "$meta.id"
     label 'process_medium'
 
     conda "bioconda::quast=5.2.0"
@@ -7,14 +8,14 @@ process QUAST {
         'quay.io/biocontainers/quast:5.2.0--py39pl5321h2add14b_1' }"
 
     // found on https://github.com/Arcadia-Science/hifi2genome/blob/a969c2b78a519814c712c3d77fdd598cd5655c8f/modules/local/nf-core-modified/quast/main.nf
-    // modified from nf-core module to output to generic QUAST directory and copy the report.tsv file
+    // modified from nf-core module to copy the report.tsv file
 
     input:
-    path("*")
+    tuple val(meta), path("*")
 
     output:
     path "quast/*", type: 'dir'     , emit: qc
-    path '*.tsv'                    , emit: results
+    tuple val(meta), path('*.tsv')  , emit: results
     path "versions.yml"             , emit: versions
 
     when:
@@ -22,6 +23,7 @@ process QUAST {
 
     script:
     def args = task.ext.args   ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     quast.py \\

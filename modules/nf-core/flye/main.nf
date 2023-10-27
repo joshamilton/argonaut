@@ -10,7 +10,7 @@ process FLYE {
     input:
     tuple val(meta), path(reads)
     val mode
-    tuple val(meta), path(genome_size_est)
+    path(genome_size_est)
 
     output:
     path("*.fasta"), emit: fasta

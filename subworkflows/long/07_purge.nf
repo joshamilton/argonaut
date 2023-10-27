@@ -6,15 +6,15 @@ workflow HAPS {
 
     take:
         assembly
-        subreads
+        reads
         
     main:
     ch_versions = Channel.empty()
 
         if (!(params.low && params.mid && params.high)) {
 
-        ALIGN(assembly, subreads)
-        HISTOGRAM(assembly, ALIGN.out.aligned)
+        ALIGN(reads, assembly, params.bam_format, params.cigar_paf_format, params.cigar_bam)
+        HISTOGRAM(assembly, ALIGN.out.bam)
         assemblies_polished_purged      = Channel.empty()
 
         } else if (params.low && params.mid && params.high){

@@ -4,7 +4,6 @@ include { CENTRIFUGE_KREPORT } from '../../modules/nf-core/centrifuge/kreport/ma
 include { NANOPLOT } from '../../modules/nf-core/nanoplot/main'
 include { KMER_FREQ } from '../../modules/local/kmerfreq'
 include { GCE } from '../../modules/local/gce'
-include { EXTRACT } from '../../modules/local/extract_genome_size'
 include { RECENTRIFUGE_C } from '../../modules/local/recentrifuge/centrifuge'
 include { SEQKIT_GREP } from '../../modules/local/seqkit/grep/main'
 
@@ -21,11 +20,9 @@ workflow READ_QC {
 
         NANOPLOT(reads)
 
-        KMER_FREQ(reads, params.kmer_num)
+        KMER_FREQ(reads)
 
         GCE(KMER_FREQ.out.kmerstat, KMER_FREQ.out.kmernum)
-
-        EXTRACT(GCE.out.gce2log)
 
         // if a centrifuge database is provided, run centrifuge and filter out all classified results
         if( ch_db ){
@@ -47,8 +44,7 @@ workflow READ_QC {
         filtered_fastq    // channel: [ val(meta), path(decontaminated fastq) ]
         nanoplot_reads_out   = NANOPLOT.out.html
         centrifuge_out       = CENTRIFUGE_KREPORT.out.kreport
-        est_genome_size      = EXTRACT.out.genome_size_est
-        std_fmt_genome_size  = EXTRACT.out.standard_fmt_est
+        gce_genome_size      = GCE.out.gce2log
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }

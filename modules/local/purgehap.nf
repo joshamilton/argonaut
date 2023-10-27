@@ -8,17 +8,41 @@ process ALIGN {
         'biocontainers/mulled-v2-66534bcbb7031a148b13e2ad42583020b9cd25c4:1679e915ddb9d6b4abda91880c4b48857d471bd8-0' }"
 
     input:
-    tuple val(meta), path(contigs)
-    tuple val(meta), path(subreads)
+    tuple val(meta), path(reads)
+    tuple val(meta), path(reference)
+    val bam_format
+    val cigar_paf_format
+    val cigar_bam
 
-    output:           
-    tuple val(meta), path("${subreads.baseName}.aligned.bam") , emit: aligned
+    output:
+    tuple val(meta), path("*.paf"), optional: true, emit: paf
+    tuple val(meta), path("*.aligned.bam"), optional: true, emit: bam
+    path "versions.yml"           , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def bam_output = bam_format ? "-a | samtools sort | samtools view -@ ${task.cpus} -b -h -o ${prefix}.aligned.bam" : "-o ${prefix}.aligned.paf"
+    def cigar_paf = cigar_paf_format && !bam_format ? "-c" : ''
+    def set_cigar_bam = cigar_bam && bam_format ? "-L" : ''
     """
-    samtools fastq $subreads | \
-        minimap2 -t ${task.cpus} -ax map-pb --secondary=no $contigs - \
-        | samtools sort -m 10G -o ${contigs.baseName}.aligned.bam
-    samtools index ${contigs.baseName}.aligned.bam
+    minimap2 \\
+        $args \\
+        -t $task.cpus \\
+        "${reference ?: reads}" \\
+        "$reads" \\
+        $cigar_paf \\
+        $set_cigar_bam \\
+        $bam_output
+
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        minimap2: \$(minimap2 --version 2>&1)
+    END_VERSIONS
     """
 }
 
@@ -59,12 +83,12 @@ process PURGE {
     path gencov
 
     output:
-    tuple val(meta), path("curated.artefacts.fasta"), emit: purged
+    path("purge_*"), emit: purged
 
     """
     purge_haplotigs cov -in $gencov \
-        -low $low -mid $mid -high $high
-    purge_haplotigs purge -t $task.cpus -g $assembly -c coverage_stats.csv
+        -low $low -mid $mid -high $high -o ${assembly.baseName}.coverage_stats.csv
+    purge_haplotigs purge -t $task.cpus -g $assembly -c ${assembly.baseName}.coverage_stats.csv
 
     mv curated.fasta purge_${assembly.baseName}.fasta
     """

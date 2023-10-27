@@ -13,7 +13,7 @@ process MEDAKA {
     val model
 
     output:
-    path("*polish.fa")              , emit: assembly
+    path("*polish.fasta")              , emit: assembly
     path "versions.yml"             , emit: versions
 
     when:

@@ -21,13 +21,13 @@ workflow READ_QC2 {
     ch_versions = Channel.empty()
 
         //zipping files for downstream processing
-        GZIP(shortreads)
+        //GZIP(shortreads)
 
         //qc raw short reads
         FASTQC(shortreads)
 
         //adapter trimming
-        FASTP(GZIP.out.gzip, params.adapter_fasta, params.save_trimmed_fail, params.save_merged)
+        FASTP(shortreads, params.adapter_fasta, params.save_trimmed_fail, params.save_merged)
 
         //qc adapter trimmed short reads
         FASTQC_2(FASTP.out.reads)

@@ -6,7 +6,6 @@ process KMER_FREQ {
 
     input:
     tuple val(meta), path(ontfile)
-    val kmernum
 
     output:
     tuple val(meta), path("*.2colum")              , emit: kmerstat
@@ -15,9 +14,10 @@ process KMER_FREQ {
 
     script:
     def VERSION = '4.0'
+
     """
     ls "$ontfile" > read_files.lib 
-    /kmerfreq/kmerfreq -k $kmernum -t $task.cpus read_files.lib
+    /kmerfreq/kmerfreq -t 10 read_files.lib
 
     #calculate kmer number
     less read_files.lib.kmer.freq.stat | grep "#Kmer indivdual number" > kmernum.txt

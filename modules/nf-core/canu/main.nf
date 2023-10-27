@@ -10,7 +10,7 @@ process CANU {
     input:
     tuple val(meta), path(reads)
     val mode
-    val genomesize
+    path(genome_size_est)
 
     output:
     tuple val(meta), path("*.report")                   , emit: report
@@ -28,14 +28,17 @@ process CANU {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "canu_${meta.id}"
+    def genomesize 
     def valid_mode = ["-pacbio", "-nanopore", "-pacbio-hifi"]
     if ( !valid_mode.contains(mode) )  { error "Unrecognised mode to run Canu. Options: ${valid_mode.join(', ')}" }
     """
+    genomesize=\$(echo "\$(<${genome_size_est})")
+
     canu \\
         -p ${prefix} \\
         $mode \\
-        genomeSize=${genomesize} \\
+        genomeSize=\$genomesize \\
         $args \\
         maxThreads=$task.cpus \\
         $reads

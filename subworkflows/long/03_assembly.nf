@@ -70,6 +70,9 @@ workflow ASSEMBLY {
 
         assemblies
             .concat(f_assembly, c_assembly, m_assembly, ex_assembly)
+            .collect()
+            .flatten()
+            .map { file -> tuple(file.baseName, file) }
             .set { all_assemblies }
 
     emit:

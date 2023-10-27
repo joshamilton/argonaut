@@ -8,8 +8,8 @@ process EXTRACT {
     tuple val(meta), path(gce2log)
 
     output:
-    tuple val(meta), path("shortenedSizeFinal.txt")        , emit: genome_size_est
-    tuple val(meta), path("standardSizeFinal.txt")     , emit: standard_fmt_est    
+    path("shortenedSizeFinal.txt")        , emit: genome_size_est
+    path("standardSizeFinal.txt")     , emit: standard_fmt_est    
 
     script: 
     def number
@@ -19,6 +19,6 @@ process EXTRACT {
     
     head -1 standardSize.txt > standardSizeFinal.txt
     
-    head -1 standardSize.txt | numfmt --to=si > shortenedSizeFinal.txt
+    head -1 standardSizeFinal.txt | numfmt --to=si > shortenedSizeFinal.txt
     """
 }
