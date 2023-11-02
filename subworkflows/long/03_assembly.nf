@@ -3,6 +3,7 @@ include { NANOPLOT } from '../../modules/nf-core/nanoplot/main'
 include { FLYE } from '../../modules/nf-core/flye/main' 
 include { MASURCA } from '../../modules/local/masurca'
 include { CANU } from '../../modules/nf-core/canu/main' 
+include { HIFIASM } from '../../modules/nf-core/hifiasm/main' 
 
 workflow ASSEMBLY {
 
@@ -28,10 +29,10 @@ workflow ASSEMBLY {
             flye_assembly
                 .map { file -> tuple([id: file.baseName], file)  }
                 .set { f_assembly }       
-        }
-        else {
+        } else {
             f_assembly = Channel.empty() 
         }
+
         if ( params.canu == true ) {
             println "assembling with canu!"
             CANU(longreads, params.canu_mode, genome_size_est)
@@ -40,10 +41,10 @@ workflow ASSEMBLY {
             canu_assembly
                 .map { file -> tuple([id: file.baseName], file)  }
                 .set { c_assembly }
-        }
-        else {
+        } else {
             c_assembly = Channel.empty() 
         }
+
         if ( params.masurca == true && params.shortread == true) {
             println "assembling with maSuRCA!"
             MASURCA(longreads, shortreads)
@@ -52,10 +53,21 @@ workflow ASSEMBLY {
             masurca_assembly
                 .map { file -> tuple([id: file.baseName], file)  }
                 .set { m_assembly }
-        }
-        else {
+        } else {
             m_assembly = Channel.empty() 
         }
+
+        if (params.hifiasm ==true){
+            HIFIASM(longreads, [],[],[],[])
+            hifiasm_assembly    = HIFIASM.out.assembly_fasta
+
+            hifiasm_assembly
+                .map { file -> tuple([id: file.baseName], file)  }
+                .set { h_assembly }
+        } else {
+            h_assembly = Channel.empty() 
+        }
+
         if ( params.ex_assembly == true ) {
             println "inputting existing assembly!"
             existing_assembly = Channel.fromPath(params.existing_assembly)
@@ -63,13 +75,12 @@ workflow ASSEMBLY {
             existing_assembly
                 .map { file -> tuple([id: file.baseName], file)  }
                 .set { ex_assembly }
-        }
-        else {
+        } else {
             ex_assembly = Channel.empty() 
         }
 
         assemblies
-            .concat(f_assembly, c_assembly, m_assembly, ex_assembly)
+            .concat(f_assembly, c_assembly, m_assembly, h_assembly, ex_assembly)
             .collect()
             .flatten()
             .map { file -> tuple(file.baseName, file) }

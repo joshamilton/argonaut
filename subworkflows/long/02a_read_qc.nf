@@ -45,6 +45,7 @@ workflow READ_QC {
         nanoplot_reads_out   = NANOPLOT.out.html
         centrifuge_out       = CENTRIFUGE_KREPORT.out.kreport
         gce_genome_size      = GCE.out.gce2log
+        nanoplot_report_txt  = NANOPLOT.out.txt
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }

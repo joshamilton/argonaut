@@ -38,6 +38,13 @@ if (params.centrifuge_db) { ch_db = file(params.centrifuge_db) } else { exit 1, 
 
 // MODULES
 include { OUTPUT } from '../modules/local/output' 
+include { TOTAL_BASES_SR } from '../modules/local/total_bases_sr' 
+include { TOTAL_BASES_LR } from '../modules/local/total_bases_lr' 
+include { COVERAGE_SR } from '../modules/local/coverage_sr'
+include { COVERAGE_LR } from '../modules/local/coverage_lr'
+include { MASURCA_SR } from '../modules/local/masurca_sr'
+include { FORMAT } from '../modules/local/format_genome_size'
+include { EXTRACT } from '../modules/local/extract_genome_size'
 
 // SUBWORKFLOWS
 include { INPUT_CHECK } from '../subworkflows/long/01_input_check'
@@ -67,9 +74,7 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { MASURCA_SR } from '../modules/local/masurca_sr'
-include { FORMAT } from '../modules/local/format_genome_size'
-include { EXTRACT } from '../modules/local/extract_genome_size'
+
 
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
@@ -83,15 +88,21 @@ workflow GENOMEASSEMBLY {
 
     ch_versions = Channel.empty()
     
-    ch_data = INPUT_CHECK ( ch_input )
+    if (params.longread == true){
+        ch_data = INPUT_CHECK ( ch_input )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
-    ch_centrifuge_db = Channel.fromPath(params.centrifuge_db)
+        ch_centrifuge_db = Channel.fromPath(params.centrifuge_db)
     
-    //decontamination and quality checking of long reads
-    READ_QC (ch_data.reads, ch_centrifuge_db)
+        //decontamination and quality checking of long reads
+        READ_QC (ch_data.reads, ch_centrifuge_db)
     ch_versions = ch_versions.mix(READ_QC.out.versions)
 
+        //optional read filtering by length with bioawk
+        LENGTH_FILT (READ_QC.out[0])
+    ch_versions = ch_versions.mix(LENGTH_FILT.out.versions)
+    }
+    
     if (params.manual_genome_size){
         genome_size = params.manual_genome_size
         FORMAT(genome_size)
@@ -104,10 +115,11 @@ workflow GENOMEASSEMBLY {
         full_size = EXTRACT.out[1]
     }
     
-    LENGTH_FILT (READ_QC.out[0])
-    ch_versions = ch_versions.mix(LENGTH_FILT.out.versions)
+    if (params.longread == true){
+        TOTAL_BASES_LR (READ_QC.out[4])
+        COVERAGE_LR (full_size, TOTAL_BASES_LR.out.total_bases)
+    }
 
-    
     if ( params.shortread == true ) {
         ch_shortdata = INPUT_CHECK2 ( ch_shortinput )
     ch_versions = ch_versions.mix(INPUT_CHECK2.out.versions)
@@ -117,12 +129,17 @@ workflow GENOMEASSEMBLY {
         READ_QC2 (ch_shortdata.reads, ch_kraken_db)
     ch_versions = ch_versions.mix(READ_QC2.out.versions)
 
+        TOTAL_BASES_SR (READ_QC2.out[2])
+        COVERAGE_SR (full_size, TOTAL_BASES_SR.out.total_bases)
+    }
+
+    //long read and hybrid assemblies
+    if (params.longread == true && params.shortread == true){
         //assembly inputting long & short reads
         ASSEMBLY (LENGTH_FILT.out[0], READ_QC2.out[1], readable_size)
         all_assemblies   = ASSEMBLY.out[0]
     ch_versions = ch_versions.mix(ASSEMBLY.out.versions)
-    }
-    else {
+    } else if (params.longread == true && params.shortread == false) {
         ch_shortdata = Channel.empty() 
         //assembly of decontam and length filtered (if specified) long reads
         ASSEMBLY (LENGTH_FILT.out[0], [], readable_size)
@@ -131,25 +148,46 @@ workflow GENOMEASSEMBLY {
     }
 
     //short read only assembly
-    if ( params.shortread == true ){
-        MASURCA_SR (READ_QC2.out[0])
-        MASURCA_SR.out[0]
-            .concat(all_assemblies)
+    if ( params.shortread == true && params.masurca == true){
+        MASURCA_SR (READ_QC2.out[1])
+        
+        MASURCA_SR.out.fasta
+            .map { file -> tuple([id: file.baseName], file)  }
+            .set { masurca_sr_assembly }
+        
+    } else {
+        masurca_sr_assembly = Channel.empty() 
+    }
+
+    if ( params.shortread == true && params.redundans == true){
+        REDUNDANS (READ_QC2.out[1])
+
+        REDUNDANS.out.assembly_fasta
+            .map { file -> tuple([id: file.baseName], file)  }
+            .set { redundans_assembly }
+        
+    } else {
+        redundans_assembly = Channel.empty() 
+    }
+
+    all_assemblies
+            .concat(masurca_sr_assembly, redundans_assembly)
             .collect()
             .flatten()
             .map { file -> tuple(file.baseName, file) }
             .set { all_assemblies }
-    } 
     
    ch_summtxt = Channel.fromPath(params.summary_txt)
 
-    if ( params.shortread == true ) {
+    if ( params.shortread == true && params.longread == true ) {
         QC_1 (all_assemblies, LENGTH_FILT.out[0], ch_summtxt, READ_QC2.out[0], full_size)
     ch_versions = ch_versions.mix(QC_1.out.versions)
-    } else {
+    } else if ( params.longread == true && params.shortread == false ) {
         QC_1 (all_assemblies, LENGTH_FILT.out[0], ch_summtxt, [], full_size)
     ch_versions = ch_versions.mix(QC_1.out.versions)
-    }
+    } else if ( params.shortread == true && params.longread == false ) {
+        QC_1 (all_assemblies, READ_QC2.out[0], ch_summtxt, READ_QC2.out[0], full_size)
+    ch_versions = ch_versions.mix(QC_1.out.versions)
 
     //polish flye assembly with medaka
     if ( params.flye == true ) {
@@ -192,22 +230,26 @@ workflow GENOMEASSEMBLY {
 
     polished_assemblies.view()
 
-    if ( params.shortread == true ) {
+    if ( params.shortread == true && params.longread == true ) {
         QC_2 (polished_assemblies, LENGTH_FILT.out[0], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], full_size, QC_1.out[7])
     ch_versions = ch_versions.mix(QC_2.out.versions)
-    } else {
+    } else if ( params.longread == true && params.shortread == false ) {
         QC_2 (polished_assemblies, LENGTH_FILT.out[0], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], [], QC_1.out[2], full_size, QC_1.out[7])
     ch_versions = ch_versions.mix(QC_2.out.versions)
+    } else if ( params.shortread == true && params.longread == false ) {
+        QC_2 (polished_assemblies, READ_QC2.out[0], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], full_size, QC_1.out[7])
     }
 
     HAPS (polished_assemblies, LENGTH_FILT.out[0])
     ch_versions = ch_versions.mix(HAPS.out.versions)
 
-    if ( params.shortread == true ) {
+    if ( params.shortread == true && params.longread == true ) {
         QC_3 (HAPS.out[0], LENGTH_FILT.out[0], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], READ_QC2.out[0], full_size, QC_1.out[7])
     ch_versions = ch_versions.mix(QC_3.out.versions)
-    } else {
+    } else if ( params.longread == true && params.shortread == false ) {
         QC_3 (HAPS.out[0], LENGTH_FILT.out[0], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], [], full_size, QC_1.out[7])  
+    } else if ( params.shortread == true && params.longread == false ) {
+        QC_3 (HAPS.out[0], READ_QC2.out[0], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], READ_QC2.out[0], full_size, QC_1.out[7])
     }
         
     if ( params.ragtag_scaffold == true ) {
@@ -216,11 +258,14 @@ workflow GENOMEASSEMBLY {
     ch_versions = ch_versions.mix(SCAFFOLD.out.versions)
     }
 
-    if (params.ragtag_scaffold == true && params.shortread == true) {
-        QC_4 (SCAFFOLD.out[0], LENGTH_FILT.out[0], ch_summtxt, QC_3.out[1], QC_3.out[2], QC_3.out[3], READ_QC2.out[0], full_size, QC_1.out[7]) 
-    } else if (params.ragtag_scaffold == true && params.shortread != true){
-        QC_4 (SCAFFOLD.out[0], LENGTH_FILT.out[0], ch_summtxt, QC_3.out[1], QC_3.out[2], QC_3.out[3], [], full_size, QC_1.out[7])  
-    }
+    if (params.ragtag_scaffold == true) {
+        if ( params.shortread == true && params.longread == true ) {
+            QC_4 (SCAFFOLD.out[0], LENGTH_FILT.out[0], ch_summtxt, QC_3.out[1], QC_3.out[2], QC_3.out[3], READ_QC2.out[0], full_size, QC_1.out[7]) 
+        } else if ( params.longread == true && params.shortread == false ) {
+            QC_4 (SCAFFOLD.out[0], LENGTH_FILT.out[0], ch_summtxt, QC_3.out[1], QC_3.out[2], QC_3.out[3], [], full_size, QC_1.out[7])  
+        } else if ( params.shortread == true && params.longread == false ) {
+            QC_4 (SCAFFOLD.out[0], READ_QC2.out[0], ch_summtxt, QC_3.out[1], QC_3.out[2], QC_3.out[3], READ_QC2.out[0], full_size, QC_1.out[7]) 
+        }}
 
     if ( params.ragtag_scaffold == true ) {
         ch_quast = QC_4.out[1]

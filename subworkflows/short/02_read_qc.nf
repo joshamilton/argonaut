@@ -27,7 +27,7 @@ workflow READ_QC2 {
         FASTQC(shortreads)
 
         //adapter trimming
-        FASTP(shortreads, params.adapter_fasta, params.save_trimmed_fail, params.save_merged)
+        FASTP(shortreads, params.adapter_fasta, params.save_trimmed_fail, params.save_merged, params.dedup, params.quality_cutoff, params.length_cutoff)
 
         //qc adapter trimmed short reads
         FASTQC_2(FASTP.out.reads)
@@ -52,6 +52,7 @@ workflow READ_QC2 {
     emit:
         filt_shortreads = KRAKEN2_KRAKEN2.out.unclassified_reads_fastq   // channel: [ val(meta), [ decontaminated and adaptor trimmed short reads ] ]
         unzip_filt_shortreads = GUNZIP.out.gunzip
+        fastp_report = FASTP.out.json
 
     versions = ch_versions                     // channel: [ versions.yml ]
 }

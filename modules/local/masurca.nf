@@ -18,7 +18,7 @@ process MASURCA {
     def prefix = task.ext.prefix ?: "masurca_${meta.id}"
     """
     sr=\$(echo '${shortreads}' | sed -e "s/ /,/g")
-    masurca -t 32 -i \$sr -r $longreads
+    masurca -t $task.cpus -i \$sr -r $longreads
 
     cd CA.mr.99.17.15.0.02
     mv primary.genome.scf.fasta ${prefix}.fasta

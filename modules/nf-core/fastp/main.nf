@@ -12,6 +12,9 @@ process FASTP {
     path  adapter_fasta
     val   save_trimmed_fail
     val   save_merged
+    val   dedup
+    val   min_quality
+    val   min_length
 
     output:
     tuple val(meta), path('*.fastp.fastq.gz') , optional:true, emit: reads
@@ -26,9 +29,12 @@ process FASTP {
     task.ext.when == null || task.ext.when
 
     script:
+    def dedup_arg = dedup ? "--dedup" : ""
+    def quality_arg = min_quality ? "-q ${min_quality}" : ''
+    def length_arg = min_length ? "-l ${min_length}": ''
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def adapter_list = adapter_fasta ? "--adapter_fasta ${adapter_fasta}" : ""
+    def adapter_list = adapter_fasta ? "--adapter_fasta ${adapter_fasta}" : ''
     def fail_fastq = save_trimmed_fail && meta.single_end ? "--failed_out ${prefix}.fail.fastq.gz" : save_trimmed_fail && !meta.single_end ? "--unpaired1 ${prefix}_1.fail.fastq.gz --unpaired2 ${prefix}_2.fail.fastq.gz" : ''
     // Added soft-links to original fastqs for consistent naming in MultiQC
     // Use single ended for interleaved. Add --interleaved_in in config.
@@ -45,6 +51,9 @@ process FASTP {
             $adapter_list \\
             $fail_fastq \\
             $args \\
+            $dedup_arg \\
+            $quality_arg \\
+            $length_arg \\
             2> ${prefix}.fastp.log \\
         | gzip -c > ${prefix}.fastp.fastq.gz
 
@@ -66,6 +75,9 @@ process FASTP {
             $adapter_list \\
             $fail_fastq \\
             $args \\
+            $dedup_arg \\
+            $quality_arg \\
+            $length_arg \\
             2> ${prefix}.fastp.log
 
         cat <<-END_VERSIONS > versions.yml
@@ -91,6 +103,9 @@ process FASTP {
             --thread $task.cpus \\
             --detect_adapter_for_pe \\
             $args \\
+            $dedup_arg \\
+            $quality_arg \\
+            $length_arg \\
             2> ${prefix}.fastp.log
 
         cat <<-END_VERSIONS > versions.yml
