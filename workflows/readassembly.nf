@@ -187,7 +187,7 @@ workflow GENOMEASSEMBLY {
     ch_versions = ch_versions.mix(QC_1.out.versions)
     } else if ( params.shortread == true && params.longread == false ) {
         QC_1 (all_assemblies, READ_QC2.out[0], ch_summtxt, READ_QC2.out[0], full_size)
-    ch_versions = ch_versions.mix(QC_1.out.versions)
+    ch_versions = ch_versions.mix(QC_1.out.versions)}
 
     //polish flye assembly with medaka
     if ( params.flye == true ) {
