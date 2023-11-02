@@ -8,7 +8,7 @@
 
 ## Introduction
 
-<img align="right" height="400" src="https://github.com/emilytrybulec/genomeassembly/assets/114685119/8f5b1323-70c2-49d4-a3c8-c70f5a58f3f9">
+<img align="right" height="300" src="https://github.com/emilytrybulec/genomeassembly/assets/114685119/8f5b1323-70c2-49d4-a3c8-c70f5a58f3f9">
 
 **Argonaut** is a bioinformatics pipeline that performs de novo genome assembly on long read data. A fastq file and input information is fed to the pipeline, resulting in final assemblies with quality checking at each step. [detailed output]
 
