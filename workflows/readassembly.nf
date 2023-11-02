@@ -43,6 +43,7 @@ include { TOTAL_BASES_LR } from '../modules/local/total_bases_lr'
 include { COVERAGE_SR } from '../modules/local/coverage_sr'
 include { COVERAGE_LR } from '../modules/local/coverage_lr'
 include { MASURCA_SR } from '../modules/local/masurca_sr'
+include { REDUNDANS } from '../modules/local/redundans'
 include { FORMAT } from '../modules/local/format_genome_size'
 include { EXTRACT } from '../modules/local/extract_genome_size'
 
