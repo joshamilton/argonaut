@@ -7,10 +7,8 @@
 [![Launch on Nextflow Tower](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Nextflow%20Tower-%234256e7)](https://tower.nf/launch?pipeline=https://github.com/nf-core/genomeassembly)
 
 
-
+![ARGOnaut_notext](https://github.com/emilytrybulec/genomeassembly/assets/114685119/8f5b1323-70c2-49d4-a3c8-c70f5a58f3f9)
 ## Introduction
-[ARGOnaut_notext.pdf](https://github.com/emilytrybulec/genomeassembly/files/13245532/ARGOnaut_notext.pdf)
-
 **Argonaut** is a bioinformatics pipeline that performs de novo genome assembly on long read data. A fastq file and input information is fed to the pipeline, resulting in a final assembly with quality checking at each step. [detailed output]
 
 <!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
