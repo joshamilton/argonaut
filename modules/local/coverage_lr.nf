@@ -10,6 +10,6 @@ process COVERAGE_LR {
 
     script: 
     """
-    printf "%.2f\n" $((10**2 * $total_bases/$genome_size))e-2 > estimatedCoverage.txt
+    printf "%.2f\n" \$((10**2 * $total_bases/$genome_size))e-2 > estimatedCoverage.txt
     """
 }
