@@ -6,10 +6,9 @@
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 [![Launch on Nextflow Tower](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Nextflow%20Tower-%234256e7)](https://tower.nf/launch?pipeline=https://github.com/nf-core/genomeassembly)
 
-
+![ARGOnaut_notext](https://github.com/emilytrybulec/genomeassembly/assets/114685119/8f5b1323-70c2-49d4-a3c8-c70f5a58f3f9)
 ## Introduction
-
-**GenomeAssembly** is a bioinformatics pipeline that performs de novo genome assembly on long read data. A fastq file and input information is fed to the pipeline, resulting in a final assembly with quality checking at each step. [detailed output]
+**Argonaut** is a bioinformatics pipeline that performs de novo genome assembly on long read data. A fastq file and input information is fed to the pipeline, resulting in final assemblies with quality checking at each step. [detailed output]
 
 <!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
@@ -32,11 +31,11 @@ Long Read Assembly
 
 Short Read and Hybrid Assembly
 1. Read QC, Contaminant Filtering, Adaptor Trimming([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/),[`GenomeScope`](http://qb.cshl.edu/genomescope/),[`Jellyfish`](https://github.com/gmarcais/Jellyfish),[`Kraken2`](https://ccb.jhu.edu/software/kraken2/), [`Recentrifuge`](https://github.com/khyox/recentrifuge),[`FastP`](https://github.com/OpenGene/fastp))
-2. Assembly([`MaSuRCA`](https://github.com/alekseyzimin/masurca))
-2. Align([`BWA`](https://bio-bwa.sourceforge.net/bwa.shtml))
+2. Assembly([`MaSuRCA`](https://github.com/alekseyzimin/masurca), [`Redundans`](https://github.com/Gabaldonlab/redundans))
 3. Polish([`POLCA`](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007981))
+4. Purge([`Redundans`](https://github.com/Gabaldonlab/redundans))
 
-Hybrid assembly is conducted within the long read assembly subworkflow, and downstream quality checking of short read and hybrid assemblies is also conducted in the long read QC subworkflows.
+Hybrid assembly is conducted within the long read assembly subworkflow, and short read assembly is conducted within the main workflow and downstream quality checking of short read and hybrid assemblies is also conducted in the long read QC subworkflows.
 
 First, prepare a samplesheet with your long read input data that looks as follows:
 
