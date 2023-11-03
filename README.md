@@ -109,7 +109,7 @@ Development of this pipeline was funded by the University of Connecticut Office 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
 ## Citations
-GenomeAssembly is currently unpublished. For now, please use the GitHub URL when referencing.
+Argonaut is currently unpublished. For now, please use the GitHub URL when referencing.
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 

@@ -480,5 +480,27 @@
         {
             "$ref": "#/definitions/generic_options"
         }
-    ]
+    ],
+    "properties": {
+        "dedup": {
+            "type": "string",
+            "default": "true"
+        },
+        "quality_cutoff": {
+            "type": "integer",
+            "default": 30
+        },
+        "length_cutoff": {
+            "type": "integer",
+            "default": 45
+        },
+        "hifiasm": {
+            "type": "string",
+            "default": "false"
+        },
+        "redundans": {
+            "type": "string",
+            "default": "true"
+        }
+    }
 }
