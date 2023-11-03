@@ -1,4 +1,4 @@
-process REDUNDANS {
+process REDUNDANS_A {
     tag "$meta.id"
     label 'process_medium'
 
@@ -11,10 +11,11 @@ process REDUNDANS {
     tuple val(meta), path(shortreads)
 
     output:
-    tuple val(meta), path("*.fasta")               , emit: assembly_fasta
+    tuple val(meta), path("*filled.fa")               , emit: assembly_fasta
 
     script:
     """
-    ./redundans.py -v -i $shortreads -t $task.cpus -o .
+    ./redundans.py -v -i $shortreads -t $task.cpus --noreduction -o .
+
     """
 }

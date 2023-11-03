@@ -1,9 +1,12 @@
 //include { GUNZIP } from '../../modules/nf-core/gunzip/main'
 include { NANOPLOT } from '../../modules/nf-core/nanoplot/main'
+include { TOTAL_BASES_LR } from '../../modules/local/total_bases_lr'
+include { COVERAGE_LR } from '../../modules/local/coverage_lr'
 include { FLYE } from '../../modules/nf-core/flye/main' 
 include { MASURCA } from '../../modules/local/masurca'
 include { CANU } from '../../modules/nf-core/canu/main' 
 include { HIFIASM } from '../../modules/nf-core/hifiasm/main' 
+
 
 workflow ASSEMBLY {
 
@@ -11,12 +14,16 @@ workflow ASSEMBLY {
         longreads   // channel: [ val(meta), [ decontaminated and/or length filtered fastq ] ]
         shortreads
         genome_size_est
+        genome_size_est_long
 
     main:
     ch_versions = Channel.empty() 
 
         //makes sure long read input is filtered reads
         NANOPLOT (longreads)
+
+        TOTAL_BASES_LR(NANOPLOT.out.txt)
+        COVERAGE_LR(genome_size_est_long, TOTAL_BASES_LR.out.total_bases)
 
         assemblies = Channel.empty() 
 

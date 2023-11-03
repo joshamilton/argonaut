@@ -13,7 +13,7 @@ process FASTP {
     val   save_trimmed_fail
     val   save_merged
     val   dedup
-    val   min_quality
+    val   trim_quality
     val   min_length
 
     output:
@@ -29,8 +29,8 @@ process FASTP {
     task.ext.when == null || task.ext.when
 
     script:
-    def dedup_arg = dedup ? "--dedup" : ""
-    def quality_arg = min_quality ? "-q ${min_quality}" : ''
+    def dedup_arg = dedup ? "--dedup" : ''
+    def quality_arg = trim_quality ? "-M" : ''
     def length_arg = min_length ? "-l ${min_length}": ''
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
