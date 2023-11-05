@@ -7,6 +7,7 @@
 [![Launch on Nextflow Tower](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Nextflow%20Tower-%234256e7)](https://tower.nf/launch?pipeline=https://github.com/nf-core/genomeassembly)
 
 ## Introduction
+![ARGOnaut_transparent](https://github.com/emilytrybulec/genomeassembly/assets/114685119/9b900dab-44cb-479e-9362-0c0d9dc00ae0)
 
 <img align="right" height="300" src="https://github.com/emilytrybulec/genomeassembly/assets/114685119/8f5b1323-70c2-49d4-a3c8-c70f5a58f3f9">
 
