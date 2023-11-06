@@ -29,7 +29,7 @@ workflow ASSEMBLY {
 
         //if statement to run assembly and create channels for each resulting assembly
         if ( params.flye == true ) {
-            println "assembling with flye!"
+            println "assembling long reads with flye!"
             FLYE(longreads, params.flye_mode, genome_size_est)
             flye_assembly      = FLYE.out.fasta   
 
@@ -41,7 +41,7 @@ workflow ASSEMBLY {
         }
 
         if ( params.canu == true ) {
-            println "assembling with canu!"
+            println "assembling long reads with canu!"
             CANU(longreads, params.canu_mode, genome_size_est)
             canu_assembly      = CANU.out.assembly   
 
@@ -53,7 +53,7 @@ workflow ASSEMBLY {
         }
 
         if ( params.masurca == true && params.shortread == true) {
-            println "assembling with maSuRCA!"
+            println "hybrid assembly with maSuRCA!"
             MASURCA(longreads, shortreads)
             masurca_assembly    = MASURCA.out.fasta
 
@@ -66,6 +66,7 @@ workflow ASSEMBLY {
 
         if (params.hifiasm ==true){
             HIFIASM(longreads, [],[],[],[])
+            println "assembling long reads with hifiasm!"
             hifiasm_assembly    = HIFIASM.out.assembly_fasta
 
             hifiasm_assembly
