@@ -161,7 +161,7 @@ workflow GENOMEASSEMBLY {
     //short read only assembly
     if ( params.shortread == true && params.masurca == true){
         MASURCA_SR (READ_QC2.out[1])
-        
+        println "assembling short reads with maSuRCA!"
         MASURCA_SR.out.fasta
             .map { file -> tuple([id: file.baseName], file)  }
             .set { masurca_sr_assembly }
@@ -172,7 +172,7 @@ workflow GENOMEASSEMBLY {
 
     if ( params.shortread == true && params.redundans == true){
         REDUNDANS_A (READ_QC2.out[1])
-
+        println "assembling short reads with maSuRCA!"
         REDUNDANS_A.out.assembly_fasta
             .map { file -> tuple([id: file.baseName], file)  }
             .set { redundans_assembly }
