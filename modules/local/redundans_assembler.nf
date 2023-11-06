@@ -15,7 +15,7 @@ process REDUNDANS_A {
 
     script:
     """
-    ./redundans.py -v -i $shortreads -t $task.cpus --noreduction -o .
+    redundans.py -v -i $shortreads -t $task.cpus --noreduction --nogapclosing --noscaffolding -o .
 
     """
 }
