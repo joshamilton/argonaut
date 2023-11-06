@@ -1,4 +1,3 @@
-//include { GUNZIP } from '../../modules/nf-core/gunzip/main'
 include { NANOPLOT } from '../../modules/nf-core/nanoplot/main'
 include { TOTAL_BASES_LR } from '../../modules/local/total_bases_lr'
 include { COVERAGE_LR } from '../../modules/local/coverage_lr'
