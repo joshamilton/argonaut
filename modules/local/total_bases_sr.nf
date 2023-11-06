@@ -6,8 +6,8 @@ process TOTAL_BASES_SR {
     tuple val(meta), path(fastp_report)
 
     output:
-    path("totalBasesSR_before*")        , emit: total_bases_before
-    path("totalBasesSR_after*")        , emit: total_bases_after
+    tuple val(meta), path("totalBasesSR_before*")        , emit: total_bases_before
+    tuple val(meta), path("totalBasesSR_after*")        , emit: total_bases_after
 
     script: 
     """
