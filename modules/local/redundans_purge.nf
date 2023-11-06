@@ -16,6 +16,6 @@ process REDUNDANS_P {
 
     script:
     """
-    redundans.py -v -f $fasta -i $shortreads -t $task.cpus --nogapclosing --noscaffolding -o .
+    redundans.py -v -f $fasta -i $shortreads -t $task.cpus --nogapclosing --noscaffolding -o redundans_purge
     """
 }
