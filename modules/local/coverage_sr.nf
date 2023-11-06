@@ -3,12 +3,12 @@ process COVERAGE_SR {
 
     input:
     val genome_size
-    path total_bases_before
-    path total_bases_after
+    tuple val(meta), path(total_bases_before)
+    tuple val(meta), path(total_bases_after)
 
     output:
-    path("estimatedCoverageSR_before.txt")        , emit: coverage_est_before
-    path("estimatedCoverageSR_after.txt")        , emit: coverage_est_filtered
+    tuple val(meta), path("estimatedCoverageSR_before.txt")        , emit: coverage_est_before
+    tuple val(meta), path("estimatedCoverageSR_after.txt")        , emit: coverage_est_filtered
 
 
     script: 
