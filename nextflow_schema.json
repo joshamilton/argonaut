@@ -124,14 +124,16 @@
                 },
                 "dedup": {
                     "type": "boolean",
-                    "default": true
+                    "description": "Fastp option to deduplicate short reads"
                 },
                 "length_cutoff": {
                     "type": "integer",
-                    "default": 45
+                    "default": 45,
+                    "description": "Fastp option to filter reads shorter than a certain length"
                 },
                 "quality_trimming": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "Fastp option to trim the ends of reads with low quality scores"
                 }
             }
         },
@@ -144,7 +146,7 @@
                 "flye": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Option to run flye assembly"
+                    "description": "Option to run flye assembly (requires long reads)"
                 },
                 "flye_mode": {
                     "type": "string",
@@ -153,7 +155,7 @@
                 },
                 "canu": {
                     "type": "boolean",
-                    "description": "Option to run canu assembly (requires high quality reads with sufficient coverage)"
+                    "description": "Option to run canu assembly (requires high quality long reads with sufficient coverage)"
                 },
                 "canu_mode": {
                     "type": "string",
@@ -174,11 +176,13 @@
                     "description": "Path to existing assembly in *.fasta format"
                 },
                 "hifiasm": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "Option to run hifiasm assembly (recommended to be used with Pacbio HiFi long reads)"
                 },
                 "redundans": {
                     "type": "boolean",
-                    "default": true
+                    "default": true,
+                    "description": "Option to run redundans assembly (requires short reads)"
                 }
             }
         },
@@ -204,7 +208,7 @@
                 },
                 "tolerable_collision": {
                     "type": "number",
-                    "default": 0.001,
+                    "default": 0.001000000000000000020816681711721685132943093776702880859375,
                     "description": "Tolerable collision rate for sequencing (ex. 0.001)"
                 }
             }
@@ -255,7 +259,9 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should save output data.",
-            "required": ["outdir"],
+            "required": [
+                "outdir"
+            ],
             "properties": {
                 "outdir": {
                     "type": "string",
@@ -380,7 +386,14 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ],
                     "hidden": true
                 },
                 "email_on_fail": {
