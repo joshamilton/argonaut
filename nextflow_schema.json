@@ -121,6 +121,17 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Kraken2 option to save a file containing taxonomic classification of each input read"
+                },
+                "dedup": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "length_cutoff": {
+                    "type": "integer",
+                    "default": 45
+                },
+                "quality_trimming": {
+                    "type": "boolean"
                 }
             }
         },
@@ -161,6 +172,13 @@
                 "existing_assembly": {
                     "type": "string",
                     "description": "Path to existing assembly in *.fasta format"
+                },
+                "hifiasm": {
+                    "type": "boolean"
+                },
+                "redundans": {
+                    "type": "boolean",
+                    "default": true
                 }
             }
         },
@@ -480,27 +498,5 @@
         {
             "$ref": "#/definitions/generic_options"
         }
-    ],
-    "properties": {
-        "dedup": {
-            "type": "string",
-            "default": "true"
-        },
-        "quality_cutoff": {
-            "type": "integer",
-            "default": 30
-        },
-        "length_cutoff": {
-            "type": "integer",
-            "default": 45
-        },
-        "hifiasm": {
-            "type": "string",
-            "default": "false"
-        },
-        "redundans": {
-            "type": "string",
-            "default": "true"
-        }
-    }
+    ]
 }
