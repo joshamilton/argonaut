@@ -1,4 +1,4 @@
-process EXTRACT {
+process EXTRACT_LR {
     tag "$meta.id"
     label 'process_low'
 
