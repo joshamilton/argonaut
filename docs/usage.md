@@ -8,14 +8,15 @@ The pipeline accepts fastq files for both short and long reads. Long reads are c
 
 ## Samplesheet input
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use the input parameter to specify its location in params.yaml. The samplesheet has to be a comma-separated file (.csv) with 3 columns, and a header row. More detail about creating the samplesheets for your specific type of input is located [below](#Using).
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use the input parameter to specify its location in params.yaml. The samplesheet has to be a comma-separated file (.csv) with 3 columns, and a header row. More detail about creating the samplesheets for your specific type of input is located [below](#Using-long-and-short-reads).
 
-The params.yaml file feeds the pipeline all of your input! Create a params.yaml file and enter the path to your long and/or short samplesheet(s)
+The params.yaml file feeds the pipeline all of your input! Create a params.yaml file and enter the path to your long and/or short samplesheet(s). We will continue to build on this params file to provide contaminant databases, an out directory name, and more. An example of the first line of params.yaml is shown here:
 
 ```yaml
 input : '[path to samplesheet file]'
 ```
 
+An example of a full [params.yaml](#Running-the-pipeline) file is provided following samplesheet examples
 ### Using long and short reads
 
 The `sample` identifiers are important for naming throughout the pipeline, and we recommend that specific sample names are used. The pipeline requires concatenated raw reads before performing any downstream analysis. For best results, please provide the entire path to the reads.
