@@ -68,8 +68,6 @@ We recommend specifying parameters in a params file.
 
 Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <file>`.
 
-> ⚠️ Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
-
 An example `params.yaml` contains:
 
 ```yaml
@@ -90,7 +88,10 @@ ragtag_reference       :  "./assembly.fasta"
 ```
 For best results, please provide full paths. Paths have been truncated for readability.  
 
-When providing a centrifuge database, please ensure that the path points to a DIRECTORY, not a file.
+General tips for your params file:
+* When providing a centrifuge database, please ensure that the path points to a DIRECTORY, not a file.
+* Please ensure that your BUSCO lineage aligns with your organism type. (e.g. for japanese walnut tree: "embryophyta_odb10")
+* If you are using PacBio HiFi data, please change the flye and canu modes to indicate so. The above example indicates ONT long read input.
 
 Not all parameters are required, and the default settings can be modified for individualized use. If you would like to change any settings dictating which assemblers run, whether short reads are available, or options like length filtering and scaffolding, please create a config file and specify in the command with '-c'.
 
