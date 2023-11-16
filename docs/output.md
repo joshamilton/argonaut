@@ -1,4 +1,4 @@
-# emilytrybulec/genomeassembly: Output
+# emilytrybulec/argonaut: Output
 
 ## Introduction
 
