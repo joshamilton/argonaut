@@ -8,7 +8,9 @@ The pipeline accepts fastq files for both short and long reads. Long reads are c
 
 ## Samplesheet input
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use the input parameter to specify its location in params.yaml. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use the input parameter to specify its location in params.yaml. The samplesheet has to be a comma-separated file (.csv) with 3 columns, and a header row. More detail about creating the samplesheets for your specific type of input is located [below](#Using).
+
+The params.yaml file feeds the pipeline all of your input! Create a params.yaml file and enter the path to your long and/or short samplesheet(s)
 
 ```yaml
 input : '[path to samplesheet file]'
