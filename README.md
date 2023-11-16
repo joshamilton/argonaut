@@ -10,7 +10,7 @@
 
 <img align="right" height="250" src="https://github.com/emilytrybulec/genomeassembly/assets/114685119/9b900dab-44cb-479e-9362-0c0d9dc00ae0">
 
-**Argonaut** is a bioinformatics pipeline that performs de novo genome assembly on long read data. A fastq file and input information is fed to the pipeline, resulting in final assemblies with quality checking at each step. [detailed output]
+**Argonaut** is a bioinformatics pipeline that performs de novo genome assembly on long and short read data. A fastq file and input information is fed to the pipeline, resulting in final assemblies with quality checking at each step. The pipeline accepts short reads, long reads, or both. [detailed output]
 
 <!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
@@ -37,7 +37,7 @@ Short Read and Hybrid Assembly
 3. Polish([`POLCA`](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007981))
 4. Purge([`Redundans`](https://github.com/Gabaldonlab/redundans))
 
-Hybrid assembly is conducted within the long read assembly subworkflow, and short read assembly is conducted within the main workflow and downstream quality checking of short read and hybrid assemblies is also conducted in the long read QC subworkflows.
+Hybrid assembly is conducted within the long read assembly subworkflow, and short read assembly is conducted within the main workflow. Downstream quality checking of short read and hybrid assemblies is also conducted in the long read QC subworkflows.
 
 First, prepare a samplesheet with your long read input data that looks as follows:
 
@@ -45,7 +45,7 @@ First, prepare a samplesheet with your long read input data that looks as follow
 
 ```csv
 sample,fastq_1,fastq_2,single_end
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq,,TRUE
+CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,,TRUE
 ```
 
 Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
@@ -56,7 +56,7 @@ If short reads are available, prepare a second samplesheet with your short read 
 
 ```csv
 sample,fastq_1,fastq_2,single_end
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq,AEG588A1_S1_L002_R2_001.fastq,FALSE
+CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,FALSE
 ```
 
 Next, create a params.yaml file to specify the paths to your samplesheet(s), contaminant databases, etc. Most likely, a config file will also need to be made to modify the default settings of the pipeline. Please look through the [nextflow.config](nextflow.config) file to browse the defaults and specify which you would like to change in you my_config file. More information is located in the [usage](docs/usage.md) section.
@@ -65,7 +65,7 @@ Now, you can run the pipeline using:
 
 
 ```bash
-nextflow run emilytrybulec/genomeassembly \
+nextflow run emilytrybulec/argonaut \
   -r main \
   -params-file params.yaml \
   -c my_config \
