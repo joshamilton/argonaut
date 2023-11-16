@@ -1,4 +1,4 @@
-# emilytrybulec/genomeassembly: Documentation
+# emilytrybulec/argonaut: Documentation
 
 The nf-core/genomeassembly documentation is split into the following pages:
 
