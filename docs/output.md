@@ -11,14 +11,14 @@ The directories created will depend on which options are selected in the configu
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
 * LONG READ QC  
-  * [Centrifuge](#centrifuge) - Contaminant detection for long reads  
+  * [Centrifuge](#centrifuge) - Contaminant detection for long reads
+    * [Recentrifuge](#recentrifuge) - Contaminant filtering visualization for short and long reads
+    * [Contaminant filter](#seqkit) - Filtering contaminants detected by Centrifuge from long reads for downstream processing  
   * Genome Size Estimation - Genome size estimation using kmerfreq and gce  
     * [Kmerfreq](#kmerfreq)  
     * [GCE](#gce)  
-  * [Length Filter](#lengthfilter) - Optional length filtering based on minimum read length parameter  
+  * [Length Filter](#lengthfilter) - Optional length filtering with bioawk based on minimum read length parameter  
   * [Nanoplot](#nanoplot) - Long read quality checking  
-  * [Recentrifuge](#recentrifuge) - Contaminant filtering visualization for short and long reads  
-  * [Seqkit](#seqkit) - Filtering contaminants detected by Centrifuge from long reads for downstream processing  
   
 * SHORT READ QC  
   * [Fastp](#fastp) - Adapter trimming for short reads  
@@ -26,12 +26,17 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   * [Genomescope2](#genomescope2) - Short read ploidy and genome size estimatation  
   * [Jellyfish](#jellyfish) - Short read kmer distribution  
   * [Kraken2](#kraken2) - Contaminant detection for short reads  
-  * [Recentrifuge](#recentrifuge) - Contaminant filtering visualization for short and long reads  
+    * [Recentrifuge](#recentrifuge) - Contaminant filtering visualization for short and long reads  
   
-* ASSEMBLY  
-  * [Canu](#canu) - Canu assembly  
-  * [Flye](#flye) - Flye assembly  
-  * [MaSuRCA](#masurca) - Masurca assembly  
+* ASSEMBLY
+  * hybrid
+    * [MaSuRCA](#masurca) - Masurca hybrid assembly
+  * long read
+    * [Canu](#canu) - Canu assembly  
+    * [Flye](#flye) - Flye assembly
+  * short read
+    * [MaSuRCA](#masurca) - Masurca short read assembly
+    * [Redundans](#masurca) - Redundans assembly
   
 * POLISH  
   * [Medaka](#medaka) - Long read polishing of flye assembly  
@@ -55,7 +60,12 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   * [Gunzip](#gunzip/gzip) - Converting files from .gz to unzipped (no .gz)  
   * [Gzip](#gunzip/gzip) - Converting files from unzipped to .gz  
   
-* [Output](#output) - Final quality stats (quast, busco, merqury) of all assemblies produced  
+* OUTPUT
+  * [Genome Size Estimation](#extract) - Genome size estimation from gce OR manually inputted in params.yaml
+  * [Long Read Coverage](#coverage) - Coverage calculated from long reads and genome size estimation
+  * [Short Read Coverage](#coverage) - Coverage calculated from short reads and genome size estimation
+  * [Output](#output) - Final quality stats (quast, busco, merqury) of all assemblies produced
+  
 * [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution  
 
 
@@ -86,7 +96,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - `centrifuge/`: Directory containting contaminant detection data  
     -`filtered_*.report.txt/`  
     -`filtered_*.results.txt/`  
-    -`filtered_*.unmapped.fastq.gz/`: Centrifuge filtered reads (not used for downstream processing, as filtering with seqkit is more accurate)  
+    -`filtered_*.unmapped.fastq.gz/`: Centrifuge filtered reads (not used for downstream processing, as filtering with seqkit is more accurate)
+  - `filtered/`: Directory containting decontaminated reads  
   - `kreport/`: Directory containing a kraken style text report about the contaminants detected
   - `recentrifuge/`: Directory containting user friendly html visualization of contaminants detected
 
@@ -96,6 +107,20 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 [Recentrifuge](https://github.com/khyox/recentrifuge) is an interactive visualization tool for contaminant detection. An html report is generated that summarizes the results of centrifuge or kraken. For more information, see the [Recentrifuge wiki](https://github.com/khyox/recentrifuge/wiki).
 
+### coverage
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `*coverage/`
+  - `estimatedCoverage_after.txt`: Estimated coverage after read quality filtering
+  - `estimatedCoverage_before.txt`: Estimated coverage before read quality filtering
+  - `totalBases_after.txt`: Number of total bases after quality filtering
+  - `totalBases_before.txt`: Number of total bases before quality filtering
+
+</details>
+
+The coverage estimation module uses linux commands to extract the total number of bases before and after quality checking and divide total bases over the estimated genome size.
 
 ### extract
 
@@ -383,6 +408,7 @@ The output module pulls quality checking statistics from assemblies at each step
 <summary>Output files</summary>
 
 - `purge/`
+  - `align/`: directory containing read alignments to assemblies
   - `histogram/`: directory containing purge histogram
   - `purged/`: directory containing purged assemblies
 
@@ -409,9 +435,9 @@ The output module pulls quality checking statistics from assemblies at each step
 <summary>Output files</summary>
 
 - `quast/`
-  - `canu_*/`: Canu assembly BUSCO output directory
-  - `flye_*/`: Flye assembly BUSCO output directory
-  - `masurca_*/`: MaSuRCA assembly BUSCO output directory
+  - `canu_*/`: Canu assembly quast output directory
+  - `flye_*/`: Flye assembly quast output directory
+  - `masurca_*/`: MaSuRCA assembly quast output directory
   - `polca_*/`: POLCA assembly quast output directory
   - `purge_*/`: Purged assembly quast output directory
 
@@ -450,7 +476,7 @@ The output module pulls quality checking statistics from assemblies at each step
 <details markdown="1">
 <summary>Output files</summary>
 
-- `seqkit/`
+- `filtered/`
   - `*_filtered.fastq`: Filtered long reads after Centrifuge contaminant detection
 
 </details>
