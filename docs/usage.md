@@ -4,7 +4,7 @@
 
 ## Introduction
 
-The pipeline accepts fastq files for both short and long reads. ONT and PacBio HiFi reads are considered long read and Illumina reads are considered short read. Please indicate whether your input consists of both or one of the read types in the your my_config file. An example config file and further explanation is located [below](#Running-the-pipeline)
+The pipeline accepts fastq files for both short and long reads. ONT and PacBio HiFi reads are considered long read and Illumina reads are considered short read. Please indicate whether your input consists of both or one of the read types in the your my_config file. An example config file and further explanation is located [below](#Running-the-pipeline).
 
 ## Samplesheet input
 
