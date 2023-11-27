@@ -41,16 +41,22 @@ workflow READ_QC2 {
         //unzip decontam short reads
         GUNZIP(KRAKEN2_KRAKEN2.out.unclassified_reads_fastq)
 
-        //qc decontaminated short reads
-        FASTQC_3(KRAKEN2_KRAKEN2.out.unclassified_reads_fastq)
-
         JELLYFISH_KMER(GUNZIP.out.gunzip, params.kmer_num)
         JELLYFISH_HIST(JELLYFISH_KMER.out.shortkmer, params.kmer_num)
         
         GENOMESCOPE2(JELLYFISH_HIST.out.shortkmer_hist)
 
+        fastq_filt = KRAKEN2_KRAKEN2.out.unclassified_reads_fastq   
+
+        fastq_filt
+            .map { file -> tuple([id:file.baseName, single_end:true], file)  }
+            .set { filt_shortreads }
+
+        //qc decontaminated short reads
+        FASTQC_3(filt_shortreads)
+
     emit:
-        filt_shortreads = KRAKEN2_KRAKEN2.out.unclassified_reads_fastq   // channel: [ val(meta), [ decontaminated and adaptor trimmed short reads ] ]
+        filt_shortreads
         unzip_filt_shortreads = GUNZIP.out.gunzip
         fastp_report = FASTP.out.json
         genome_size_est = GENOMESCOPE2.out.summary
