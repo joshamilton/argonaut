@@ -38,14 +38,6 @@ workflow READ_QC2 {
         //summarizing and visualizing decontam
         RECENTRIFUGE_KR(KRAKEN2_KRAKEN2.out.classified_reads_assignment, params.rcf_db)
 
-        //unzip decontam short reads
-        GUNZIP(KRAKEN2_KRAKEN2.out.unclassified_reads_fastq)
-
-        JELLYFISH_KMER(GUNZIP.out.gunzip, params.kmer_num)
-        JELLYFISH_HIST(JELLYFISH_KMER.out.shortkmer, params.kmer_num)
-        
-        GENOMESCOPE2(JELLYFISH_HIST.out.shortkmer_hist)
-
         fastq_filt = KRAKEN2_KRAKEN2.out.unclassified_reads_fastq   
 
         fastq_filt
@@ -54,6 +46,14 @@ workflow READ_QC2 {
 
         //qc decontaminated short reads
         FASTQC_3(filt_shortreads)
+
+        //unzip decontam short reads
+        GUNZIP(filt_shortreads)
+
+        JELLYFISH_KMER(GUNZIP.out.gunzip, params.kmer_num)
+        JELLYFISH_HIST(JELLYFISH_KMER.out.shortkmer, params.kmer_num)
+        
+        GENOMESCOPE2(JELLYFISH_HIST.out.shortkmer_hist)
 
     emit:
         filt_shortreads
