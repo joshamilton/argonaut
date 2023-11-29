@@ -41,6 +41,7 @@ workflow READ_QC2 {
         fastq_filt = KRAKEN2_KRAKEN2.out.unclassified_reads_fastq   
 
         fastq_filt
+            .flatten()
             .map { file -> tuple([id:file.baseName, single_end:true], file)  }
             .set { filt_shortreads }
 
