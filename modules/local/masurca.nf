@@ -20,7 +20,7 @@ process MASURCA {
     sr=\$(echo '${shortreads}' | sed -e "s/ /,/g")
     masurca -t $task.cpus -i \$sr -r $longreads
 
-    cd CA.mr.99.17.15.0.02
+    cd CA*
     mv primary.genome.scf.fasta ${prefix}.fasta
 
     cat <<-END_VERSIONS > versions.yml
