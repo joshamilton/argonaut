@@ -1,6 +1,6 @@
 process GCE {
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_medium', 'error_ignore'
 
     container 'emilytrybulec/genassembly:kmer'
 
