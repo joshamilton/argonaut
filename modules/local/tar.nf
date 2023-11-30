@@ -6,7 +6,7 @@ process TAR {
     tuple val(meta), path(reads)
 
     output:
-    path("*.gz")        , emit: untar
+    tuple val(meta), path("*.gz")        , emit: untar
 
     script: 
     """
