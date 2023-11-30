@@ -171,8 +171,8 @@ workflow GENOMEASSEMBLY {
     }
 
     if ( params.shortread == true && params.redundans == true){
-        REDUNDANS_A (READ_QC2.out[1])
-        println "assembling short reads with maSuRCA!"
+        REDUNDANS_A (ch_shortdata.reads)
+        println "assembling short reads with redundans!"
         REDUNDANS_A.out.assembly_fasta
             .map { file -> tuple([id: file.baseName], file)  }
             .set { redundans_assembly }
@@ -180,13 +180,14 @@ workflow GENOMEASSEMBLY {
     } else {
         redundans_assembly = Channel.empty() 
     }
-
+    
+    if ( params.shortread == true) {
     masurca_sr_assembly
-            .concat(redundans_assembly)
-            .collect()
-            .flatten()
-            .map { file -> tuple(file.baseName, file) }
-            .set { sr_assemblies }
+        .concat(redundans_assembly)
+        .collect()
+        .flatten()
+        .map { file -> tuple(file.baseName, file) }
+        .set { sr_assemblies }
 
     all_assemblies
             .concat(masurca_sr_assembly, redundans_assembly)
@@ -194,6 +195,8 @@ workflow GENOMEASSEMBLY {
             .flatten()
             .map { file -> tuple(file.baseName, file) }
             .set { all_assemblies }
+    }
+    
     
    ch_summtxt = Channel.fromPath(params.summary_txt)
 
