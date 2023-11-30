@@ -6,6 +6,7 @@ include { KMER_FREQ } from '../../modules/local/kmerfreq'
 include { GCE } from '../../modules/local/gce'
 include { RECENTRIFUGE_C } from '../../modules/local/recentrifuge/centrifuge'
 include { SEQKIT_GREP } from '../../modules/local/seqkit/grep/main'
+include { TAR } from '../../modules/local/tar'
 
 workflow READ_QC {
 
@@ -17,6 +18,10 @@ workflow READ_QC {
     main:
     
     ch_versions = Channel.empty()
+
+        if ( params.tar == true ) { 
+            TAR(reads)
+            reads = TAR.out.untar }
 
         NANOPLOT(reads)
 
