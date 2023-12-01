@@ -26,9 +26,12 @@ workflow READ_QC {
         NANOPLOT(reads)
 
         if (params.manual_genome_size == null){
-        KMER_FREQ(reads)
+            KMER_FREQ(reads)
 
-        GCE(KMER_FREQ.out.kmerstat, KMER_FREQ.out.kmernum)
+            GCE(KMER_FREQ.out.kmerstat, KMER_FREQ.out.kmernum)
+            gce_genome_size      = GCE.out.gce2log
+        } else{
+            gce_genome_size      = Channel.empty() 
         }
 
         // if a centrifuge database is provided, run centrifuge and filter out all classified results
@@ -51,7 +54,7 @@ workflow READ_QC {
         filtered_fastq    // channel: [ val(meta), path(decontaminated fastq) ]
         nanoplot_reads_out   = NANOPLOT.out.html
         centrifuge_out       = CENTRIFUGE_KREPORT.out.kreport
-        gce_genome_size      = GCE.out.gce2log
+        gce_genome_size
         nanoplot_report_txt  = NANOPLOT.out.txt
         
     versions = ch_versions                     // channel: [ versions.yml ]
