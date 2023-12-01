@@ -25,9 +25,11 @@ workflow READ_QC {
 
         NANOPLOT(reads)
 
+        if (params.manual_genome_size == null){
         KMER_FREQ(reads)
 
         GCE(KMER_FREQ.out.kmerstat, KMER_FREQ.out.kmernum)
+        }
 
         // if a centrifuge database is provided, run centrifuge and filter out all classified results
         if( ch_db ){
