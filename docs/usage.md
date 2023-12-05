@@ -24,7 +24,7 @@ Below is an example samplesheet for long reads:
 
 ```csv
 sample,fastq_1,fastq_2,single_end
-CONTROL_REP1,AEG588A1_S1_L002.fastq,,TRUE
+Mo_191,Mo_191_p1s.fastq.gz,,TRUE
 ```
 
 An additional samplesheet must be constructed if short reads are available.
