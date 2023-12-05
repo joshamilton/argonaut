@@ -38,12 +38,7 @@ workflow READ_QC2 {
         //summarizing and visualizing decontam
         RECENTRIFUGE_KR(KRAKEN2_KRAKEN2.out.classified_reads_assignment, params.rcf_db)
 
-        fastq_filt = KRAKEN2_KRAKEN2.out.unclassified_reads_fastq   
-
-        fastq_filt
-            .flatten()
-            .map { file -> tuple([id:file.baseName, single_end:true], file)  }
-            .set { filt_shortreads }
+        filt_shortreads = KRAKEN2_KRAKEN2.out.unclassified_reads_fastq   
 
         //qc decontaminated short reads
         FASTQC_3(filt_shortreads)
@@ -58,7 +53,7 @@ workflow READ_QC2 {
 
     emit:
         filt_shortreads
-        unzip_filt_shortreads = GUNZIP.out.gunzip
+        GUNZIP.out.gunzip
         fastp_report = FASTP.out.json
         genome_size_est = GENOMESCOPE2.out.summary
 
