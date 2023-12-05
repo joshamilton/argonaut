@@ -263,24 +263,35 @@ workflow GENOMEASSEMBLY {
 
     if (params.shortread == true) {
         PURGE2 (sr_assemblies, READ_QC2.out[1])
+        sr_purge = PURGE2.out[0]
+    } else {
+        sr_purge = Channel.empty()
     }
     if (params.longread == true) {
         HAPS (polished_assemblies, LENGTH_FILT.out[0])
+        lr_purge = HAPS.out[0]
         ch_versions = ch_versions.mix(HAPS.out.versions)
     }
 
+    lr_purge
+            .concat(sr_purge)
+            .collect()
+            .flatten()
+            .map { file -> tuple(file.baseName, file) }
+            .set { purged_assemblies }
+
     if ( params.shortread == true && params.longread == true ) {
-        QC_3 (HAPS.out[0], LENGTH_FILT.out[0], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], READ_QC2.out[0], full_size, QC_1.out[7])
+        QC_3 (purged_assemblies, LENGTH_FILT.out[0], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], READ_QC2.out[0], full_size, QC_1.out[7])
     ch_versions = ch_versions.mix(QC_3.out.versions)
     } else if ( params.longread == true && params.shortread == false ) {
-        QC_3 (HAPS.out[0], LENGTH_FILT.out[0], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], [], full_size, QC_1.out[7])  
+        QC_3 (purged_assemblies, LENGTH_FILT.out[0], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], [], full_size, QC_1.out[7])  
     } else if ( params.shortread == true && params.longread == false ) {
-        QC_3 (HAPS.out[0], READ_QC2.out[0], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], READ_QC2.out[0], full_size, QC_1.out[7])
+        QC_3 (purged_assemblies, READ_QC2.out[0], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], READ_QC2.out[0], full_size, QC_1.out[7])
     }
         
     if ( params.ragtag_scaffold == true ) {
     ch_reference = Channel.fromPath(params.ragtag_reference)
-        SCAFFOLD (HAPS.out[0], ch_reference)
+        SCAFFOLD (purged_assemblies, ch_reference)
     ch_versions = ch_versions.mix(SCAFFOLD.out.versions)
     }
 
