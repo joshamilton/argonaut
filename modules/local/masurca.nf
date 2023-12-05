@@ -9,8 +9,8 @@ process MASURCA {
     tuple val(meta), path(shortreads) //path_to/pe_R1.fa /path_to/pe_R2.fa
 
     output:
-    path("CA.mr.99.17.15.0.02/masurca*")                , emit: fasta
-    path ("CA.mr.99.17.15.0.02/versions.yml")                , emit: versions
+    path("CA*/masurca*")                , emit: fasta
+    path ("CA*/versions.yml")                , emit: versions
 
     script:
     def VERSION = '4.1.0'
