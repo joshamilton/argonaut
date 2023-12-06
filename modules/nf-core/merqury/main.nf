@@ -1,5 +1,5 @@
 process MERQURY {
-    tag {id}
+    tag "$meta.id"
     label 'process_low'
 
     conda "bioconda::merqury=1.3"
@@ -8,7 +8,7 @@ process MERQURY {
         'biocontainers/merqury:1.3--hdfd78af_1' }"
 
     input:
-    tuple val(id), path(assembly)
+    tuple val(meta), path(assembly)
     path meryl_db
     path(genome_size_est)
     val tolerable_collision
