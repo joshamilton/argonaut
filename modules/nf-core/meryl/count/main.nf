@@ -31,6 +31,8 @@ process MERYL_COUNT {
             output kmer_db.meryl
 
         meryl greater-than 1 \\
+            threads=$task.cpus \\
+            k=$kmernum \\
             output kmer_db.filtered.meryl kmer_db.meryl
     done
 
