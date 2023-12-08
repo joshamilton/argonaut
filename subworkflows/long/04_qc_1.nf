@@ -20,6 +20,8 @@ workflow QC_1 {
 
     ch_versions = Channel.empty() 
 
+    assemblies.view()
+
         // build index
         MINIMAP2_INDEX(assemblies)
         ch_versions = ch_versions.mix(MINIMAP2_INDEX.out.versions)
