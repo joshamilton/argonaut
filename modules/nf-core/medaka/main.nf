@@ -1,5 +1,5 @@
 process MEDAKA {
-    tag "$meta.id"
+    tag "$meta"
     label 'process_high_memory', 'error_ignore'
 
     conda "bioconda::medaka=1.4.4"
