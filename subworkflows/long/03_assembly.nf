@@ -31,7 +31,11 @@ workflow ASSEMBLY {
         if ( params.flye == true ) {
             println "assembling long reads with flye!"
             FLYE(longreads, params.flye_mode, genome_size_est)
-            f_assembly      = FLYE.out.fasta          
+            flye_assembly      = FLYE.out.fasta   
+
+            flye_assembly
+                .map { file -> tuple([id: file.baseName], file)  }
+                .set { f_assembly }      
         } else {
             f_assembly = Channel.empty() 
         }
@@ -39,7 +43,11 @@ workflow ASSEMBLY {
         if ( params.canu == true ) {
             println "assembling long reads with canu!"
             CANU(longreads, params.canu_mode, genome_size_est)
-            c_assembly      = CANU.out.assembly   
+            canu_assembly      = CANU.out.assembly   
+
+            canu_assembly
+                .map { file -> tuple([id: file.baseName], file)  }
+                .set { c_assembly }
         } else {
             c_assembly = Channel.empty() 
         }
@@ -47,7 +55,11 @@ workflow ASSEMBLY {
         if ( params.masurca == true && params.shortread == true) {
             println "hybrid assembly with maSuRCA!"
             MASURCA(longreads, shortreads)
-            m_assembly    = MASURCA.out.fasta
+            masurca_assembly    = MASURCA.out.fasta
+
+            masurca_assembly
+                .map { file -> tuple([id: file.baseName], file)  }
+                .set { m_assembly }
         } else {
             m_assembly = Channel.empty() 
         }
@@ -55,15 +67,22 @@ workflow ASSEMBLY {
         if (params.hifiasm ==true){
             HIFIASM(longreads, [],[],[],[])
             println "assembling long reads with hifiasm!"
-            h_assembly    = HIFIASM.out.assembly_fasta
+            hifi_assembly    = HIFIASM.out.assembly_fasta
 
+            hifi_assembly
+                .map { file -> tuple([id: file.baseName], file)  }
+                .set { h_assembly }
         } else {
             h_assembly = Channel.empty() 
         }
 
         if ( params.ex_assembly == true ) {
             println "inputting existing assembly!"
-            ex = Channel.fromPath(params.existing_assembly)
+            existing_assembly = Channel.fromPath(params.existing_assembly)
+
+            existing_assembly
+                .map { file -> tuple([id: file.baseName], file)  }
+                .set { ex_assembly }
         } else {
             ex_assembly = Channel.empty() 
         }
@@ -71,7 +90,6 @@ workflow ASSEMBLY {
         assemblies
             .concat(f_assembly, c_assembly, m_assembly, h_assembly, ex_assembly)
             .collect()
-            .map { file -> tuple([id: file.baseName], file)  }
             .set { all_assemblies }
 
     emit:
