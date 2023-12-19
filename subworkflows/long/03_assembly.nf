@@ -88,7 +88,7 @@ workflow ASSEMBLY {
         }
 
         assemblies
-            .mix(f_assembly, c_assembly, m_assembly, h_assembly, ex_assembly)
+            .concat(f_assembly, c_assembly, m_assembly, h_assembly, ex_assembly)
             .collect()
             .set { all_assemblies }
 
