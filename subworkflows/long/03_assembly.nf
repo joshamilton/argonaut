@@ -71,7 +71,6 @@ workflow ASSEMBLY {
         assemblies
             .concat(f_assembly, c_assembly, m_assembly, h_assembly, ex_assembly)
             .collect()
-            .flatten()
             .map { file -> tuple([id: file.baseName], file)  }
             .set { all_assemblies }
 
