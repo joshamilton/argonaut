@@ -88,9 +88,8 @@ workflow ASSEMBLY {
         }
 
         assemblies
-            .concat(f_assembly, c_assembly, m_assembly, h_assembly, ex_assembly)
+            .mix(f_assembly, c_assembly, m_assembly, h_assembly, ex_assembly)
             .collect()
-            .flatten()
             .set { all_assemblies }
 
     emit:
