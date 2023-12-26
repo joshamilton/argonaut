@@ -182,19 +182,12 @@ workflow GENOMEASSEMBLY {
     }
     
     if ( params.shortread == true) {
-    masurca_sr_assembly
-        .concat(redundans_assembly)
-        .collect()
-        .flatten()
-        .map { file -> tuple(file.baseName, file) }
-        .set { sr_assemblies }
-
     all_assemblies
-            .concat(masurca_sr_assembly, redundans_assembly)
-            .collect()
-            .flatten()
-            .map { file -> tuple(file.baseName, file) }
-            .set { all_assemblies }
+        .concat(masurca_sr_assembly, redundans_assembly)
+        .collect()
+        .groupTuple()
+        .set { all_assemblies }
+    all_assemblies.view { "Final Long Read, Hybrid, and Short Read Assemblies: $it" }
     }
     
     
@@ -235,8 +228,7 @@ workflow GENOMEASSEMBLY {
         polca_polish
             .concat(all_assemblies, medaka_polish)
             .collect()
-            .flatten()
-            .map { file -> tuple(file.baseName, file) }
+            .groupTuple()
             .set { polished_assemblies }
 
     ch_versions = ch_versions.mix(POLISH2.out.versions)
@@ -244,8 +236,7 @@ workflow GENOMEASSEMBLY {
         medaka_polish
             .concat(all_assemblies)
             .collect()
-            .flatten()
-            .map { file -> tuple(file.baseName, file) }
+            .groupTuple()
             .set { polished_assemblies }
     }
 
@@ -274,11 +265,11 @@ workflow GENOMEASSEMBLY {
     }
 
     lr_purge
-            .concat(sr_purge)
-            .collect()
-            .flatten()
-            .map { file -> tuple(file.baseName, file) }
-            .set { purged_assemblies }
+        .concat(sr_purge)
+        .collect()
+        .groupTuple()
+        .map { file -> tuple(file.baseName, file) }
+        .set { purged_assemblies }
 
     if ( params.shortread == true && params.longread == true ) {
         QC_3 (purged_assemblies, LENGTH_FILT.out[0], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], READ_QC2.out[0], full_size, QC_1.out[7])
