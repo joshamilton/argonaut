@@ -41,7 +41,8 @@ Short Read and Hybrid Assembly
 3. Polish([`POLCA`](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007981))
 4. Purge([`Redundans`](https://github.com/Gabaldonlab/redundans))
 
-Hybrid assembly is conducted within the long read assembly subworkflow, and short read assembly is conducted within the main workflow. Downstream quality checking of short read and hybrid assemblies is also conducted in the long read QC subworkflows. 
+Hybrid assembly is conducted within the long read assembly subworkflow, and short read assembly is conducted within the main workflow. Downstream quality checking of short read and hybrid assemblies is also conducted in the long read QC subworkflows.  
+  
 Purge Haplotigs is the first step of manual curation, as it produces a histogram that needs to be analyzed for -l, -m, -h flags. The pipeline will stop at the purge step and wait for manual input of parameters according to the histogram of your assembly, which can be found in your out directory.
 
 Below is a figure detailing the major workflow steps involved in hybrid assembly.
