@@ -99,7 +99,7 @@ University of Connecticut:
      * Nicole Pauloski  
      * Vel Johnston
   
-<img align="right" height="180" src="https://github.com/emilytrybulec/argonaut/assets/114685119/161c0c34-4f05-496d-9436-2d087ba5ccd1">  
+<img align="right" height="150" src="https://github.com/emilytrybulec/argonaut/assets/114685119/161c0c34-4f05-496d-9436-2d087ba5ccd1">  
 
 * Computational Biology Core  
      * Noah Reid  
