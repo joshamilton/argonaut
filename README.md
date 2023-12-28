@@ -8,9 +8,10 @@
 
 ## Introduction
 
-<img align="right" height="200" src="https://github.com/emilytrybulec/genomeassembly/assets/114685119/9b900dab-44cb-479e-9362-0c0d9dc00ae0">
 
 **Argonaut** performs **a**utomated **r**eads to **g**enome **o**perations for de **n**ovo **a**ssemblies; it is a bioinformatics pipeline that performs genome assembly on long and short read data. A fastq file and input information is fed to the pipeline, resulting in final assemblies with quality checking at each step. The pipeline accepts short reads, long reads, or both and outputs the assemblies and quality checking statistics. 
+
+<img align="right" height="300" src="https://github.com/emilytrybulec/genomeassembly/assets/114685119/9b900dab-44cb-479e-9362-0c0d9dc00ae0">
 
 ## Table of Contents
 - [Pipeline Summary](#Pipeline-Summary)
