@@ -79,7 +79,6 @@ emilytrybulec/genomeassembly was originally written by Emily Trybulec.
 We thank the following people for their extensive assistance in the development of this pipeline:
 
 University of Connecticut:  
-<img align="right" height="50" src="https://github.com/emilytrybulec/argonaut/assets/114685119/a19e1504-4288-4e3f-91bc-94c69d10eaa2">  
 <img align="right" height="210" src="https://github.com/emilytrybulec/argonaut/assets/114685119/7a3fd47c-0fbf-443c-a121-9fd8a3da9ba3">
 
 * Biodiversity and Conservation Genomics Center  
