@@ -74,14 +74,13 @@ nextflow run emilytrybulec/argonaut \
 All of the output from the programs run in the pipeline pipeline will be located in the out directory specified in params.yaml. Information about interpreting output is located in the [output](docs/output.md) section.
 
 ## Credits
-
 emilytrybulec/genomeassembly was originally written by Emily Trybulec.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
 University of Connecticut:  
-<img align="right" height="100" src="https://github.com/emilytrybulec/argonaut/assets/114685119/a19e1504-4288-4e3f-91bc-94c69d10eaa2">  
-<img align="right" height="300" src="https://github.com/emilytrybulec/argonaut/assets/114685119/7a3fd47c-0fbf-443c-a121-9fd8a3da9ba3">
+<img align="right" height="70" src="https://github.com/emilytrybulec/argonaut/assets/114685119/a19e1504-4288-4e3f-91bc-94c69d10eaa2">  
+<img align="right" height="250" src="https://github.com/emilytrybulec/argonaut/assets/114685119/7a3fd47c-0fbf-443c-a121-9fd8a3da9ba3">
 
 * Biodiversity and Conservation Genomics Center  
      * Jill Wegrzyn  
@@ -92,9 +91,8 @@ University of Connecticut:
      * Amanda Mueller  
      * Cristopher Guzman  
      * Harshita Akella
-
+  
 <img align="right" height="150" src="https://github.com/emilytrybulec/argonaut/assets/114685119/91c25e9f-f70b-481f-8aab-55d2d529eca4">
-
 
 * Rachel O'Neill Lab  
      * Rachel O’Neill  
@@ -102,7 +100,7 @@ University of Connecticut:
      * Nicole Pauloski  
      * Vel Johnston
   
-<img align="right" height="200" src="https://github.com/emilytrybulec/argonaut/assets/114685119/161c0c34-4f05-496d-9436-2d087ba5ccd1">
+<img align="right" height="200" src="https://github.com/emilytrybulec/argonaut/assets/114685119/161c0c34-4f05-496d-9436-2d087ba5ccd1">  
 
 * Computational Biology Core  
      * Noah Reid  
@@ -116,6 +114,11 @@ University of Connecticut:
 ## Contributions and Support
 
 Development of this pipeline was funded by the University of Connecticut Office of Undergraduate Research through the Summer Undergraduate Research Fund (SURF) Grant.
+
+<img align="right" height="110" src="https://github.com/emilytrybulec/argonaut/assets/114685119/925bab1e-ba82-44d3-b640-3d7cf6c2028f">  
+<img align="right" height="110" src="https://github.com/emilytrybulec/argonaut/assets/114685119/3276ed4c-e272-4ff5-93ba-4a7802bd78aa">  
+
+The Biodiversity and Conservation Genomics Center is a part of the [Earth Biogenome Project](https://www.earthbiogenome.org/), working towards capturing the genetic diversity of life on Earth.
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
