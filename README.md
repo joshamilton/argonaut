@@ -45,7 +45,7 @@ Purge Haplotigs is the first step of manual curation, as it produces a histogram
 
 Below is a figure detailing the major workflow steps involved in hybrid assembly.
 
-<img align="center" width="750" alt="Screenshot 2023-12-28 at 1 50 48 PM" src="https://github.com/emilytrybulec/argonaut/assets/114685119/9a67e0bb-8d63-4a1a-ae64-3f2e7dde0746">
+<img align="center" width="750" alt="Argonaut Hybrid Workflow" src="https://github.com/emilytrybulec/argonaut/assets/114685119/7e05df36-4c44-4e66-8fde-598e6b156610">
 
 ## Quick Start
 
