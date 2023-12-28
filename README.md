@@ -10,7 +10,7 @@
 
 <img align="right" height="200" src="https://github.com/emilytrybulec/genomeassembly/assets/114685119/9b900dab-44cb-479e-9362-0c0d9dc00ae0">
 
-**Argonaut** performs **a**utomated **r**eads to **g**enome **o**perations for de **n**ovo **a**ssemblies; it is a bioinformatics pipeline that performs genome assembly on long and short read data. A fastq file and input information is fed to the pipeline, resulting in final assemblies with quality checking at each step. The pipeline accepts short reads, long reads, or both and outputs resulting files in labeled directories- read qc, assembly, polish, purge, scaffold, assembly qc, output, and pipeline info (depending on configurations). For more information, please refer to the [pipeline documentation](https://github.com/emilytrybulec/argonaut/blob/main/docs/README.md).  Below is a figure detailing the major workflow steps involved in hybrid assembly.
+**Argonaut** performs **a**utomated **r**eads to **g**enome **o**perations for de **n**ovo **a**ssemblies; it is a bioinformatics pipeline that performs genome assembly on long and short read data. A fastq file and input information is fed to the pipeline, resulting in final assemblies with quality checking at each step. The pipeline accepts short reads, long reads, or both and outputs the assemblies and quality checking statistics. Below is a figure detailing the major workflow steps involved in hybrid assembly.
 
 <img align="center" width="750" alt="Screenshot 2023-12-28 at 1 50 48 PM" src="https://github.com/emilytrybulec/argonaut/assets/114685119/9a67e0bb-8d63-4a1a-ae64-3f2e7dde0746">
 
@@ -36,6 +36,9 @@ Short Read and Hybrid Assembly
 
 Hybrid assembly is conducted within the long read assembly subworkflow, and short read assembly is conducted within the main workflow. Downstream quality checking of short read and hybrid assemblies is also conducted in the long read QC subworkflows. 
 Purge Haplotigs is the first step of manual curation, as it produces a histogram that needs to be analyzed for -l, -m, -h flags. The pipeline will stop at the purge step and wait for manual input of parameters according to the histogram of your assembly, which can be found in your out directory.
+
+
+## Quick Start
 
 First, prepare a samplesheet with your long read input data that looks as follows:
 
@@ -71,7 +74,18 @@ nextflow run emilytrybulec/argonaut \
 ```
 
 ## Pipeline output
-All of the output from the programs run in the pipeline pipeline will be located in the out directory specified in params.yaml. Information about interpreting output is located in the [output](docs/output.md) section.
+All of the output from the programs run in the pipeline pipeline will be located in the out directory specified in params.yaml. The pipeline produces the following labeled directories depending on configurations:
+* short read qc  
+* long read qc  
+* assembly  
+* polish  
+* purge  
+* scaffold  
+* assembly qc  
+* output  
+* pipeline info
+
+Information about interpreting output is located in the [output](docs/output.md) section.
 
 ## Credits
 emilytrybulec/genomeassembly was originally written by Emily Trybulec.
