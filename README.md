@@ -91,7 +91,7 @@ University of Connecticut:
      * Cristopher Guzman  
      * Harshita Akella
   
-<img align="right" height="130" src="https://github.com/emilytrybulec/argonaut/assets/114685119/91c25e9f-f70b-481f-8aab-55d2d529eca4">
+<img align="right" height="150" src="https://github.com/emilytrybulec/argonaut/assets/114685119/91c25e9f-f70b-481f-8aab-55d2d529eca4">
 
 * Rachel O'Neill Lab  
      * Rachel O’Neill  
@@ -99,7 +99,7 @@ University of Connecticut:
      * Nicole Pauloski  
      * Vel Johnston
   
-<img align="right" height="130" src="https://github.com/emilytrybulec/argonaut/assets/114685119/161c0c34-4f05-496d-9436-2d087ba5ccd1">  
+<img align="right" height="210" src="https://github.com/emilytrybulec/argonaut/assets/114685119/161c0c34-4f05-496d-9436-2d087ba5ccd1">  
 
 * Computational Biology Core  
      * Noah Reid  
