@@ -8,11 +8,11 @@
 
 ## Introduction
 
-<img align="right" height="250" src="https://github.com/emilytrybulec/genomeassembly/assets/114685119/9b900dab-44cb-479e-9362-0c0d9dc00ae0">
+<img align="right" height="275" src="https://github.com/emilytrybulec/genomeassembly/assets/114685119/9b900dab-44cb-479e-9362-0c0d9dc00ae0">
 
 **Argonaut** performs automated reads to genome operations for de novo assemblies; it is a bioinformatics pipeline that performs genome assembly on long and short read data. A fastq file and input information is fed to the pipeline, resulting in final assemblies with quality checking at each step. The pipeline accepts short reads, long reads, or both and outputs resulting files in labeled directories- read qc, assembly, polish, purge, scaffold, assembly qc, output, and pipeline info (depending on configurations). For more information, please refer to the [pipeline documentation](https://github.com/emilytrybulec/argonaut/blob/main/docs/README.md).  Below is a figure detailing the major workflow steps involved in hybrid assembly.
 
-<img width="910" alt="Screenshot 2023-12-28 at 1 27 06 PM" src="https://github.com/emilytrybulec/argonaut/assets/114685119/c835a707-1b98-4aec-a6bf-b080b09add8a">
+<img align="center" width="900" alt="Screenshot 2023-12-28 at 1 27 06 PM" src="https://github.com/emilytrybulec/argonaut/assets/114685119/c835a707-1b98-4aec-a6bf-b080b09add8a">
 
 
 
