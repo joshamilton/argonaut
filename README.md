@@ -10,13 +10,15 @@
 
 <img align="right" height="200" src="https://github.com/emilytrybulec/genomeassembly/assets/114685119/9b900dab-44cb-479e-9362-0c0d9dc00ae0">
 
-**Argonaut** performs **a**utomated **r**eads to **g**enome **o**perations for de **n**ovo **a**ssemblies; it is a bioinformatics pipeline that performs genome assembly on long and short read data. A fastq file and input information is fed to the pipeline, resulting in final assemblies with quality checking at each step. The pipeline accepts short reads, long reads, or both and outputs the assemblies and quality checking statistics. Below is a figure detailing the major workflow steps involved in hybrid assembly.
-
-<img align="center" width="750" alt="Screenshot 2023-12-28 at 1 50 48 PM" src="https://github.com/emilytrybulec/argonaut/assets/114685119/9a67e0bb-8d63-4a1a-ae64-3f2e7dde0746">
+**Argonaut** performs **a**utomated **r**eads to **g**enome **o**perations for de **n**ovo **a**ssemblies; it is a bioinformatics pipeline that performs genome assembly on long and short read data. A fastq file and input information is fed to the pipeline, resulting in final assemblies with quality checking at each step. The pipeline accepts short reads, long reads, or both and outputs the assemblies and quality checking statistics. 
 
 # Table of Contents
 1. [Pipeline Summary](#Pipeline-Summary)
 2. [Quick Start](#Quick-Start)
+3. [Output Overview](#Pipeline-Output)
+4. [Credits](#Credits)
+5. [Contributions & Support](#Contributions-and-Support)
+6. [Citations](#Citations)
    
 ## Pipeline Summary
 
@@ -41,6 +43,9 @@ Short Read and Hybrid Assembly
 Hybrid assembly is conducted within the long read assembly subworkflow, and short read assembly is conducted within the main workflow. Downstream quality checking of short read and hybrid assemblies is also conducted in the long read QC subworkflows. 
 Purge Haplotigs is the first step of manual curation, as it produces a histogram that needs to be analyzed for -l, -m, -h flags. The pipeline will stop at the purge step and wait for manual input of parameters according to the histogram of your assembly, which can be found in your out directory.
 
+Below is a figure detailing the major workflow steps involved in hybrid assembly.
+
+<img align="center" width="750" alt="Screenshot 2023-12-28 at 1 50 48 PM" src="https://github.com/emilytrybulec/argonaut/assets/114685119/9a67e0bb-8d63-4a1a-ae64-3f2e7dde0746">
 
 ## Quick Start
 
