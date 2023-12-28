@@ -91,7 +91,7 @@ University of Connecticut:
      * Cristopher Guzman  
      * Harshita Akella
   
-<img align="right" height="150" src="https://github.com/emilytrybulec/argonaut/assets/114685119/91c25e9f-f70b-481f-8aab-55d2d529eca4">
+<img align="right" height="140" src="https://github.com/emilytrybulec/argonaut/assets/114685119/91c25e9f-f70b-481f-8aab-55d2d529eca4">
 
 * Rachel O'Neill Lab  
      * Rachel O’Neill  
