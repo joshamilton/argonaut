@@ -12,13 +12,13 @@
 
 **Argonaut** performs **a**utomated **r**eads to **g**enome **o**perations for de **n**ovo **a**ssemblies; it is a bioinformatics pipeline that performs genome assembly on long and short read data. A fastq file and input information is fed to the pipeline, resulting in final assemblies with quality checking at each step. The pipeline accepts short reads, long reads, or both and outputs the assemblies and quality checking statistics. 
 
-# Table of Contents
-1. [Pipeline Summary](#Pipeline-Summary)
-2. [Quick Start](#Quick-Start)
-3. [Output Overview](#Pipeline-Output)
-4. [Credits](#Credits)
-5. [Contributions & Support](#Contributions-and-Support)
-6. [Citations](#Citations)
+## Table of Contents
+- [Pipeline Summary](#Pipeline-Summary)
+- [Quick Start](#Quick-Start)
+- [Output Overview](#Pipeline-Output)
+- [Credits](#Credits)
+- [Contributions & Support](#Contributions-and-Support)
+- [Citations](#Citations)
    
 ## Pipeline Summary
 
