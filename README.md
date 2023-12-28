@@ -14,6 +14,10 @@
 
 <img align="center" width="750" alt="Screenshot 2023-12-28 at 1 50 48 PM" src="https://github.com/emilytrybulec/argonaut/assets/114685119/9a67e0bb-8d63-4a1a-ae64-3f2e7dde0746">
 
+# Table of Contents
+1. [Pipeline Summary](#Pipeline-Summary)
+2. [Quick Start](#Quick-Start)
+   
 ## Pipeline Summary
 
 Long Read Assembly
