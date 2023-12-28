@@ -35,9 +35,10 @@ sample,fastq_1,fastq_2,single_end
 Mo_short,SRR10443809_1.fastq,SRR10443809_2.fastq,FALSE
 ```
 
-| `sample`  | Custom sample name.  
-| `fastq_1` | Full path to FastQ file for ONT long reads or Illumina short reads 1. File must have the extension ".fastq" or ".fastq.qz".  
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File must have the extension ".fastq" or ".fastq.gz".
+|   `sample`    | Custom sample name.  
+|   `fastq_1`   | Full path to FastQ file for ONT long reads or Illumina short reads 1. File must have the extension ".fastq" or ".fastq.qz".  
+|   `fastq_2`   | Full path to FastQ file for Illumina short reads 2. File must have the extension ".fastq" or ".fastq.gz".  
+| `single end`  | True/false indicating whether reads are single end (usually long reads) or paired end (usually short reads).  
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
