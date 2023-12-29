@@ -182,6 +182,11 @@ workflow GENOMEASSEMBLY {
     }
     
     if ( params.shortread == true) {
+    masurca_sr_assembly
+        .concat(redundans_assembly)
+        .collect()
+        .groupTuple()
+        .set { sr_assemblies }
     all_assemblies
         .concat(masurca_sr_assembly, redundans_assembly)
         .collect()
@@ -203,21 +208,21 @@ workflow GENOMEASSEMBLY {
         QC_1 (all_assemblies, READ_QC2.out[0], ch_summtxt, READ_QC2.out[0], full_size)
     ch_versions = ch_versions.mix(QC_1.out.versions)}
 
-    //polish flye assembly with medaka
-    if ( params.flye == true ) {
-        POLISH (ASSEMBLY.out[3], LENGTH_FILT.out[0], params.model)
+    //polish assemblies with medaka and racon
+    if ( params.longread == true && params.medaka_racon_polish == true) {
+        POLISH (ASSEMBLY.out[0], LENGTH_FILT.out[0], params.model, QC_1.out[8])
         lr_polish   = POLISH.out[0]
         
         lr_polish
                 .map { file -> tuple([id: file.baseName], file)  }
-                .set { medaka_polish }      
+                .set { medaka_racon_polish }      
         
     ch_versions = ch_versions.mix(POLISH.out.versions)
     }
 
-    //align flye assembly to short reads and polish with POLCA if short reads are available
-    if ( params.flye == true && params.shortread == true) {
-        POLISH2 (ASSEMBLY.out[3], READ_QC2.out[1])
+    //align assemblies to short reads and polish with POLCA if short reads are available
+    if ( params.longread == true && params.shortread == true) {
+        POLISH2 (ASSEMBLY.out[0], READ_QC2.out[1])
         sr_polish   = POLISH2.out[0]
 
         sr_polish
@@ -226,20 +231,19 @@ workflow GENOMEASSEMBLY {
         
         //combine polished flye assemblies w other assemblies
         polca_polish
-            .concat(all_assemblies, medaka_polish)
+            .concat(all_assemblies, medaka_racon_polish)
             .collect()
             .groupTuple()
             .set { polished_assemblies }
 
     ch_versions = ch_versions.mix(POLISH2.out.versions)
     } else {
-        medaka_polish
+        medaka_racon_polish
             .concat(all_assemblies)
             .collect()
             .groupTuple()
             .set { polished_assemblies }
     }
-
     polished_assemblies.view()
 
     if ( params.shortread == true && params.longread == true ) {
