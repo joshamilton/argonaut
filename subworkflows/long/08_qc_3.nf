@@ -51,12 +51,14 @@ workflow QC_3 {
 
         SAMTOOLS_INDEX (ch_bam)
 
+        if ( params.summary_txt_file == true ) {
         ch_summarytxt = summarytxt.map { file -> tuple(file.baseName, file) }
 
         PYCOQC (
-            ch_summarytxt, ch_bam, SAMTOOLS_INDEX.out.bai
+            ch_summarytxt, MINIMAP2_ALIGN.out.bam, SAMTOOLS_INDEX.out.bai
         )
         ch_versions = ch_versions.mix(PYCOQC.out.versions)
+        }
 
         MERQURY (
             assemblies, ch_meryl, genome_size_est, params.tolerable_collision
