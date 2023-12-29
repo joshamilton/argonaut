@@ -196,7 +196,9 @@ workflow GENOMEASSEMBLY {
     }
     
     if ( params.summary_txt_file == true) {
-        ch_summtxt = Channel.fromPath(params.summary_txt) }
+        ch_summtxt = Channel.fromPath(params.summary_txt) 
+    } else {
+        ch_summtxt = Channel.empty() }
 
     if ( params.shortread == true && params.longread == true ) {
         QC_1 (all_assemblies, LENGTH_FILT.out[0], ch_summtxt, READ_QC2.out[0], full_size)
