@@ -48,11 +48,13 @@ workflow QC_1 {
     
         // create summary txt channel with meta id and run pycoQC
         ch_summarytxt = summarytxt.map { file -> tuple(file.baseName, file) }
-        
+
+        if ( params.summary_txt_file == true ) {
         PYCOQC (
             ch_summarytxt, MINIMAP2_ALIGN.out.bam, SAMTOOLS_INDEX.out.bai
         )
         ch_versions = ch_versions.mix(PYCOQC.out.versions)
+        }
 
         if ( params.shortread == true ) {
             MERYL_COUNT ( shortreads ) }
