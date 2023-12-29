@@ -1,24 +1,29 @@
 include { MEDAKA } from '../../modules/nf-core/medaka/main'  
+include { RACON } from '../../modules/nf-core/racon/main'  
 
 workflow POLISH {
 
     take:
-        flye_assembly
+        assembly
         fastq_filt
         model
+        paf
     main:
 
     ch_versions = Channel.empty() 
 
-        MEDAKA (fastq_filt, flye_assembly, model)
-        medaka_assembly = MEDAKA.out.assembly
+        RACON (fastq_filt, assembly, paf)
 
-        medaka_assembly
+        MEDAKA (fastq_filt, RACON.out.improved_assembly, model)
+
+        polished_assembly = MEDAKA.out.assembly
+
+        polished_assembly
                 .map { file -> tuple([id: file.baseName], file)  }
-                .set { flye_assembly_polished }
+                .set { assembly_polished }
     emit:
     
-        flye_assembly_polished      
+        assembly_polished      
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
