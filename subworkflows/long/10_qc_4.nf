@@ -58,6 +58,8 @@ workflow QC_4 {
             ch_summarytxt, MINIMAP2_ALIGN.out.bam, SAMTOOLS_INDEX.out.bai
         )
         ch_versions = ch_versions.mix(PYCOQC.out.versions)
+        } else {
+            ch_summarytxt = Channel.empty()
         }
 
         MERQURY (
