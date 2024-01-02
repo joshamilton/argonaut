@@ -276,7 +276,6 @@ workflow GENOMEASSEMBLY {
     lr_purge
         .concat(sr_purge)
         .collect()
-        .groupTuple()
         .map { file -> tuple(file.baseName, file) }
         .set { purged_assemblies }
 
