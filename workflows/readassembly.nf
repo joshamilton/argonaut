@@ -220,6 +220,8 @@ workflow GENOMEASSEMBLY {
                 .set { medaka_racon_polish }      
         
     ch_versions = ch_versions.mix(POLISH.out.versions)
+    } else {
+        medaka_racon_polish = Channel.empty()
     }
 
     //align assemblies to short reads and polish with POLCA if short reads are available
