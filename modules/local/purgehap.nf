@@ -1,5 +1,5 @@
 process ALIGN {
-    tag "$meta.id"
+    tag "$meta"
     label 'process_medium'
 
     conda "bioconda::minimap2=2.24 bioconda::samtools=1.14"
@@ -47,7 +47,7 @@ process ALIGN {
 }
 
 process HISTOGRAM {
-    tag "$meta.id"
+    tag "$meta"
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -68,7 +68,7 @@ process HISTOGRAM {
 }
 
 process PURGE {
-    tag "$meta.id"
+    tag "$meta"
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
