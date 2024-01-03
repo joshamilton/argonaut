@@ -28,7 +28,7 @@ Long Read Assembly
 2. Length Filtering (optional)([`Bioawk`](https://github.com/lh3/bioawk), [`Nanoplot`](https://github.com/wdecoster/NanoPlot))
 3. Assembly([`Flye`](https://github.com/fenderglass/Flye), [`Canu`](https://github.com/marbl/canu), [`Hifiasm`](https://github.com/chhylp123/hifiasm))
 4. Assembly QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
-5. Polish([`Medaka`](https://github.com/nanoporetech/medaka))
+5. Polish([`Medaka`](https://github.com/nanoporetech/medaka),[`Racon`](https://github.com/isovic/racon))
 6. Polish QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
 7. Purge([`PurgeHaplotigs`](https://bitbucket.org/mroachawri/purge_haplotigs/src/master/))
 8. Purge QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
