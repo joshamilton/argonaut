@@ -145,8 +145,6 @@ Development of this pipeline was funded by the University of Connecticut Office 
 
 The Biodiversity and Conservation Genomics Center is a part of the [Earth Biogenome Project](https://www.earthbiogenome.org/), working towards capturing the genetic diversity of life on Earth.
 
-If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
-
 ## Citations
 Argonaut is currently unpublished. For now, please use the GitHub URL when referencing.
 
