@@ -43,7 +43,7 @@ Short Read and Hybrid Assembly
 
 Below is a figure detailing the major workflow steps involved in hybrid assembly.
 
-<img align="left" width="700" alt="Argonaut Hybrid Workflow" src="https://github.com/emilytrybulec/argonaut/assets/114685119/54fd9e52-d657-4a29-99a6-953f736e1630">
+<img align="center" width="700" alt="Argonaut Hybrid Workflow" src="https://github.com/emilytrybulec/argonaut/assets/114685119/54fd9e52-d657-4a29-99a6-953f736e1630">
 
   
 Hybrid assembly is conducted within the long read assembly subworkflow, and short read assembly is conducted within the main workflow. Downstream quality checking of short read and hybrid assemblies is also conducted in the long read QC subworkflows.  
