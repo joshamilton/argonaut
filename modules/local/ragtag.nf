@@ -11,17 +11,17 @@ process RAGTAG {
     path reference
 
     output:
-    path "*.fasta"             , emit: scaffolded_assembly
-    tuple val(meta), path("*.stats")                 , emit: summary
-    path  "versions.yml"                           , emit: versions
+    path "ragtag*/*.fasta"                           , emit: scaffolded_assembly
+    tuple val(meta), path("ragtag*/*.stats")                 , emit: summary
+    path  "ragtag*/versions.yml"                           , emit: versions
 
     script:
     def VERSION = '2.1.0'
 
     """
-    ragtag.py scaffold $reference $fasta -f 1000 -o ${fasta.baseName}
+    ragtag.py scaffold $reference $fasta -f 1000 -o ragtag_${fasta.baseName}
 
-    cd ${fasta.baseName}
+    cd ragtag_${fasta.baseName}
     mv ragtag.scaffold.fasta ragtag.scaffold.${fasta.baseName}.fasta
 
     cat <<-END_VERSIONS > versions.yml
