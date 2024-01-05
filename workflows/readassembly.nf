@@ -259,7 +259,15 @@ workflow GENOMEASSEMBLY {
         } else if ( params.shortread == true && params.longread == false ) {
             QC_2 (polished_assemblies, READ_QC2.out[0], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], full_size, QC_1.out[7])
         }
+        qualitya = QC_2.out[3]
+        qualityb = QC_2.out[4]
+        qualityc = QC_2.out[5]
+    } else {
+        qualitya = QC_1.out[3]
+        qualityb = QC_1.out[4]
+        qualityc = QC_1.out[5]
     }
+
 
     if (params.shortread == true) {
         PURGE2 (sr_assemblies, READ_QC2.out[1])
@@ -280,12 +288,12 @@ workflow GENOMEASSEMBLY {
         .set { purged_assemblies }
 
     if ( params.shortread == true && params.longread == true ) {
-        QC_3 (purged_assemblies, LENGTH_FILT.out[0], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], READ_QC2.out[0], full_size, QC_1.out[7])
+        QC_3 (purged_assemblies, LENGTH_FILT.out[0], ch_summtxt, qualitya, qualityb, qualityc, READ_QC2.out[0], full_size, QC_1.out[7])
     ch_versions = ch_versions.mix(QC_3.out.versions)
     } else if ( params.longread == true && params.shortread == false ) {
-        QC_3 (purged_assemblies, LENGTH_FILT.out[0], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], [], full_size, QC_1.out[7])  
+        QC_3 (purged_assemblies, LENGTH_FILT.out[0], ch_summtxt, qualitya, qualityb, qualityc, [], full_size, QC_1.out[7])  
     } else if ( params.shortread == true && params.longread == false ) {
-        QC_3 (purged_assemblies, READ_QC2.out[0], ch_summtxt, QC_2.out[3], QC_2.out[4], QC_2.out[5], READ_QC2.out[0], full_size, QC_1.out[7])
+        QC_3 (purged_assemblies, READ_QC2.out[0], ch_summtxt, qualitya, qualityb, qualityc, READ_QC2.out[0], full_size, QC_1.out[7])
     }
         
     if ( params.ragtag_scaffold == true ) {
