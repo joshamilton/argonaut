@@ -37,11 +37,11 @@ process CANU {
 
     canu \\
         -p ${prefix} \\
-        $mode \\
+        $mode $reads \\
         genomeSize=\$genomesize \\
         $args \\
         maxThreads=$task.cpus \\
-        $reads
+        
 
     gzip *.fasta
 
