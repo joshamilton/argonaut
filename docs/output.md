@@ -34,7 +34,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   * long read
     * [Canu](#canu) - Canu assembly (for high coverage data) 
     * [Flye](#flye) - Flye assembly
-    * [Hifiasm](#hifiasm) - Hifiasm asssembly
+    * [Hifiasm](#hifiasm) - Hifiasm asssembly (for PacBio Hifi data)
   * short read
     * [MaSuRCA](#masurca) - Masurca short read assembly
     * [Redundans](#masurca) - Redundans assembly
