@@ -102,7 +102,7 @@ Information about interpreting output is located in the [output](docs/output.md)
 ## Credits
 emilytrybulec/genomeassembly was originally written by Emily Trybulec.
 
-We thank the following people for their extensive assistance in the development of this pipeline:
+I thank the following people for their extensive assistance in the development of this pipeline:
 
 University of Connecticut:  
 <img align="right" height="210" src="https://github.com/emilytrybulec/argonaut/assets/114685119/7a3fd47c-0fbf-443c-a121-9fd8a3da9ba3">
