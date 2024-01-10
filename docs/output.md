@@ -32,15 +32,17 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   * hybrid
     * [MaSuRCA](#masurca) - Masurca hybrid assembly
   * long read
-    * [Canu](#canu) - Canu assembly  
+    * [Canu](#canu) - Canu assembly (for high coverage data) 
     * [Flye](#flye) - Flye assembly
+    * [Hifiasm](#hifiasm) - Hifiasm asssembly
   * short read
     * [MaSuRCA](#masurca) - Masurca short read assembly
     * [Redundans](#masurca) - Redundans assembly
   
 * POLISH  
-  * [Medaka](#medaka) - Long read polishing of flye assembly  
-  * [POLCA](#polca) - Short read (or long read) polishing of flye assembly  
+  * [Medaka](#medaka) - Long read polishing assemblies
+  * [Racon](#racon) - Long read polishing assemblies
+  * [POLCA](#polca) - Short (or long) read polishing assemblies
   
 * PURGE  
   * [Align](#purge) - Alignment of raw reads to assemblies  
@@ -238,6 +240,8 @@ The extract module uses awk and numfmt to isolate the genome size estimate for d
 </details>
 
 [Gzip](https://www.gzip.org/) is a file compression tool that may be used in the pipeline to convert files from fastq to fastq.gz and vice versa. For further reading and documentation see the [Gzip documentation](https://www.gnu.org/software/gzip/manual/gzip.html).
+
+### hifiasm
 
 ### jellyfish
 
@@ -444,6 +448,8 @@ The output module pulls quality checking statistics from assemblies at each step
 </details>
 
 [Quast](https://github.com/a-slide/pycoQC) is an quality checking tool that assesses contiguity. A report is generated that summarizes the statistics for each assembly. For more information, see the [Quast user manual](https://quast.sourceforge.net/docs/manual.html).
+
+### racon
 
 ### recentrifuge
 
