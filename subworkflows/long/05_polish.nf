@@ -13,13 +13,15 @@ workflow POLISH {
     ch_versions = Channel.empty() 
 
         RACON (fastq_filt, assembly, paf)
+        ch_versions = ch_versions.mix(RACON.out.versions)
 
         MEDAKA (fastq_filt, RACON.out.improved_assembly, model)
-
+        ch_versions = ch_versions.mix(MEDAKA.out.versions)
+ 
         polished_assembly = MEDAKA.out.assembly
 
         polished_assembly
-                .map { file -> tuple([id: file.baseName], file)  }
+                .map { file -> tuple(id: file.baseName, file)  }
                 .set { assembly_polished }
     emit:
     
