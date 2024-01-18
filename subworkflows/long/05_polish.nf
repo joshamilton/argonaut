@@ -19,7 +19,7 @@ workflow POLISH {
             .view()
             .set { ch_racon }
 
-            RACON (fastq_filt, assembly, paf)
+            RACON (ch_racon)
         ch_versions = ch_versions.mix(RACON.out.versions)
         polished_assembly = RACON.out.improved_assembly
         }
