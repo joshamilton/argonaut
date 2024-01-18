@@ -12,12 +12,29 @@ workflow POLISH {
 
     ch_versions = Channel.empty() 
 
-        RACON (fastq_filt, assembly, paf)
+        if (params.racon_polish == true) {
+            fastq_filt
+            .join(assembly, by:0)
+            .concat(paf)
+            .view()
+            .set { ch_racon }
 
-        MEDAKA (fastq_filt, RACON.out.improved_assembly, model)
+            RACON (fastq_filt, assembly, paf)
+        ch_versions = ch_versions.mix(RACON.out.versions)
+        }
+        
+        if (params.medaka_polish == true && params.racon_polish == true) {
+            MEDAKA (fastq_filt, RACON.out.improved_assembly, model)
         ch_versions = ch_versions.mix(MEDAKA.out.versions)
  
         polished_assembly = MEDAKA.out.assembly
+        } else {
+            MEDAKA (fastq_filt, assembly, model)
+        ch_versions = ch_versions.mix(MEDAKA.out.versions)
+ 
+        polished_assembly = MEDAKA.out.assembly
+        }
+        
 
         polished_assembly
                 .map { file -> tuple(id: file.baseName, file)  }
