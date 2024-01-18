@@ -211,15 +211,17 @@ workflow GENOMEASSEMBLY {
     ch_versions = ch_versions.mix(QC_1.out.versions)}
 
     //polish assemblies with medaka and racon
-    if ( params.longread == true && params.medaka_racon_polish == true) {
+    if ( params.longread == true) {
+        if ( params.medaka_polish == true || params.racon_polish == true){
+
         POLISH (ASSEMBLY.out[0], LENGTH_FILT.out[0], params.model, QC_1.out[8])
         lr_polish   = POLISH.out[0]
         
         lr_polish
-                .map { file -> tuple([id: file.baseName], file)  }
+                .map { file -> tuple(id: file.baseName, file)  }
                 .set { medaka_racon_polish }      
         
-    ch_versions = ch_versions.mix(POLISH.out.versions)
+    ch_versions = ch_versions.mix(POLISH.out.versions) }
     } else {
         medaka_racon_polish = Channel.empty()
     }
@@ -230,14 +232,13 @@ workflow GENOMEASSEMBLY {
         sr_polish   = POLISH2.out[0]
 
         sr_polish
-                .map { file -> tuple([id: file.baseName], file)  }
+                .map { file -> tuple(id: file.baseName, file)  }
                 .set { polca_polish }   
         
         //combine polished flye assemblies w other assemblies
         polca_polish
             .concat(all_assemblies, medaka_racon_polish)
             .collect()
-            .groupTuple()
             .set { polished_assemblies }
 
     ch_versions = ch_versions.mix(POLISH2.out.versions)
@@ -247,9 +248,10 @@ workflow GENOMEASSEMBLY {
             .collect()
             .set { polished_assemblies }
     }
+
     polished_assemblies.view()
 
-    if ( params.medaka_racon_polish == true || params.shortread == true) {
+    if ( params.medaka_polish == true || params.racon_polish == true || params.shortread == true) {
         if ( params.shortread == true && params.longread == true ) {
             QC_2 (polished_assemblies, LENGTH_FILT.out[0], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], full_size, QC_1.out[7])
             ch_versions = ch_versions.mix(QC_2.out.versions)
