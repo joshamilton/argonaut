@@ -33,12 +33,14 @@ workflow POLISH {
         ch_versions = ch_versions.mix(MEDAKA.out.versions)
  
         polished_assembly = MEDAKA.out.assembly
-        }
-        
 
         polished_assembly
                 .map { file -> tuple(id: file.baseName, file)  }
                 .set { assembly_polished }
+        }
+        
+
+        
     emit:
     
         assembly_polished      
