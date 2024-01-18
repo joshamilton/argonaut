@@ -66,9 +66,6 @@ include { READ_QC2 } from '../subworkflows/short/02_read_qc'
 include { POLISH2 } from '../subworkflows/short/03_polish'
 include { PURGE2 } from '../subworkflows/short/04_purge'
 
-
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
