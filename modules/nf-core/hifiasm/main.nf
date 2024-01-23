@@ -73,7 +73,8 @@ process HIFIASM {
             hifiasm: \$(hifiasm --version 2>&1)
         END_VERSIONS
         """
-    } else { // Phasing with Hi-C data is not supported yet
+    } else { 
+    // Phasing with Hi-C data is not supported yet
         """
         hifiasm \\
             $args \\
