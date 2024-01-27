@@ -8,17 +8,12 @@ workflow POLISH {
         fastq_filt
         model
         paf
+        ch_racon
     main:
 
     ch_versions = Channel.empty() 
 
         if (params.racon_polish == true) {
-            fastq_filt
-            .join(assembly, by:0)
-            .concat(paf)
-            .view()
-            .set { ch_racon }
-
             RACON (ch_racon)
         ch_versions = ch_versions.mix(RACON.out.versions)
         polished_assembly = RACON.out.improved_assembly
