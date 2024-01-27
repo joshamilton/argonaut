@@ -1,4 +1,5 @@
 process RACON {
+    work "${params.workDir}/racon_work"
     tag "$meta.id"
     label 'process_high'
 
