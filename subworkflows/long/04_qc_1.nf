@@ -45,6 +45,7 @@ workflow QC_1 {
         ch_versions = ch_versions.mix(BUSCO.out.versions)
 
         SAMTOOLS_INDEX (MINIMAP2_ALIGN.out.bam)
+        ch_sam = SAMTOOLS_INDEX.out.sam
     
         if ( params.summary_txt_file == true ) {
         // create summary txt channel with meta id and run pycoQC
@@ -78,7 +79,7 @@ workflow QC_1 {
         ch_merqury
         ch_summarytxt
         ch_meryl = MERYL_COUNT.out.meryl_db
-        ch_sam = SAMTOOLS_INDEX.out.sam
+        ch_sam
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
