@@ -217,7 +217,7 @@ workflow GENOMEASSEMBLY {
                 .view()
                 .set { ch_racon }
             } else { ch_racon = Channel.empty() }
-        POLISH (ASSEMBLY.out[0], LENGTH_FILT.out[0], params.model, QC_1.out[8])
+        POLISH (ASSEMBLY.out[0], LENGTH_FILT.out[0], params.model, QC_1.out[8], ch_racon)
         lr_polish   = POLISH.out[0]
         
         lr_polish
