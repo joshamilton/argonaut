@@ -14,6 +14,7 @@ process SAMTOOLS_INDEX {
     tuple val(meta), path("*.bai") , optional:true, emit: bai
     tuple val(meta), path("*.csi") , optional:true, emit: csi
     tuple val(meta), path("*.crai"), optional:true, emit: crai
+    tuple val(meta), path("*.sam"), emit: sam
     path  "versions.yml"           , emit: versions
 
     when:
@@ -21,7 +22,14 @@ process SAMTOOLS_INDEX {
 
     script:
     def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
+    samtools \\
+        view \\
+        -h -o assembly_out.sam $input
+
+    mv assembly_out.sam ${prefix}.sam
+
     samtools \\
         index \\
         -@ ${task.cpus-1} \\
