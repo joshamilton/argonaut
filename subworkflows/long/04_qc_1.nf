@@ -78,6 +78,7 @@ workflow QC_1 {
         ch_merqury
         ch_summarytxt
         ch_meryl = MERYL_COUNT.out.meryl_db
+        ch_sam = SAMTOOLS_INDEX.out.sam
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
