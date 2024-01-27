@@ -210,7 +210,13 @@ workflow GENOMEASSEMBLY {
     //polish assemblies with medaka and racon
     if ( params.longread == true) {
         if ( params.medaka_polish == true || params.racon_polish == true){
-
+            if (params.racon_polish == true){
+            LENGTH_FILT.out[0]
+                .join(ASSEMBLY.out[0, by:0)
+                .concat(QC_1.out[8])
+                .view()
+                .set { ch_racon }
+            } else { ch_racon = Channel.empty() }
         POLISH (ASSEMBLY.out[0], LENGTH_FILT.out[0], params.model, QC_1.out[8])
         lr_polish   = POLISH.out[0]
         
