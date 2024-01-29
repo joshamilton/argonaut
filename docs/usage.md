@@ -4,7 +4,7 @@
 
 ## Introduction
 
-The pipeline accepts fastq files for both short and long reads. ONT and PacBio HiFi reads are considered long read and Illumina reads are considered short read. Please indicate whether your input consists of both or one of the read types in the your my_config file. An example config file and further explanation is located [below](#Running-the-pipeline). To get started, four main files are recommended: [samplesheet.csv](#Samplesheet-input), [params.yaml](#Parameters), [my_config](#Configurations), and [nextflow.sh]
+To get started running Argonaut, four main files are recommended: [samplesheet.csv](#Samplesheet-input), [params.yaml](#Parameters), [my_config](#Configurations), and [nextflow.sh]
 
 ## Samplesheet input
 
@@ -71,7 +71,7 @@ Not all parameters are required, and the default settings can be modified for in
 
 ## Configurations  
 
-Your my_config file acts as the master switch for controlling the pipeline options. Create a my_config file and populate it with your preferences that differ from the default settings found in [nextflow.config](../nextflow.config). Specify the full path to your config file with '-c' when [running the nextflow command](#Running-the-pipeline).  
+Your my_config file acts as the master switch for controlling the pipeline options. Create a my_config file and populate it with your preferences that differ from the default settings found in [nextflow.config](../nextflow.config). The pipeline accepts fastq files for both short and long reads. ONT and PacBio HiFi reads are considered long read and Illumina reads are considered short read. Please indicate whether your input consists of both or one of the read types in the your my_config file. Specify the full path to your config file with '-c' when [running the nextflow command](#Running-the-pipeline).  
 
 An example `my_config` contains:
 
