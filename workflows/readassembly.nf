@@ -172,6 +172,10 @@ workflow GENOMEASSEMBLY {
                 .map { file -> tuple(id: file.baseName, file)  }
                 .set { masurca_sr_assembly }
         }
+    } else {
+        masurca_sr_assembly = Channel.empty() 
+    }
+
 
     if ( params.shortread == true && params.redundans == true){
         REDUNDANS_A (ch_shortdata.reads)
