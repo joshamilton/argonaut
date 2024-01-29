@@ -1,6 +1,6 @@
 process CANU {
     tag "$meta.id"
-    label 'process_high_memory'
+    label 'process_low'
 
     conda "bioconda::canu=2.2"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
