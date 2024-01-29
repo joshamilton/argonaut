@@ -4,7 +4,7 @@
 
 ## Introduction
 
-To get started running Argonaut, four main files are recommended: [samplesheet.csv](#Samplesheet-input), [params.yaml](#Parameters), [my_config](#Configurations), and [nextflow.sh]
+To get started running Argonaut, four main files are recommended: [samplesheet.csv](#Samplesheet-input), [params.yaml](#Parameters), [my_config](#Configurations), and [nextflow.sh](#Running-the-pipeline)
 
 ## Samplesheet input
 
