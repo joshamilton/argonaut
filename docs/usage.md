@@ -4,19 +4,12 @@
 
 ## Introduction
 
-The pipeline accepts fastq files for both short and long reads. ONT and PacBio HiFi reads are considered long read and Illumina reads are considered short read. Please indicate whether your input consists of both or one of the read types in the your my_config file. An example config file and further explanation is located [below](#Running-the-pipeline).
+The pipeline accepts fastq files for both short and long reads. ONT and PacBio HiFi reads are considered long read and Illumina reads are considered short read. Please indicate whether your input consists of both or one of the read types in the your my_config file. An example config file and further explanation is located [below](#Running-the-pipeline). To get started, four main files are recommended: [samplesheet.csv](#Samplesheet-input), [params.yaml](#Parameters), [my_config](#Configurations), and [nextflow.sh]
 
 ## Samplesheet input
 
 You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use the input parameter to specify its location in params.yaml. The samplesheet has to be a comma-separated file (.csv) with 3 columns, and a header row. More detail about creating the samplesheets for your specific type of input is located [below](#Using-long-and-short-reads).
 
-The params.yaml file feeds the pipeline all of your input! Create a params.yaml file and enter the path to your long and/or short samplesheet(s). We will continue to build on this params file to provide contaminant databases, an out directory name, and more. An example of the first line of params.yaml is shown here:
-
-```yaml
-input : '[path to samplesheet file]'
-```
-
-An example of a full [params.yaml](#Running-the-pipeline) file is provided following samplesheet examples
 ### Using long and short reads
 
 The `sample` identifiers are important for naming throughout the pipeline, and we recommend that specific sample names are used. The pipeline requires concatenated raw reads before performing any downstream analysis. For best results, please provide the entire path to the reads.
@@ -42,32 +35,12 @@ Mo_short,SRR10443809_1.fastq,SRR10443809_2.fastq,FALSE
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
-## Running the pipeline
 
-The typical command for running the pipeline is as follows:
+## Parameters
+We recommend specifying parameters in a params file. 
 
-```bash
-nextflow run emilytrybulec/genomeassembly \
-  -r main \
-  -params-file params.yaml \
-  -c my_config \
-  -profile singularity,xanadu \
-```
+The params.yaml file feeds the pipeline all of your input paths! Create a params.yaml file and enter the path to your long and/or short samplesheet(s). You will continue to build on this params file to provide contaminant databases, an out directory name, and more. An example of a params.yaml is shown here:
 
-This will launch the pipeline with the `xanadu` configuration profile. See below for more information about profiles.
-
-Note that the pipeline will create the following files in your working directory:
-
-```bash
-work                # Directory containing the nextflow working files
-<OUTDIR>            # Finished results in specified location (defined with --outdir in params.yaml)
-.nextflow_log       # Log file from Nextflow
-# Other nextflow hidden files, eg. history of pipeline runs and old logs.
-```
-
-We recommend specifying parameters in a params file.
-
-Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <file>`.
 
 An example `params.yaml` contains:
 
@@ -94,7 +67,11 @@ General tips for your params file:
 * Please ensure that your BUSCO lineage aligns with your organism type. (e.g. for japanese walnut tree: "embryophyta_odb10")
 * If you are using PacBio HiFi data, please change the flye and canu modes to indicate so. The above example indicates ONT long read input.
 
-Not all parameters are required, and the default settings can be modified for individualized use. If you would like to change any settings dictating which assemblers run, whether short reads are available, or options like length filtering and scaffolding, please create a config file and specify in the command with '-c'.
+Not all parameters are required, and the default settings can be modified for individualized use. If you would like to change any settings dictating which assemblers run, whether short reads are available, or options like length filtering and scaffolding, please create a config file using the directions [below](#Configurations).
+
+## Configurations  
+
+Your my_config file acts as the master switch for controlling the pipeline options. Create a my_config file and populate it with your preferences that differ from the default settings found in [nextflow.config](../nextflow.config). Specify the full path to your config file with '-c' when [running the nextflow command](#Running-the-pipeline).  
 
 An example `my_config` contains:
 
@@ -106,6 +83,29 @@ params{
   canu                = true
   ragtag_scaffold     = false
 }
+```
+
+## Running the pipeline
+
+The typical command for running the pipeline is as follows:
+
+```bash
+nextflow run emilytrybulec/genomeassembly \
+  -r main \
+  -params-file params.yaml \
+  -c my_config \
+  -profile singularity,xanadu \
+```
+
+This will launch the pipeline with the `xanadu` configuration profile. See below for more information about profiles.
+
+Note that the pipeline will create the following files in your working directory:
+
+```bash
+work                # Directory containing the nextflow working files
+<OUTDIR>            # Finished results in specified location (defined with --outdir in params.yaml)
+.nextflow_log       # Log file from Nextflow
+# Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
 
 ### Updating the pipeline
