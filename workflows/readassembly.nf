@@ -43,6 +43,7 @@ include { TOTAL_BASES_LR } from '../modules/local/total_bases_lr'
 include { COVERAGE_SR } from '../modules/local/coverage_sr'
 include { COVERAGE_LR } from '../modules/local/coverage_lr'
 include { MASURCA_SR } from '../modules/local/masurca_sr'
+include { MASURCA_SR_ADV } from '../modules/local/masurca_sr_adv'
 include { REDUNDANS_A } from '../modules/local/redundans_assembler'
 include { FORMAT } from '../modules/local/format_genome_size'
 include { EXTRACT_LR } from '../modules/local/extract_genome_size'
@@ -157,15 +158,20 @@ workflow GENOMEASSEMBLY {
 
     //short read only assembly
     if ( params.shortread == true && params.masurca == true){
-        MASURCA_SR (READ_QC2.out[1])
-        println "assembling short reads with maSuRCA!"
-        MASURCA_SR.out.fasta
-            .map { file -> tuple([id: file.baseName], file)  }
-            .set { masurca_sr_assembly }
-        
-    } else {
-        masurca_sr_assembly = Channel.empty() 
-    }
+        if (params.masurca_sr_adv == true){
+            ch_config = Channel.fromPath(params.masurca_config)
+            MASURCA_SR_ADV (ch_config)
+            println "assembling short reads with maSuRCA!"
+            MASURCA_SR_ADV.out.fasta
+                .map { file -> tuple(id: file.baseName, file)  }
+                .set { masurca_sr_assembly }
+        } else {
+            MASURCA_SR (READ_QC2.out[1])
+            println "assembling short reads with maSuRCA!"
+            MASURCA_SR.out.fasta
+                .map { file -> tuple(id: file.baseName, file)  }
+                .set { masurca_sr_assembly }
+        }
 
     if ( params.shortread == true && params.redundans == true){
         REDUNDANS_A (ch_shortdata.reads)
