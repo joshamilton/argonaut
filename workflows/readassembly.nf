@@ -222,8 +222,8 @@ workflow GENOMEASSEMBLY {
         if ( params.medaka_polish == true || params.racon_polish == true){
             if (params.racon_polish == true){
             LENGTH_FILT.out[0]
-                .join(all_assemblies, by:0)
-                .concat(QC_1.out[8])
+                .join(all_assemblies)
+                .join(QC_1.out[8])
                 .view()
                 .set { ch_racon }
             } else { ch_racon = Channel.empty() }
