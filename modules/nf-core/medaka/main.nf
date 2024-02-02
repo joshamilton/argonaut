@@ -14,7 +14,7 @@ process MEDAKA {
 
     output:
     path("medaka/*polish.fasta")              , emit: assembly
-    path "versions.yml"             , emit: versions
+    path("medaka/versions.yml")            , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
