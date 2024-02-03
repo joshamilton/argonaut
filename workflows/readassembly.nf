@@ -276,7 +276,7 @@ workflow GENOMEASSEMBLY {
         if ( params.medaka_polish == true || params.racon_polish == true){
             if (params.racon_polish == true){
             ch_longreads
-                .join(all_assemblies, by:0)
+                .join(all_assemblies)
                 .concat(QC_1.out[8])
                 .view()
                 .set { ch_racon }
