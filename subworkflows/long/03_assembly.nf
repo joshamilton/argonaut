@@ -69,8 +69,8 @@ workflow ASSEMBLY {
 
             masurca_assembly
                 .map { file -> tuple(id: file.baseName, file)  }
-                .set { m_assembly } 
-                }} else {
+                .set { m_assembly } }
+        } else {
             m_assembly = Channel.empty() 
         }
 
