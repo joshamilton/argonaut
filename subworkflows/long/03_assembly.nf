@@ -15,6 +15,7 @@ workflow ASSEMBLY {
         shortreads
         genome_size_est
         genome_size_est_long
+        combined_longreads
 
     main:
     ch_versions = Channel.empty() 
@@ -26,7 +27,7 @@ workflow ASSEMBLY {
         COVERAGE_LR(genome_size_est_long, TOTAL_BASES_LR.out.total_bases)
 
         assemblies = Channel.empty() 
-
+        
         //if statement to run assembly and create channels for each resulting assembly
         if ( params.flye == true ) {
             println "assembling long reads with flye!"
@@ -34,7 +35,7 @@ workflow ASSEMBLY {
             flye_assembly      = FLYE.out.fasta   
 
             flye_assembly
-                .map { file -> tuple([id: file.baseName], file)  }
+                .map { file -> tuple(id: file.baseName, file)  }
                 .set { f_assembly }      
         } else {
             f_assembly = Channel.empty() 
@@ -46,21 +47,30 @@ workflow ASSEMBLY {
             canu_assembly      = CANU.out.assembly   
 
             canu_assembly
-                .map { file -> tuple([id: file.baseName], file)  }
+                .map { file -> tuple(id: file.baseName, file)  }
                 .set { c_assembly }
         } else {
             c_assembly = Channel.empty() 
         }
 
         if ( params.masurca == true && params.shortread == true) {
+            if (params.ONT_lr == true && params.PacBioHifi_lr == true) {
+            println "hybrid assembly with maSuRCA!"
+            MASURCA(combined_longreads, shortreads)
+            masurca_assembly    = MASURCA.out.fasta
+
+            masurca_assembly
+                .map { file -> tuple(id: file.baseName, file)  }
+                .set { m_assembly } 
+            } else {
             println "hybrid assembly with maSuRCA!"
             MASURCA(longreads, shortreads)
             masurca_assembly    = MASURCA.out.fasta
 
             masurca_assembly
-                .map { file -> tuple([id: file.baseName], file)  }
-                .set { m_assembly }
-        } else {
+                .map { file -> tuple(id: file.baseName, file)  }
+                .set { m_assembly } 
+                }} else {
             m_assembly = Channel.empty() 
         }
 
@@ -70,7 +80,7 @@ workflow ASSEMBLY {
             hifi_assembly    = HIFIASM.out.assembly_fasta
 
             hifi_assembly
-                .map { file -> tuple([id: file.baseName], file)  }
+                .map { file -> tuple(id: file.baseName, file)  }
                 .set { h_assembly }
         } else {
             h_assembly = Channel.empty() 
@@ -81,7 +91,7 @@ workflow ASSEMBLY {
             existing_assembly = Channel.fromPath(params.existing_assembly)
 
             existing_assembly
-                .map { file -> tuple([id: file.baseName], file)  }
+                .map { file -> tuple(id: file.baseName, file)  }
                 .set { ex_assembly }
         } else {
             ex_assembly = Channel.empty() 
@@ -92,6 +102,8 @@ workflow ASSEMBLY {
             .collect()
             .groupTuple()
             .set { all_assemblies }
+
+        all_assemblies.view { "Final Long Read and Hybrid Assemblies: $it" }
 
     emit:
         all_assemblies  
