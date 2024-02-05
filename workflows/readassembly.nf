@@ -138,9 +138,10 @@ workflow GENOMEASSEMBLY {
             ch_ONTlongreads
                 .join(ch_PacBiolongreads)
                 .set{ch_combo_longreads}
-        }
-        
-    }
+        }else if (params.PacBioHifi_lr == false && params.PacBioHifi_lr == false){ 
+            ch_longreads = Channel.empty()
+            ch_combo_longreads = Channel.empty()
+        }}
 
     if ( params.shortread == true ) {
         ch_shortdata = INPUT_CHECK2 ( ch_shortinput )
