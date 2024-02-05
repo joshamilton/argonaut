@@ -108,11 +108,12 @@ workflow GENOMEASSEMBLY {
 
             //optional read filtering by length with bioawk
             LENGTH_FILT (READ_QC.out[0])
+            ch_ONTlongreads = LENGTH_FILT.out[0]
+
             ch_versions = ch_versions.mix(LENGTH_FILT.out.versions)
 
             if (params.PacBioHifi_lr == false){
                 ch_longreads = LENGTH_FILT.out[0]
-                ch_ONTlongreads = LENGTH_FILT.out[0]
         }} else {ch_ONTlongreads = Channel.empty()}
         if (params.PacBioHifi_lr == true) {
             ch_PB_data = INPUT_CHECK3 ( ch_pb_input )
@@ -124,11 +125,12 @@ workflow GENOMEASSEMBLY {
             ch_versions = ch_versions.mix(READ_QC3.out.versions)
 
             LENGTH_FILT3 (READ_QC3.out[0])
+            ch_PacBiolongreads = LENGTH_FILT3.out[0]
+
             ch_versions = ch_versions.mix(LENGTH_FILT3.out.versions)
 
             if (params.ONT_lr == false){
                 ch_longreads = LENGTH_FILT3.out[0]
-                ch_PacBiolongreads = LENGTH_FILT3.out[0]
         }} else {ch_PacBiolongreads = Channel.empty()}
         if (params.PacBioHifi_lr == true && params.PacBioHifi_lr == true) {
             ch_ONTlongreads
