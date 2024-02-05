@@ -95,7 +95,11 @@ include { MUMMER } from '../modules/nf-core/mummer/main'
 workflow GENOMEASSEMBLY {
 
     ch_versions = Channel.empty()
-    
+
+    if ( params.shortread == true || params.PacBioHifi_lr == true) {
+        ch_kraken_db = Channel.fromPath(params.kraken_db)
+    }
+
     if (params.longread == true){
         if (params.ONT_lr == true) {
             ch_data = INPUT_CHECK ( ch_input )
@@ -120,7 +124,6 @@ workflow GENOMEASSEMBLY {
             ch_versions = ch_versions.mix(INPUT_CHECK3.out.versions)    
         
             //decontamination and quality checking of long reads
-            ch_kraken_db = Channel.fromPath(params.kraken_db)
             READ_QC3 (ch_PB_data.reads, ch_kraken_db)
             ch_versions = ch_versions.mix(READ_QC3.out.versions)
 
@@ -150,7 +153,6 @@ workflow GENOMEASSEMBLY {
     ch_versions = ch_versions.mix(INPUT_CHECK2.out.versions)
 
         //adaptor trimming and decontamination of short reads if available
-        ch_kraken_db = Channel.fromPath(params.kraken_db)
         READ_QC2 (ch_shortdata.reads, ch_kraken_db)
     ch_versions = ch_versions.mix(READ_QC2.out.versions)
     }
