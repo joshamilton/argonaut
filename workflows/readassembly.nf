@@ -292,11 +292,7 @@ workflow GENOMEASSEMBLY {
             } else { ch_racon = Channel.empty() }
         
         POLISH (ASSEMBLY.out[0], ch_longreads, params.model, QC_1.out[8], ch_racon)
-        lr_polish   = POLISH.out[0]
-        
-        lr_polish
-                .map { file -> tuple(id: file.baseName, file)  }
-                .set { medaka_racon_polish }      
+        medaka_racon_polish   = POLISH.out[0]   
         
     ch_versions = ch_versions.mix(POLISH.out.versions) } else {medaka_racon_polish = Channel.empty()}
     } else {
