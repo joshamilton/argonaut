@@ -100,7 +100,6 @@ workflow ASSEMBLY {
         assemblies
             .concat(f_assembly, c_assembly, m_assembly, h_assembly, ex_assembly)
             .collect()
-            .groupTuple()
             .set { all_assemblies }
 
         all_assemblies.view { "Final Long Read and Hybrid Assemblies: $it" }
