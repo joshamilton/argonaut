@@ -15,7 +15,8 @@ process JELLYFISH_HIST {
     tuple val(meta), path("*.histo")               , emit: shortkmer_hist
 
     script:
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    jellyfish histo -o ${kmernum}_mer_out.histo $shortkmer
+    jellyfish histo -o ${kmernum}_mer_out_${prefix}.histo $shortkmer
     """
 }
