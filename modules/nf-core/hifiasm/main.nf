@@ -73,21 +73,20 @@ process HIFIASM {
             hifiasm: \$(hifiasm --version 2>&1)
         END_VERSIONS
         """
-    } else { 
-        """
-        hifiasm \\
-            $args \\
-            -o ${prefix}.asm \\
-            -t $task.cpus \\
-            $reads
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            hifiasm: \$(hifiasm --version 2>&1)
-        END_VERSIONS
-        """
-    }
+    } 
     """
+    hifiasm \\
+        $args \\
+        -o ${prefix}.asm \\
+        -t $task.cpus \\
+        $reads
+
     awk '/^S/{print ">"\$2;print \$3}' *.p_ctg.gfa > ${prefix}.asm.p_ctg.fasta
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        hifiasm: \$(hifiasm --version 2>&1)
+    END_VERSIONS
+
     """
 }
