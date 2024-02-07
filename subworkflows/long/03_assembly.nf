@@ -39,6 +39,7 @@ workflow ASSEMBLY {
                 .set { f_assembly }      
         } else {
             f_assembly = Channel.empty() 
+            flye_assembly = Channel.empty() 
         }
 
         if ( params.canu == true ) {
@@ -50,6 +51,7 @@ workflow ASSEMBLY {
                 .map { file -> tuple(id: file.baseName, file)  }
                 .set { c_assembly }
         } else {
+            canu_assembly = Channel.empty() 
             c_assembly = Channel.empty() 
         }
 
@@ -69,9 +71,10 @@ workflow ASSEMBLY {
 
             masurca_assembly
                 .map { file -> tuple(id: file.baseName, file)  }
-                .set { m_assembly } }
-        } else {
+                .set { m_assembly } 
+        }} else {
             m_assembly = Channel.empty() 
+            masurca_assembly = Channel.empty() 
         }
 
         if (params.hifiasm ==true){
@@ -84,6 +87,7 @@ workflow ASSEMBLY {
                 .set { h_assembly }
         } else {
             h_assembly = Channel.empty() 
+            hifi_assembly = Channel.empty() 
         }
 
         if ( params.ex_assembly == true ) {
@@ -95,20 +99,31 @@ workflow ASSEMBLY {
                 .set { ex_assembly }
         } else {
             ex_assembly = Channel.empty() 
+            existing_assembly = Channel.empty() 
         }
 
         assemblies
             .concat(f_assembly, c_assembly, m_assembly, h_assembly, ex_assembly)
             .collect()
+            .groupTuple()
             .set { all_assemblies }
 
         all_assemblies.view { "Final Long Read and Hybrid Assemblies: $it" }
+
+        no_meta_assemblies = Channel.empty()
+
+        no_meta_assemblies
+            .concat(flye_assembly, canu_assembly, masurca_assembly, hifi_assembly, existing_assembly)
+            .collect()
+            .groupTuple()
+            .set { all_assemblies_no_meta }
 
     emit:
         all_assemblies  
         longreads   
         nanoplot_filtered_out   = NANOPLOT.out.html
         f_assembly
+        all_assemblies_no_meta
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
