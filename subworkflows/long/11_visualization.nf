@@ -13,6 +13,7 @@ workflow VISUALIZE {
         sr_fastq
 
     main:
+        ch_versions = Channel.empty() 
 
         GZIP(assemblies)
 
