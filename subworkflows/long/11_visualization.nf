@@ -16,10 +16,10 @@ workflow VISUALIZE {
 
         GZIP(assemblies)
 
-		BLOBTOOLS_CONFIG_1LINEAGE(GZIP.out.gz, lr_fastq)
+		BLOBTOOLS_CONFIG_1LINEAGE(GZIP.out.gzip, lr_fastq)
 		blobtools_config=BLOBTOOLS_CONFIG_1LINEAGE.out.config
 		
-		BLOBTOOLS_PIPELINE(blobtools_config, GZIP.out.gz)
+		BLOBTOOLS_PIPELINE(blobtools_config, GZIP.out.gzip)
 	    BLOBTOOLS_CREATE(assemblies, blobtools_config)
 	    BLOBTOOLS_ADD(BLOBTOOLS_PIPELINE.out.blast_out, BLOBTOOLS_PIPELINE.out.diamond_proteome_out, BLOBTOOLS_PIPELINE.out.diamond_busco_out, BLOBTOOLS_PIPELINE.out.assembly_minimap_bam, BLOBTOOLS_PIPELINE.out.hic_minimap_bam, BLOBTOOLS_PIPELINE.out.lineage1_full_table_tsv, BLOBTOOLS_CREATE.out.blobtools_folder)
 	    BLOBTOOLS_VIEW(BLOBTOOLS_ADD.out.blobtools_folder)
