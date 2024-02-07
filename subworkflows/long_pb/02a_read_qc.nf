@@ -46,7 +46,7 @@ workflow READ_QC3 {
         GENOMESCOPE2(MERYL_HISTOGRAM.out.hist)
         EXTRACT_SR(GENOMESCOPE2.out.summary)
         TOTAL_BASES_LR (NANOPLOT.out.txt)
-        COVERAGE_LR (full_size, TOTAL_BASES_LR.out.total_bases)}
+        COVERAGE_LR (full_size, TOTAL_BASES_LR.out.total_bases)
 
         //decontamination of trimmed short reads
         KRAKEN2_KRAKEN2(input_pacbio, ch_db, params.save_output_fastqs, params.save_reads_assignment)
