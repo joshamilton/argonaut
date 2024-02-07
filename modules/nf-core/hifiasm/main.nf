@@ -8,11 +8,9 @@ process HIFIASM {
         'biocontainers/hifiasm:0.18.5--h5b5514e_0' }"
 
     input:
-    tuple val(meta), path(reads)
-    path  paternal_kmer_dump
-    path  maternal_kmer_dump
-    path  hic_read1
-    path  hic_read2
+    tuple val(meta), path(hifi_reads)
+    path ont
+
 
     output:
     tuple val(meta), path("*.r_utg.gfa")       , emit: raw_unitigs
@@ -33,60 +31,36 @@ process HIFIASM {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    if ((paternal_kmer_dump) && (maternal_kmer_dump) && (hic_read1) && (hic_read2)) {
-        error "Hifiasm Trio-binning and Hi-C integrated should not be used at the same time"
-    } else if ((paternal_kmer_dump) && !(maternal_kmer_dump)) {
-        error "Hifiasm Trio-binning requires maternal data"
-    } else if (!(paternal_kmer_dump) && (maternal_kmer_dump)) {
-        error "Hifiasm Trio-binning requires paternal data"
-    } else if ((paternal_kmer_dump) && (maternal_kmer_dump)) {
-        """
+    if(ont){
+       """
         hifiasm \\
             $args \\
             -o ${prefix}.asm \\
             -t $task.cpus \\
-            -1 $paternal_kmer_dump \\
-            -2 $maternal_kmer_dump \\
+            --ul $ont \\
             $reads
+
+        awk '/^S/{print ">"\$2;print \$3}' *.p_ctg.gfa > ${prefix}.asm.p_ctg.fasta
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
             hifiasm: \$(hifiasm --version 2>&1)
         END_VERSIONS
-        """
-    } else if ((hic_read1) && !(hic_read2)) {
-        error "Hifiasm Hi-C integrated requires paired-end data (only R1 specified here)"
-    } else if (!(hic_read1) && (hic_read2)) {
-        error "Hifiasm Hi-C integrated requires paired-end data (only R2 specified here)"
-    } else if ((hic_read1) && (hic_read2)) {
+        """ 
+    } else {
         """
         hifiasm \\
             $args \\
             -o ${prefix}.asm \\
             -t $task.cpus \\
-            --h1 $hic_read1 \\
-            --h2 $hic_read2 \\
             $reads
+
+        awk '/^S/{print ">"\$2;print \$3}' *.p_ctg.gfa > ${prefix}.asm.p_ctg.fasta
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
             hifiasm: \$(hifiasm --version 2>&1)
         END_VERSIONS
-        """
-    } 
-    """
-    hifiasm \\
-        $args \\
-        -o ${prefix}.asm \\
-        -t $task.cpus \\
-        $reads
-
-    awk '/^S/{print ">"\$2;print \$3}' *.p_ctg.gfa > ${prefix}.asm.p_ctg.fasta
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        hifiasm: \$(hifiasm --version 2>&1)
-    END_VERSIONS
-
-    """
+    
+    """}
 }
