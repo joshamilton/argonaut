@@ -16,6 +16,8 @@ workflow ASSEMBLY {
         genome_size_est
         genome_size_est_long
         combined_longreads
+        ont_reads
+        pacbio_reads
 
     main:
     ch_versions = Channel.empty() 
@@ -78,14 +80,23 @@ workflow ASSEMBLY {
         }
 
         if (params.hifiasm ==true){
-            HIFIASM(longreads, [],[],[],[])
-            println "assembling long reads with hifiasm!"
-            hifi_assembly    = HIFIASM.out.assembly_fasta
+            if (params.ONT_lr_ultralong == true && params.PacBioHifi_lr == true){
+                HIFIASM(pacbio_reads, ont_reads)
+                println "assembling long reads with hifiasm!"
+                hifi_assembly    = HIFIASM.out.assembly_fasta
 
-            hifi_assembly
-                .map { file -> tuple(id: file.baseName, file)  }
-                .set { h_assembly }
-        } else {
+                hifi_assembly
+                    .map { file -> tuple(id: file.baseName, file)  }
+                    .set { h_assembly }
+            } else { 
+                HIFIASM(pacbio_reads, [])
+                println "assembling long reads with hifiasm!"
+                hifi_assembly    = HIFIASM.out.assembly_fasta
+
+                hifi_assembly
+                    .map { file -> tuple(id: file.baseName, file)  }
+                    .set { h_assembly }           
+        }} else {
             h_assembly = Channel.empty() 
             hifi_assembly = Channel.empty() 
         }
