@@ -406,7 +406,7 @@ workflow GENOMEASSEMBLY {
     }
 
     if (params.blobtools_visualization == true){
-        VISUALIZE(final_assemblies, ch_longreads, READ_QC2.out[1])
+        VISUALIZE(final_assemblies, ch_longreads, [])
     }
 
     OUTPUT (ch_quast, ch_busco, ch_merqury)
