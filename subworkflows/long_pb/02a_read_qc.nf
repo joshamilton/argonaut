@@ -7,6 +7,9 @@ include { GENOMESCOPE2 } from '../../modules/nf-core/genomescope2/main'
 include { KRAKEN2_KRAKEN2 } from '../../modules/nf-core/kraken2/kraken2/main'
 include { RECENTRIFUGE_KR } from '../../modules/local/recentrifuge/kraken'
 include { NANOPLOT } from '../../modules/nf-core/nanoplot/main'
+include { COVERAGE_LR } from '../modules/local/coverage_lr'
+include { EXTRACT_SR } from '../modules/local/extract_short_genome_size'
+include { TOTAL_BASES_LR } from '../modules/local/total_bases_lr' 
 
 workflow READ_QC3 {
 
@@ -41,6 +44,9 @@ workflow READ_QC3 {
         MERYL_HISTOGRAM (hifi_meryldb)
 
         GENOMESCOPE2(MERYL_HISTOGRAM.out.hist)
+        EXTRACT_SR(GENOMESCOPE2.out.summary)
+        TOTAL_BASES_LR (NANOPLOT.out.txt)
+        COVERAGE_LR (full_size, TOTAL_BASES_LR.out.total_bases)}
 
         //decontamination of trimmed short reads
         KRAKEN2_KRAKEN2(input_pacbio, ch_db, params.save_output_fastqs, params.save_reads_assignment)
@@ -54,7 +60,6 @@ workflow READ_QC3 {
         filt_pbhifi    // channel: [ val(meta), path(decontaminated fastq) ]
         nanoplot_reads_out   = NANOPLOT.out.html
         nanoplot_report_txt  = NANOPLOT.out.txt
-        genome_size_est = GENOMESCOPE2.out.summary
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
