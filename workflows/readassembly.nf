@@ -63,6 +63,8 @@ include { HAPS } from '../subworkflows/long/07_purge'
 include { QC_3 } from '../subworkflows/long/08_qc_3'
 include { SCAFFOLD } from '../subworkflows/long/09_scaffold'
 include { QC_4 } from '../subworkflows/long/10_qc_4'
+include { VISUALIZE } from '../subworkflows/long/11_visualization'
+
 
 include { INPUT_CHECK2 } from '../subworkflows/short/01_input_check'
 include { READ_QC2 } from '../subworkflows/short/02_read_qc'
