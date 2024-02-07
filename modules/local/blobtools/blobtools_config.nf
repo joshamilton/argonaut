@@ -4,7 +4,9 @@ process BLOBTOOLS_CONFIG_1LINEAGE {
 
     input:
     tuple val(meta), path(assembly)
+    tuple val(meta), path(ont_fastq)
     tuple val(meta), path(pacbio_fastq)
+    tuple val(meta), path(illumina_fastq)
 
     output:
     tuple val(meta), path('config.yaml'), emit: config
@@ -20,20 +22,23 @@ process BLOBTOOLS_CONFIG_1LINEAGE {
       level: scaffold
       prefix: ${meta.id}
     busco:
-      download_dir: ${params.busco_lineages_path}
+      download_dir: ${params.busco_lineage}
       lineages:
         - ${params.lineage}
       basal_lineages:
         - ${params.lineage}
     reads:
       paired:
-        - prefix: ${params.Illumina_prefix}
+        - prefix: ${meta.id}
           platform: ILLUMINA
-          file: ${params.hic_read1};${params.hic_read2}
+          file: $illumina_fastq
       single:
         - prefix: ${meta.id}
           platform: PACBIO_SMRT
-          file: ${params.outdir}/preprocessing/bam2fastx/${pacbio_fastq}
+          file: $pacbio_fastq
+        - prefix: ${meta.id}
+          platform: PACBIO_SMRT
+          file: $ont_fastq
     revision: 0
     settings:
       blast_chunk: 100000
@@ -59,7 +64,6 @@ process BLOBTOOLS_CONFIG_1LINEAGE {
         name: nt
         path: ${params.Blobtoolkit_db}/nt
     taxon:
-      name: ${params.taxon_name}
       taxid: '${params.taxon_taxid}'
     version: 1" > config.yaml    
     """
