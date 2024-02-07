@@ -285,8 +285,8 @@ workflow GENOMEASSEMBLY {
         if ( params.medaka_polish == true || params.racon_polish == true){
             if (params.racon_polish == true){
             ch_longreads
-                .join(all_assemblies)
-                .concat(QC_1.out[8])
+                .concat(ASSEMBLY.out[4], QC_1.out[8])
+                .collect()
                 .view()
                 .set { ch_racon }
             } else { ch_racon = Channel.empty() }
@@ -383,13 +383,15 @@ workflow GENOMEASSEMBLY {
     
 
     if (params.ragtag_scaffold == true) {
+        final_assemblies = SCAFFOLD.out[0]
         if ( params.shortread == true && params.longread == true ) {
             QC_4 (SCAFFOLD.out[0], ch_longreads, ch_summtxt, QC_3.out[1], QC_3.out[2], QC_3.out[3], READ_QC2.out[0], full_size, QC_1.out[7]) 
         } else if ( params.longread == true && params.shortread == false ) {
             QC_4 (SCAFFOLD.out[0], ch_longreads, ch_summtxt, QC_3.out[1], QC_3.out[2], QC_3.out[3], [], full_size, QC_1.out[7])  
         } else if ( params.shortread == true && params.longread == false ) {
             QC_4 (SCAFFOLD.out[0], READ_QC2.out[0], ch_summtxt, QC_3.out[1], QC_3.out[2], QC_3.out[3], READ_QC2.out[0], full_size, QC_1.out[7]) 
-        }}
+    }} else {
+        final_assemblies = purged_assemblies_common}
 
     if ( params.ragtag_scaffold == true ) {
         ch_quast = QC_4.out[1]
@@ -399,6 +401,10 @@ workflow GENOMEASSEMBLY {
         ch_quast = QC_3.out[1]
         ch_busco = QC_3.out[2]
         ch_merqury = QC_3.out[3]
+    }
+
+    if (params.blobtools_visualization == true){
+        VISUALIZE(final_assemblies, ch_longreads, READ_QC2.out[1])
     }
 
     OUTPUT (ch_quast, ch_busco, ch_merqury)
