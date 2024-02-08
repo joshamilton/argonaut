@@ -44,12 +44,14 @@ include { TOTAL_BASES_SR } from '../modules/local/total_bases_sr'
 include { TOTAL_BASES_LR } from '../modules/local/total_bases_lr' 
 include { COVERAGE_SR } from '../modules/local/coverage_sr'
 include { COVERAGE_LR } from '../modules/local/coverage_lr'
+include { COVERAGE_LR_PB } from '../modules/local/coverage_lr_pb'
 include { MASURCA_SR_ADV } from '../modules/local/masurca_sr_adv'
 include { MASURCA_SR } from '../modules/local/masurca_sr'
 include { REDUNDANS_A } from '../modules/local/redundans_assembler'
 include { FORMAT } from '../modules/local/format_genome_size'
 include { EXTRACT_LR } from '../modules/local/extract_genome_size'
 include { EXTRACT_SR } from '../modules/local/extract_short_genome_size'
+include { EXTRACT_LR_PB } from '../modules/local/extract_pb_genome_size'
 
 // SUBWORKFLOWS
 include { INPUT_CHECK } from '../subworkflows/long/01_input_check'
@@ -160,40 +162,51 @@ workflow GENOMEASSEMBLY {
     }
 
     // extracting and formatting genome size est
+     if (params.shortread == true){
+        genome_size = READ_QC2.out[3]
+        EXTRACT_SR(genome_size)
+        ill_readable_size = EXTRACT_SR.out[0]
+        ill_full_size = EXTRACT_SR.out[1]
+    } if (params.longread == true ){
+        if (params.ONT_lr == true) {
+        genome_size = READ_QC.out[3]
+        EXTRACT_LR(genome_size)
+        ont_readable_size = EXTRACT_LR.out[0]
+        ont_full_size = EXTRACT_LR.out[1] }
+        if (params.PacBioHifi_lr == true) {
+        pb_genome_size = READ_QC3.out[3]
+        EXTRACT_PB(pb_genome_size)
+        pb_readable_size = EXTRACT_PB.out[0]
+        pb_full_size = EXTRACT_PB.out[1]}
+    }
+
     if (params.manual_genome_size){
         genome_size = params.manual_genome_size
         FORMAT(genome_size)
         readable_size = FORMAT.out[0]
         full_size = FORMAT.out[1]
-    } else if (params.shortread == true){
-        genome_size = READ_QC2.out[3]
-        EXTRACT_SR(genome_size)
-        readable_size = EXTRACT_SR.out[0]
-        full_size = EXTRACT_SR.out[1]
     } else if (params.longread == true ){
         if (params.ONT_lr == true) {
-        genome_size = READ_QC.out[3]
-        EXTRACT_LR(genome_size)
-        readable_size = EXTRACT_LR.out[0]
-        full_size = EXTRACT_LR.out[1] }
-        else if (params.PacBioHifi_lr == true) {
-        genome_size = READ_QC3.out[3]
-        EXTRACT_SR(genome_size)
+            readable_size = EXTRACT_LR.out[0]
+            full_size = EXTRACT_LR.out[1]
+        } else if (params.PacBioHifi_lr == true) {
+            readable_size = EXTRACT_PB.out[0]
+            full_size = EXTRACT_PB.out[1]}
+    } else if (params.shortread == true) {
         readable_size = EXTRACT_SR.out[0]
-        full_size = EXTRACT_SR.out[1]}
+        full_size = EXTRACT_SR.out[1]
     }
 
     //calculating coverage for long and/or short reads
     if (params.longread == true){
         if (params.ONT_lr == true) {
         TOTAL_BASES_LR (READ_QC.out[4])
-        COVERAGE_LR (full_size, TOTAL_BASES_LR.out.total_bases)}}
-        else if (params.PacBioHifi_lr == true) {
-        TOTAL_BASES_LR (READ_QC3.out[2])
-        COVERAGE_LR (full_size, TOTAL_BASES_LR.out.total_bases)}
+        COVERAGE_LR (ont_full_size, TOTAL_BASES_LR.out.total_bases)}}
+        if (params.PacBioHifi_lr == true) {
+        COVERAGE_LR_PB (pb_full_size, READ_QC3.out[3])}
     if (params.shortread == true) {
         TOTAL_BASES_SR (READ_QC2.out[2])
-        COVERAGE_SR (full_size, TOTAL_BASES_SR.out.total_bases_before, TOTAL_BASES_SR.out.total_bases_after)
+        COVERAGE_SR (ill_full_size, TOTAL_BASES_SR.out.total_bases_before, TOTAL_BASES_SR.out.total_bases_after)
     }
 
     if (params.ONT_lr == true && params.PacBioHifi_lr == true) {
