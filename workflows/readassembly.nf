@@ -137,7 +137,7 @@ workflow GENOMEASSEMBLY {
             if (params.ONT_lr == false){
                 ch_longreads = LENGTH_FILT3.out[0]
         }} else {ch_PacBiolongreads = Channel.empty()}
-        if (params.PacBioHifi_lr == true && params.PacBioHifi_lr == true) {
+        if (params.PacBioHifi_lr == true && params.ONT_lr == true) {
             ch_ONTlongreads
                 .concat(ch_PacBiolongreads)
                 .set{ch_longreads}
@@ -145,7 +145,7 @@ workflow GENOMEASSEMBLY {
             ch_ONTlongreads
                 .join(ch_PacBiolongreads)
                 .set{ch_combo_longreads}
-        }else if (params.PacBioHifi_lr == false && params.PacBioHifi_lr == false){ 
+        }else if (params.PacBioHifi_lr == false && params.ONT_lr == false){ 
             ch_longreads = Channel.empty()
             ch_combo_longreads = Channel.empty()
         }}
