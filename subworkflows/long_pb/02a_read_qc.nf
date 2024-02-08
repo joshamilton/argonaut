@@ -7,9 +7,9 @@ include { GENOMESCOPE2 } from '../../modules/nf-core/genomescope2/main'
 include { KRAKEN2_KRAKEN2 } from '../../modules/nf-core/kraken2/kraken2/main'
 include { RECENTRIFUGE_KR } from '../../modules/local/recentrifuge/kraken'
 include { NANOPLOT } from '../../modules/nf-core/nanoplot/main'
-include { COVERAGE_LR } from '../modules/local/coverage_lr'
-include { EXTRACT_SR } from '../modules/local/extract_short_genome_size'
-include { TOTAL_BASES_LR } from '../modules/local/total_bases_lr' 
+include { COVERAGE_LR } from '../../modules/local/coverage_lr'
+include { EXTRACT_SR } from '../../modules/local/extract_short_genome_size'
+include { TOTAL_BASES_LR } from '../../modules/local/total_bases_lr' 
 
 workflow READ_QC3 {
 
