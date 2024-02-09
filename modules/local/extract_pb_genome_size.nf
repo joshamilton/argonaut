@@ -12,7 +12,7 @@ process EXTRACT_PB {
     script: 
     def number
     """
-    sed -n '11p' < genomescope_report | awk '{print \$6}' | sed 's/,//g' > standardSize.txt
+    sed -n '11p' < $genomescope_report | awk '{print \$6}' | sed 's/,//g' > standardSize.txt
     
     head -1 standardSize.txt > standardSizeFinal.txt
     
