@@ -113,6 +113,7 @@ workflow GENOMEASSEMBLY {
             //decontamination and quality checking of long reads
             READ_QC (ch_data.reads, ch_centrifuge_db)
             ch_versions = ch_versions.mix(READ_QC.out.versions)
+            no_meta_fastq = READ_QC.out[5]
 
             //optional read filtering by length with bioawk
             LENGTH_FILT (READ_QC.out[0])
@@ -122,7 +123,9 @@ workflow GENOMEASSEMBLY {
 
             if (params.PacBioHifi_lr == false){
                 ch_longreads = LENGTH_FILT.out[0]
-        }} else {ch_ONTlongreads = Channel.empty()}
+        }} else {
+            ch_ONTlongreads = Channel.empty()
+            no_meta_fastq = Channel.empty()}
         if (params.PacBioHifi_lr == true) {
             ch_PB_data = INPUT_CHECK3 ( ch_pb_input )
             ch_versions = ch_versions.mix(INPUT_CHECK3.out.versions)    
@@ -162,51 +165,58 @@ workflow GENOMEASSEMBLY {
     }
 
     // extracting and formatting genome size est
-     if (params.shortread == true){
-        genome_size = READ_QC2.out[3]
-        EXTRACT_SR(genome_size)
+
+    if(params.shortread == true){
+        ill_genome_size = READ_QC2.out[3]
+        EXTRACT_SR(ill_genome_size)
         ill_readable_size = EXTRACT_SR.out[0]
         ill_full_size = EXTRACT_SR.out[1]
-    } if (params.longread == true ){
-        if (params.ONT_lr == true) {
-        genome_size = READ_QC.out[3]
-        EXTRACT_LR(genome_size)
-        ont_readable_size = EXTRACT_LR.out[0]
-        ont_full_size = EXTRACT_LR.out[1] }
-        if (params.PacBioHifi_lr == true) {
-        pb_genome_size = READ_QC3.out[3]
-        EXTRACT_PB(pb_genome_size)
-        pb_readable_size = EXTRACT_PB.out[0]
-        pb_full_size = EXTRACT_PB.out[1]}
     }
 
+    if (params.longread == true && params.ONT_lr == true){
+        ont_genome_size = READ_QC.out[3]
+        EXTRACT_LR(ont_genome_size)
+        ont_readable_size = EXTRACT_LR.out[0]
+        ont_full_size = EXTRACT_LR.out[1] 
+    }
+
+    if (params.longread == true && params.PacBioHifi_lr == true){
+        pb_genome_size = READ_QC3.out[4]
+        EXTRACT_PB(pb_genome_size)
+        pb_readable_size = EXTRACT_PB.out[0]
+        pb_full_size = EXTRACT_PB.out[1]
+    }
+
+    
     if (params.manual_genome_size){
         genome_size = params.manual_genome_size
         FORMAT(genome_size)
         readable_size = FORMAT.out[0]
         full_size = FORMAT.out[1]
+    } else if (params.shortread == true){
+        readable_size = EXTRACT_SR.out[0]
+        full_size = EXTRACT_SR.out[1]
     } else if (params.longread == true ){
         if (params.ONT_lr == true) {
             readable_size = EXTRACT_LR.out[0]
-            full_size = EXTRACT_LR.out[1]
-        } else if (params.PacBioHifi_lr == true) {
+            full_size = EXTRACT_LR.out[1]  }    
+        else if (params.PacBioHifi_lr == true) {
             readable_size = EXTRACT_PB.out[0]
-            full_size = EXTRACT_PB.out[1]}
-    } else if (params.shortread == true) {
-        readable_size = EXTRACT_SR.out[0]
-        full_size = EXTRACT_SR.out[1]
+            full_size = EXTRACT_PB.out[1]
+        }
     }
 
     //calculating coverage for long and/or short reads
-    if (params.longread == true){
-        if (params.ONT_lr == true) {
+    if (params.longread == true && params.ONT_lr == true){
         TOTAL_BASES_LR (READ_QC.out[4])
-        COVERAGE_LR (ont_full_size, TOTAL_BASES_LR.out.total_bases)}}
-        if (params.PacBioHifi_lr == true) {
-        COVERAGE_LR_PB (pb_full_size, READ_QC3.out[3])}
+        COVERAGE_LR (full_size, TOTAL_BASES_LR.out.total_bases)
+    }   
+    if (params.longread == true && params.PacBioHifi_lr == true){
+        COVERAGE_LR_PB (full_size, READ_QC3.out[3])
+    }
     if (params.shortread == true) {
         TOTAL_BASES_SR (READ_QC2.out[2])
-        COVERAGE_SR (ill_full_size, TOTAL_BASES_SR.out.total_bases_before, TOTAL_BASES_SR.out.total_bases_after)
+        COVERAGE_SR (full_size, TOTAL_BASES_SR.out.total_bases_before, TOTAL_BASES_SR.out.total_bases_after)
     }
 
     if (params.ONT_lr == true && params.PacBioHifi_lr == true) {
@@ -218,14 +228,14 @@ workflow GENOMEASSEMBLY {
     //long read and hybrid assemblies
     if (params.longread == true && params.shortread == true){
         //assembly inputting long & short reads
-        ASSEMBLY (ch_longreads, READ_QC2.out[1], readable_size, full_size, combined_lr, READ_QC.out[5], ch_PacBiolongreads)
+        ASSEMBLY (ch_longreads, READ_QC2.out[1], readable_size, full_size, combined_lr, no_meta_fastq, ch_PacBiolongreads)
         lr_assemblies   = ASSEMBLY.out[0]
         lr_assemblies.collect()
         lr_assemblies.view { "Initial Long Read Assembly: $it" }
     } else if (params.longread == true && params.shortread == false) {
         ch_shortdata = Channel.empty() 
         //assembly of decontam and length filtered (if specified) long reads
-        ASSEMBLY (ch_longreads, [], readable_size, full_size, combined_lr, READ_QC.out[5], ch_PacBiolongreads)
+        ASSEMBLY (ch_longreads, [], readable_size, full_size, combined_lr, no_meta_fastq, ch_PacBiolongreads)
         lr_assemblies   = ASSEMBLY.out[0]
         lr_assemblies.collect()
         lr_assemblies.view { "Initial Long Read Assembly: $it" }
@@ -419,7 +429,7 @@ workflow GENOMEASSEMBLY {
     }
 
     if (params.blobtools_visualization == true){
-        VISUALIZE(final_assemblies, ch_longreads, [])
+        VISUALIZE(final_assemblies, ch_longreads, [], [])
     }
 
     OUTPUT (ch_quast, ch_busco, ch_merqury)
