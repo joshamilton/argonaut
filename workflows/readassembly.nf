@@ -51,7 +51,7 @@ include { REDUNDANS_A } from '../modules/local/redundans_assembler'
 include { FORMAT } from '../modules/local/format_genome_size'
 include { EXTRACT_LR } from '../modules/local/extract_genome_size'
 include { EXTRACT_SR } from '../modules/local/extract_short_genome_size'
-include { EXTRACT_LR_PB } from '../modules/local/extract_pb_genome_size'
+include { EXTRACT_PB } from '../modules/local/extract_pb_genome_size'
 
 // SUBWORKFLOWS
 include { INPUT_CHECK } from '../subworkflows/long/01_input_check'
