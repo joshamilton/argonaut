@@ -11,7 +11,7 @@ process GUNZIP {
     tuple val(meta), path(archive)
 
     output:
-    tuple val(meta), path("*.fast*"), emit: gunzip
+    tuple val(meta), path("*.f*"), emit: gunzip
     path "versions.yml"             , emit: versions
 
     when:
