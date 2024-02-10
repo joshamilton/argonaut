@@ -11,7 +11,7 @@ process GUNZIP {
     tuple val(meta), path(archive)
 
     output:
-    tuple val(meta), path("$gunzip"), emit: gunzip
+    tuple val(meta), path("*.fast*"), emit: gunzip
     path "versions.yml"             , emit: versions
 
     when:
@@ -26,16 +26,6 @@ process GUNZIP {
         $args \\
         $archive
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        gunzip: \$(echo \$(gunzip --version 2>&1) | sed 's/^.*(gzip) //; s/ Copyright.*\$//')
-    END_VERSIONS
-    """
-
-    stub:
-    gunzip = archive.toString() - '.gz'
-    """
-    touch $gunzip
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         gunzip: \$(echo \$(gunzip --version 2>&1) | sed 's/^.*(gzip) //; s/ Copyright.*\$//')
