@@ -312,7 +312,6 @@ workflow GENOMEASSEMBLY {
             ch_longreads
                 .concat(ASSEMBLY.out[4], QC_1.out[8])
                 .collect()
-                .view()
                 .set { ch_racon }
             } else { ch_racon = Channel.empty() }
         
