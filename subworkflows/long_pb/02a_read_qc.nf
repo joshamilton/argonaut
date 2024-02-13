@@ -33,7 +33,16 @@ workflow READ_QC3 {
 	    CUTADAPT (input_pacbio)
 	    ch_versions = ch_versions.mix(CUTADAPT.out.versions)
 
-        MERYL_COUNT (CUTADAPT.out.reads, params.kmer_num)
+        //decontamination of trimmed short reads
+        KRAKEN2_KRAKEN2(CUTADAPT.out.reads, ch_db, params.save_output_fastqs, params.save_reads_assignment)
+
+        //summarizing and visualizing decontam
+        RECENTRIFUGE_KR(KRAKEN2_KRAKEN2.out.classified_reads_assignment, params.rcf_db)
+
+        filt_pbhifi = KRAKEN2_KRAKEN2.out.unclassified_reads_fastq   
+
+
+        MERYL_COUNT (KRAKEN2_KRAKEN2.out.unclassified_reads_fastq, params.kmer_num)
 
         MERYL_COUNT.out.meryl_db
                 .map { file -> tuple(id: file.baseName, file)  }
@@ -46,14 +55,7 @@ workflow READ_QC3 {
         TOTAL_BASES_LR (NANOPLOT.out.txt)
         
 
-        //decontamination of trimmed short reads
-        KRAKEN2_KRAKEN2(input_pacbio, ch_db, params.save_output_fastqs, params.save_reads_assignment)
-
-        //summarizing and visualizing decontam
-        RECENTRIFUGE_KR(KRAKEN2_KRAKEN2.out.classified_reads_assignment, params.rcf_db)
-
-        filt_pbhifi = KRAKEN2_KRAKEN2.out.unclassified_reads_fastq   
-
+        
     emit:
         filt_pbhifi    // channel: [ val(meta), path(decontaminated fastq) ]
         nanoplot_reads_out   = NANOPLOT.out.html
