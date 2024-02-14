@@ -162,6 +162,9 @@ workflow GENOMEASSEMBLY {
         //adaptor trimming and decontamination of short reads if available
         READ_QC2 (ch_shortdata.reads, ch_kraken_db)
     ch_versions = ch_versions.mix(READ_QC2.out.versions)
+        filt_sr_unzip = READ_QC2.out[1]
+    } else {
+        filt_sr_unzip = Channel.empty()
     }
 
     // extracting and formatting genome size est
