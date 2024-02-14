@@ -325,7 +325,11 @@ workflow GENOMEASSEMBLY {
 
     //align assemblies to short reads and polish with POLCA if short reads are available
     if ( params.longread == true && params.shortread == true) {
-        POLISH2 (ASSEMBLY.out[0], READ_QC2.out[1])
+        if (params.params.medaka_polish == true || params.racon_polish == true){
+            POLISH2 (POLISH.out[0], READ_QC2.out[1])
+        } else {
+            POLISH2 (ASSEMBLY.out[0], READ_QC2.out[1])
+        }
         sr_polish   = POLISH2.out[0]
 
         sr_polish
@@ -334,15 +338,13 @@ workflow GENOMEASSEMBLY {
         
         //combine polished flye assemblies w other assemblies
         polca_polish
-            .concat(all_assemblies, medaka_racon_polish)
+            .concat(medaka_racon_polish)
             .collect()
             .set { polished_assemblies }
 
     ch_versions = ch_versions.mix(POLISH2.out.versions)
     } else {
         medaka_racon_polish
-            .concat(all_assemblies)
-            .collect()
             .set { polished_assemblies }
     }
 
@@ -397,25 +399,36 @@ workflow GENOMEASSEMBLY {
     } else if ( params.shortread == true && params.longread == false ) {
         QC_3 (purged_assemblies_common, READ_QC2.out[0], ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7])
     }
-        
-    if ( params.ragtag_scaffold == true ) {
-    ch_reference = Channel.fromPath(params.ragtag_reference)
+            
+    if (params.ragtag_scaffold == true) {
+        if (params.purge == true){
+        qc_quast = QC_3.out[1]
+        qc_busco = QC_3.out[2]
+        qc_merqury = QC_3.out[3]} 
+
+        ch_reference = Channel.fromPath(params.ragtag_reference)
         SCAFFOLD (purged_assemblies_common, ch_reference)
     ch_versions = ch_versions.mix(SCAFFOLD.out.versions)
-    }
 
-    
-
-    if (params.ragtag_scaffold == true) {
         final_assemblies = SCAFFOLD.out[0]
         if ( params.shortread == true && params.longread == true ) {
-            QC_4 (SCAFFOLD.out[0], ch_longreads, ch_summtxt, QC_3.out[1], QC_3.out[2], QC_3.out[3], READ_QC2.out[0], full_size, QC_1.out[7]) 
+            QC_4 (SCAFFOLD.out[0], ch_longreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7]) 
         } else if ( params.longread == true && params.shortread == false ) {
-            QC_4 (SCAFFOLD.out[0], ch_longreads, ch_summtxt, QC_3.out[1], QC_3.out[2], QC_3.out[3], [], full_size, QC_1.out[7])  
+            QC_4 (SCAFFOLD.out[0], ch_longreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, [], full_size, QC_1.out[7])  
         } else if ( params.shortread == true && params.longread == false ) {
-            QC_4 (SCAFFOLD.out[0], READ_QC2.out[0], ch_summtxt, QC_3.out[1], QC_3.out[2], QC_3.out[3], READ_QC2.out[0], full_size, QC_1.out[7]) 
-    }} else {
-        final_assemblies = purged_assemblies_common}
+            QC_4 (SCAFFOLD.out[0], READ_QC2.out[0], ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7]) }
+    
+    SCAFFOLD.out[0]
+            .concat(purged_assemblies_common, polished_assemblies, all_assemblies)
+            .collect()
+            .set{final_assemblies}
+
+    } else {
+        purged_assemblies_common
+            .concat(polished_assemblies, all_assemblies)
+            .collect() 
+            .set {final_assemblies}
+    }
 
     if ( params.ragtag_scaffold == true ) {
         ch_quast = QC_4.out[1]
@@ -428,7 +441,7 @@ workflow GENOMEASSEMBLY {
     }
 
     if (params.blobtools_visualization == true){
-        VISUALIZE(final_assemblies, ch_longreads, [], [])
+        VISUALIZE(final_assemblies, ch_ONTlongreads, ch_PacBiolongreads, filt_sr_unzip)
     }
 
     OUTPUT (ch_quast, ch_busco, ch_merqury)
