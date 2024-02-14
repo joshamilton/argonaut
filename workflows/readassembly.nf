@@ -375,7 +375,7 @@ workflow GENOMEASSEMBLY {
 
     purged_assemblies_common = Channel.empty()
 
-    if (params.longread == true) {
+    if (params.longread == true && params.purge == true) {
         HAPS (polished_assemblies, ch_longreads)
         lr_purge = HAPS.out[0]
         lr_purge
@@ -384,7 +384,7 @@ workflow GENOMEASSEMBLY {
         ch_versions = ch_versions.mix(HAPS.out.versions)
     } 
 
-    if (params.shortread == true) {
+    if (params.shortread == true && params.purge == true) {
         PURGE2 (sr_assemblies, READ_QC2.out[1])
         sr_purge = PURGE2.out[0]
         purged_assemblies_common = sr_purge.concat(purged_assemblies_common)
@@ -394,7 +394,7 @@ workflow GENOMEASSEMBLY {
 
     purged_assemblies_common.view()
 
-    if ( params.shortread == true && params.longread == true ) {
+    if ( params.shortread == true && params.longread == true && params.purge == true) {
         QC_3 (purged_assemblies_common, ch_longreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7])
     ch_versions = ch_versions.mix(QC_3.out.versions)
     } else if ( params.longread == true && params.shortread == false ) {
