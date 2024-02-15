@@ -11,19 +11,19 @@ workflow HAPS {
     main:
     ch_versions = Channel.empty()
 
-        if (!(params.low && params.mid && params.high)) {
+        if (params.low == null && params.mid == null && params.high == null) {
 
         ALIGN(reads, assembly, params.bam_format, params.cigar_paf_format, params.cigar_bam)
         HISTOGRAM(assembly, ALIGN.out.bam)
         assemblies_polished_purged      = Channel.empty()
 
-        } else if (params.low && params.mid && params.high){
+        } else if (params.low != null && params.mid != null && params.high != null){
 
         PURGE(params.low, params.mid, params.high, assembly, params.gencov)
         purged_assemblies      = PURGE.out.purged           
         
         purged_assemblies
-                .map { file -> tuple([id: file.baseName], file)  }
+                .map { file -> tuple(id: file.baseName, file)  }
                 .set { assemblies_polished_purged }
         }
 
