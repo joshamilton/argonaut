@@ -394,14 +394,15 @@ workflow GENOMEASSEMBLY {
 
     purged_assemblies_common.view()
 
-    if ( params.shortread == true && params.longread == true && params.purge == true) {
+    if ( params.purge == true ) {
+    if ( params.shortread == true && params.longread == true) {
         QC_3 (purged_assemblies_common, ch_longreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7])
     ch_versions = ch_versions.mix(QC_3.out.versions)
-    } else if ( params.longread == true && params.shortread == false ) {
+    } else if ( params.longread == true && params.shortread == false) {
         QC_3 (purged_assemblies_common, ch_longreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, [], full_size, QC_1.out[7])  
-    } else if ( params.shortread == true && params.longread == false ) {
+    } else if ( params.shortread == true && params.longread == false) {
         QC_3 (purged_assemblies_common, READ_QC2.out[0], ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7])
-    }
+    }}
             
     if (params.ragtag_scaffold == true) {
         if (params.purge == true){
