@@ -12,7 +12,7 @@ process REDUNDANS_P {
     tuple val(meta), path(shortreads)
 
     output:
-    tuple val(meta), path("redundans_purge/redundans*")               , emit: assembly_fasta
+    tuple val(meta), path("redundans_purge/redundans_purge_contig.fa")               , emit: assembly_fasta
 
     script:
     """
