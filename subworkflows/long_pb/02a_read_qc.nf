@@ -19,15 +19,6 @@ workflow READ_QC3 {
     
     ch_versions = Channel.empty()
 
-        //PBBAM_PBMERGE(input_pacbio)
-		//ch_versions = ch_versions.mix(PBBAM_PBMERGE.out.versions)
-		//final_pacBio_bam	= PBBAM_PBMERGE.out.bam
-		//final_pacBio_bam_index	= PBBAM_PBMERGE.out.pbi
-
-        //BAM2FASTX (final_pacBio_bam.join(final_pacBio_bam_index))
-        //ch_versions = ch_versions.mix(BAM2FASTX.out.versions)
-        //bam2fastx_output	= BAM2FASTX.out.reads
-
         NANOPLOT(input_pacbio)
         TOTAL_BASES_LR (NANOPLOT.out.txt)
 
