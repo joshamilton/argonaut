@@ -12,14 +12,14 @@ process REDUNDANS_P {
     tuple val(meta), path(shortreads)
 
     output:
-    tuple val(meta), path("redundans_purge/redundans_purge_contig.fa")               , emit: assembly_fasta
+    tuple val(meta), path("redundans_purge/redundans_purge_contig.fasta")               , emit: assembly_fasta
 
     script:
     """
     redundans.py -v -f $fasta -i $shortreads -t $task.cpus --nogapclosing --noscaffolding -o redundans_purge
     
     cd redundans_purge
-    mv scaffolds.reduced.fa redundans_purge_scaf.fa
-    mv contigs.reduced.fa redundans_purge_contig.fa
+    mv scaffolds.reduced.fa redundans_purge_scaf.fasta
+    mv contigs.reduced.fa redundans_purge_contig.fasta
     """
 }
