@@ -75,6 +75,7 @@ workflow QC_4 {
         ch_quast
         ch_busco
         ch_merqury
+        ch_bam
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
