@@ -1,8 +1,8 @@
-include { PBBAM_PBMERGE } from '../../modules/local/pb_bam'
-include { BAM2FASTX } from '../../modules/local/bam2fastx'
 include { CUTADAPT } from '../../modules/local/cutadapt'
-include { KMER_FREQ } from '../../modules/local/kmerfreq'
-include { GCE } from '../../modules/local/gce'
+include { GUNZIP } from '../../modules/nf-core/gunzip/main'
+include { GENOMESCOPE2 } from '../../modules/nf-core/genomescope2/main'
+include { JELLYFISH_KMER } from '../../modules/local/jellyfish_kmer'
+include { JELLYFISH_HIST } from '../../modules/local/jellyfish_hist'
 include { KRAKEN2_KRAKEN2 } from '../../modules/nf-core/kraken2/kraken2/main'
 include { RECENTRIFUGE_KR } from '../../modules/local/recentrifuge/kraken'
 include { NANOPLOT } from '../../modules/nf-core/nanoplot/main'
@@ -19,6 +19,15 @@ workflow READ_QC3 {
     
     ch_versions = Channel.empty()
 
+        //PBBAM_PBMERGE(input_pacbio)
+		//ch_versions = ch_versions.mix(PBBAM_PBMERGE.out.versions)
+		//final_pacBio_bam	= PBBAM_PBMERGE.out.bam
+		//final_pacBio_bam_index	= PBBAM_PBMERGE.out.pbi
+
+        //BAM2FASTX (final_pacBio_bam.join(final_pacBio_bam_index))
+        //ch_versions = ch_versions.mix(BAM2FASTX.out.versions)
+        //bam2fastx_output	= BAM2FASTX.out.reads
+
         NANOPLOT(input_pacbio)
         TOTAL_BASES_LR (NANOPLOT.out.txt)
 
@@ -33,17 +42,23 @@ workflow READ_QC3 {
 
         filt_pbhifi = KRAKEN2_KRAKEN2.out.unclassified_reads_fastq   
 
-        KMER_FREQ(filt_pbhifi)
+        filt_pbhifi
+            .map { file -> tuple([id:file.baseName, single_end:true], file)  }
+            .set { filtered_fastq }
 
-        GCE(KMER_FREQ.out.kmerstat, KMER_FREQ.out.kmernum)
-        gce_genome_size      = GCE.out.gce2log
+        GUNZIP(filtered_fastq)
+
+        JELLYFISH_KMER(GUNZIP.out.gunzip, params.kmer_num)
+        JELLYFISH_HIST(JELLYFISH_KMER.out.shortkmer, params.kmer_num)
+        
+        GENOMESCOPE2(JELLYFISH_HIST.out.shortkmer_hist)
 
     emit:
-        filt_pbhifi    // channel: [ val(meta), path(decontaminated fastq) ]
+        filtered_fastq    // channel: [ val(meta), path(decontaminated fastq) ]
         nanoplot_reads_out   = NANOPLOT.out.html
         nanoplot_report_txt  = NANOPLOT.out.txt
         base_count           = TOTAL_BASES_LR.out.total_bases
-        gce_genome_size
+        genome_size_est = GENOMESCOPE2.out.summary
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
