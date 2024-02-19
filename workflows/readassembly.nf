@@ -88,7 +88,6 @@ include { LENGTH_FILT3 } from '../subworkflows/long_pb/02b_length_filter'
 
 
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-include { MUMMER } from '../modules/nf-core/mummer/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -308,6 +307,8 @@ workflow GENOMEASSEMBLY {
         QC_1 (all_assemblies, READ_QC2.out[0], ch_summtxt, READ_QC2.out[0], full_size)
     ch_versions = ch_versions.mix(QC_1.out.versions)}
 
+    bam_1 = QC_1.out[1]
+
     //polish assemblies
     if ( params.longread == true) {
         if ( params.medaka_polish == true || params.racon_polish == true){
@@ -363,10 +364,12 @@ workflow GENOMEASSEMBLY {
         } else if ( params.shortread == true && params.longread == false ) {
             QC_2 (polished_assemblies, READ_QC2.out[0], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], full_size, QC_1.out[7])
     } 
+    bam_2 = QC_2.out[1]
     qc_quast = QC_2.out[3]
     qc_busco = QC_2.out[4]
     qc_merqury = QC_2.out[5]
     } else {
+    bam_2 = Channel.empty()
     qc_quast = QC_1.out[3]
     qc_busco = QC_1.out[4]
     qc_merqury = QC_1.out[5]
@@ -402,7 +405,11 @@ workflow GENOMEASSEMBLY {
         QC_3 (purged_assemblies_common, ch_longreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, [], full_size, QC_1.out[7])  
     } else if ( params.shortread == true && params.longread == false) {
         QC_3 (purged_assemblies_common, READ_QC2.out[0], ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7])
-    }}
+    }    
+    bam_3 = QC_3.out[4] 
+    } else {
+    bam_3 = Channel.empty()
+    }
             
     if (params.ragtag_scaffold == true) {
         if (params.purge == true){
@@ -421,13 +428,16 @@ workflow GENOMEASSEMBLY {
             QC_4 (SCAFFOLD.out[0], ch_longreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, [], full_size, QC_1.out[7])  
         } else if ( params.shortread == true && params.longread == false ) {
             QC_4 (SCAFFOLD.out[0], READ_QC2.out[0], ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7]) }
-    
-    SCAFFOLD.out[0]
+        bam_4 = QC_4.out[4]
+
+        SCAFFOLD.out[0]
             .concat(purged_assemblies_common, polished_assemblies, all_assemblies)
             .collect()
             .set{final_assemblies}
 
     } else {
+        bam_4 = Channel.empty()
+
         purged_assemblies_common
             .concat(polished_assemblies, all_assemblies)
             .collect() 
@@ -444,8 +454,12 @@ workflow GENOMEASSEMBLY {
         ch_merqury = QC_3.out[3]
     }
 
+    bam_1
+        .concat(bam_2, bam_3, bam_4)
+        .set{qc_bam}
+
     if (params.blobtools_visualization == true){
-        VISUALIZE(final_assemblies, ch_ONTlongreads, ch_PacBiolongreads, filt_sr_unzip)
+        VISUALIZE(final_assemblies, ch_ONTlongreads, ch_PacBiolongreads, filt_sr_unzip, qc_bam)
     }
 
     OUTPUT (ch_quast, ch_busco, ch_merqury)
