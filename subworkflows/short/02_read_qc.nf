@@ -1,7 +1,7 @@
 include { GZIP } from '../../modules/local/gzip'
 include { FASTP } from '../../modules/nf-core/fastp/main'
 include { FASTQC } from '../../modules/nf-core/fastqc/main'
-include { KRAKEN2_KRAKEN2 } from '../../modules/nf-core/kraken2/kraken2/main'
+include { KRAKEN2_SR } from '../../modules/local/kraken2_sr'
 include { FASTQC_2 } from '../../modules/local/fastqc2/main'
 include { FASTQC_3 } from '../../modules/local/fastqc3/main'
 include { GUNZIP } from '../../modules/nf-core/gunzip/main'
