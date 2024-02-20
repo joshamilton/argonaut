@@ -118,7 +118,7 @@ workflow ASSEMBLY {
             .collect()
             .set { all_assemblies }
 
-        all_assemblies.view { "Final Long Read and Hybrid Assemblies: $it" }
+        all_assemblies.view()
 
         no_meta_assemblies = Channel.empty()
 
