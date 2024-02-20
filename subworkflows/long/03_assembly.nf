@@ -116,7 +116,6 @@ workflow ASSEMBLY {
         assemblies
             .concat(f_assembly, c_assembly, m_assembly, h_assembly, ex_assembly)
             .collect()
-            .groupTuple()
             .set { all_assemblies }
 
         all_assemblies.view { "Final Long Read and Hybrid Assemblies: $it" }
@@ -126,7 +125,6 @@ workflow ASSEMBLY {
         no_meta_assemblies
             .concat(flye_assembly, canu_assembly, masurca_assembly, hifi_assembly, existing_assembly)
             .collect()
-            .groupTuple()
             .set { all_assemblies_no_meta }
 
     emit:
