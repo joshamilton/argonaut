@@ -318,13 +318,23 @@ workflow GENOMEASSEMBLY {
         } else { ch_racon = Channel.empty() }
 
     //polish assemblies
-    if ( params.longread == true) {
-        if ( params.medaka_polish == true || params.racon_polish == true){
+        if ( params.longread == true) {
+        if ( params.medaka_polish == true && params.racon_polish == true){
         
         POLISH (ASSEMBLY.out[0], ch_longreads, params.model, QC_1.out[8], ch_racon)
         medaka_racon_polish   = POLISH.out[0]   
         
     ch_versions = ch_versions.mix(POLISH.out.versions) } else {medaka_racon_polish = Channel.empty()}
+    } else if (params.medaka_polish == true && params.racon_polish == false){
+        
+        POLISH (ASSEMBLY.out[0], ch_longreads, params.model, QC_1.out[8], ch_racon)
+        medaka_racon_polish   = POLISH.out[0]   
+
+    } else if ( params.medaka_polish == false &&  params.racon_polish == true){
+        
+        POLISH (ASSEMBLY.out[0], ch_longreads, [], QC_1.out[8], ch_racon)
+        medaka_racon_polish   = POLISH.out[0]   
+
     } else {
         medaka_racon_polish = Channel.empty()
     }
