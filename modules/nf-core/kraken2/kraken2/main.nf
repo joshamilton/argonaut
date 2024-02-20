@@ -1,4 +1,4 @@
-process KRAKEN2_KRAKEN2 {
+process KRAKEN2_KRAKEN2_PB {
     tag "$meta.id"
     label 'process_high'
 
