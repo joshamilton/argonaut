@@ -44,6 +44,7 @@ workflow READ_QC2 {
             .map { file -> tuple([id:file.baseName, single_end:true], file)  }
             .first()
             .set { filt_shortreads }
+            .view()
 
         //qc decontaminated short reads
         FASTQC_3(filt_shortreads)
