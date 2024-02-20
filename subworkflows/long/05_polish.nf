@@ -1,5 +1,6 @@
 include { MEDAKA } from '../../modules/nf-core/medaka/main'  
 include { RACON } from '../../modules/nf-core/racon/main'  
+include { GUNZIP } from '../../modules/nf-core/gunzip/main' 
 
 workflow POLISH {
 
@@ -16,12 +17,21 @@ workflow POLISH {
         if (params.racon_polish == true) {
 
             RACON (ch_racon)
-            assembly_polished = RACON.out.improved_assembly
+            
+            no_meta_polished_assembly = RACON.out.improved_assembly
+
+            no_meta_polished_assembly
+                .map { file -> tuple(id: file.baseName.replaceAll(/\\.fasta$/, ''), file) }
+                .set { polished_assembly }
+
+            GUNZIP (polished_assembly)
+            assembly_polished = GUNZIP.out.gunzip
+
         ch_versions = ch_versions.mix(RACON.out.versions)
         }
         
         if (params.medaka_polish == true && params.racon_polish == true) {
-            MEDAKA (fastq_filt, RACON.out.improved_assembly, model)
+            MEDAKA (fastq_filt, polished_assembly, model)
         ch_versions = ch_versions.mix(MEDAKA.out.versions)
  
         polished_assembly = MEDAKA.out.assembly
