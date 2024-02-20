@@ -42,6 +42,7 @@ workflow READ_QC2 {
 
         filt_illumina
             .map { file -> tuple([id:file.baseName, single_end:true], file)  }
+            .first()
             .set { filt_shortreads }
 
         //qc decontaminated short reads
