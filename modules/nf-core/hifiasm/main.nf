@@ -55,7 +55,7 @@ process HIFIASM {
             -t $task.cpus \\
             $hifi_reads
 
-        awk '/^S/{print ">"\$2;print \$3}' *.p_ctg.gfa > ${prefix}.asm.p_ctg.fasta
+        awk '/^S/{print ">"\$2;print \$3}' *.p_ctg.gfa > hifi_${prefix}.asm.p_ctg.fasta
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
