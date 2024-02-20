@@ -33,18 +33,12 @@ workflow READ_QC2 {
         FASTQC_2(FASTP.out.reads)
 
         //decontamination of trimmed short reads
-        KRAKEN2_SR(FASTP.out.reads, ch_db, params.save_output_fastqs, params.save_reads_assignment)
+        KRAKEN2_KRAKEN2_SR(FASTP.out.reads, ch_db, params.save_output_fastqs, params.save_reads_assignment)
 
         //summarizing and visualizing decontam
-        RECENTRIFUGE_KR(KRAKEN2_SR.out.classified_reads_assignment, params.rcf_db)
+        RECENTRIFUGE_KR(KRAKEN2_KRAKEN2_SR.out.classified_reads_assignment, params.rcf_db)
 
-        filt_illumina = KRAKEN2_SR.out.unclassified_reads_fastq   
-
-        filt_illumina
-            .map { file -> tuple([id:file.baseName, single_end:true], file)  }
-            .first()
-            .set { filt_shortreads }
-            .view()
+        filt_shortreads = KRAKEN2_KRAKEN2_SR.out.unclassified_reads_fastq   
 
         //qc decontaminated short reads
         FASTQC_3(filt_shortreads)
