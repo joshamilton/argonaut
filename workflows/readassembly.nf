@@ -290,7 +290,12 @@ workflow GENOMEASSEMBLY {
         sr_assemblies = Channel.empty()
     }
     
-    all_assemblies = lr_assemblies.concat(sr_assemblies).collect()
+    lr_assemblies
+        .concat(sr_assemblies)
+        .collect()
+        .set{all_assemblies}
+
+    all_assemblies.view()
 
     if ( params.summary_txt_file == true) {
         ch_summtxt = Channel.fromPath(params.summary_txt) 
