@@ -309,15 +309,17 @@ workflow GENOMEASSEMBLY {
 
     bam_1 = QC_1.out[1]
 
+    if (params.racon_polish == true){
+        ch_longreads
+            .concat(ASSEMBLY.out[4], QC_1.out[8])
+            .collect()
+            .view()
+            .set { ch_racon }
+        } else { ch_racon = Channel.empty() }
+
     //polish assemblies
     if ( params.longread == true) {
         if ( params.medaka_polish == true || params.racon_polish == true){
-            if (params.racon_polish == true){
-            ch_longreads
-                .concat(ASSEMBLY.out[4], QC_1.out[8])
-                .collect()
-                .set { ch_racon }
-            } else { ch_racon = Channel.empty() }
         
         POLISH (ASSEMBLY.out[0], ch_longreads, params.model, QC_1.out[8], ch_racon)
         medaka_racon_polish   = POLISH.out[0]   
