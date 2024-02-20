@@ -3,7 +3,7 @@ include { GUNZIP } from '../../modules/nf-core/gunzip/main'
 include { GENOMESCOPE2 } from '../../modules/nf-core/genomescope2/main'
 include { JELLYFISH_KMER } from '../../modules/local/jellyfish_kmer'
 include { JELLYFISH_HIST } from '../../modules/local/jellyfish_hist'
-include { KRAKEN2_KRAKEN2 } from '../../modules/nf-core/kraken2/kraken2/main'
+include { KRAKEN2_KRAKEN2_PB } from '../../modules/nf-core/kraken2/kraken2/main'
 include { RECENTRIFUGE_KR } from '../../modules/local/recentrifuge/kraken'
 include { NANOPLOT } from '../../modules/nf-core/nanoplot/main'
 include { TOTAL_BASES_LR } from '../../modules/local/total_bases_lr' 
@@ -35,12 +35,12 @@ workflow READ_QC3 {
 	    ch_versions = ch_versions.mix(CUTADAPT.out.versions)
 
         //decontamination of trimmed short reads
-        KRAKEN2_KRAKEN2(CUTADAPT.out.reads, ch_db, params.save_output_fastqs, params.save_reads_assignment)
+        KRAKEN2_KRAKEN2_PB(CUTADAPT.out.reads, ch_db, params.save_output_fastqs, params.save_reads_assignment)
 
         //summarizing and visualizing decontam
-        RECENTRIFUGE_KR(KRAKEN2_KRAKEN2.out.classified_reads_assignment, params.rcf_db)
+        RECENTRIFUGE_KR(KRAKEN2_KRAKEN2_PB.out.classified_reads_assignment, params.rcf_db)
 
-        filt_pbhifi = KRAKEN2_KRAKEN2.out.unclassified_reads_fastq   
+        filt_pbhifi = KRAKEN2_KRAKEN2_PB.out.unclassified_reads_fastq   
 
         filt_pbhifi
             .map { file -> tuple([id:file.baseName, single_end:true], file)  }
