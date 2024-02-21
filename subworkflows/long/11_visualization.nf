@@ -12,6 +12,7 @@ workflow VISUALIZE {
 
     main:
         ch_versions = Channel.empty() 
+        println "visualizing assemblies with blobtools!"
 
 		BLOBTOOLS_CONFIG(assemblies, ont_fastq, pb_fastq, sr_fastq)
 		blobtools_config=BLOBTOOLS_CONFIG.out.config
