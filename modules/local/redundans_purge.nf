@@ -15,7 +15,7 @@ process REDUNDANS_P {
     tuple val(meta), path("redundans_purge/redundans_purge_contig.fasta")               , emit: assembly_fasta
 
     script:
-    def prefix = task.ext.prefix ?: "${meta}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     redundans.py -v -f $fasta -i $shortreads -t $task.cpus --nogapclosing --noscaffolding -o ${prefix}_redundans_purge
     
