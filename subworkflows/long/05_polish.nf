@@ -34,29 +34,30 @@ workflow POLISH {
             MEDAKA (fastq_filt, racon_polished_assembly, model)
         ch_versions = ch_versions.mix(MEDAKA.out.versions)
  
-            medaka_polished_assembly = MEDAKA.out.assembly
+            assembly_polished = MEDAKA.out.assembly
         
-            medaka_polished_assembly
+            assembly_polished
                 .map { file -> tuple(id: file.baseName, file)  }
                 .set { medaka_assembly_polished }
 
-            medaka_assembly_polished
-                .concat(polished_assembly)
-                .set{assembly_polished}
+            assembly_polished
+                .concat(no_meta_polished_assembly)
+                .set{no_meta_polished_assembly}
             
         } else if (params.medaka_polish == true && params.racon_polish == false){
             MEDAKA (fastq_filt, assembly, model)
         ch_versions = ch_versions.mix(MEDAKA.out.versions)
  
-        polished_assembly = MEDAKA.out.assembly
-        polished_assembly
+        no_meta_polished_assembly = MEDAKA.out.assembly
+
+        no_meta_polished_assembly
                 .map { file -> tuple(id: file.baseName, file)  }
                 .set { assembly_polished }
         } 
         
     emit:
     
-        assembly_polished      
+        no_meta_polished_assembly      
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
