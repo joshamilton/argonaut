@@ -350,9 +350,10 @@ workflow GENOMEASSEMBLY {
                 .set { polca_polish }   
         
         //combine polished flye assemblies w other assemblies
-        polca_polish
+        sr_polish
             .concat(medaka_racon_polish)
-            .collect()
+            .flatten()
+            .map { file -> tuple(file.baseName, file) }
             .set { polished_assemblies }
 
     ch_versions = ch_versions.mix(POLISH2.out.versions)
