@@ -252,37 +252,44 @@ workflow GENOMEASSEMBLY {
             ch_config = Channel.fromPath(params.masurca_config)
             MASURCA_SR_ADV (ch_config)
             println "assembling short reads with maSuRCA!"
-            MASURCA_SR_ADV.out.fasta
+            masurca_asm = MASURCA_SR_ADV.out.fasta
+            masurca_asm
                 .map { file -> tuple(id: file.baseName, file)  }
                 .set { masurca_sr_assembly }
         } else {
             MASURCA_SR (READ_QC2.out[1])
             println "assembling short reads with maSuRCA!"
-            MASURCA_SR.out.fasta
+            masurca_asm = MASURCA_SR.out.fasta
+            masurca_asm
                 .map { file -> tuple(id: file.baseName, file)  }
                 .set { masurca_sr_assembly }
         }
         
         
     } else {
+        masurca_asm = Channel.empty() 
         masurca_sr_assembly = Channel.empty() 
     }
 
     if ( params.shortread == true && params.redundans == true){
         REDUNDANS_A (ch_shortdata.reads)
         println "assembling short reads with redundans!"
-        REDUNDANS_A.out.assembly_fasta
+        redundans_asm = REDUNDANS_A.out.assembly_fasta
+        redundans_asm
             .map { file -> tuple(id: file.baseName, file)  }
             .set { redundans_assembly }
         
     } else {
+        redundans_asm = Channel.empty()
         redundans_assembly = Channel.empty() 
     }
     
     if ( params.shortread == true) {
-    masurca_sr_assembly
-        .concat(redundans_assembly)
-        .collect()
+    masurca_asm
+        .concat(redundans_asm)
+        .flatten()
+        .map { file -> tuple(file.baseName, file) }
+        .view()
         .set { sr_assemblies }
 
     sr_assemblies.view { "Initial Short Read Assembly: $it" }
@@ -292,7 +299,8 @@ workflow GENOMEASSEMBLY {
     
     lr_assemblies
         .concat(sr_assemblies)
-        .collect()
+        .flatten()
+        .view()
         .set{all_assemblies}
 
     all_assemblies.view()
