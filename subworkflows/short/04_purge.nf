@@ -10,6 +10,8 @@ workflow PURGE2 {
 
     ch_versions = Channel.empty() 
 
+        println "purging short read assemblies with redundans!"
+
         REDUNDANS_P (assembly, shortreads)
 
 
