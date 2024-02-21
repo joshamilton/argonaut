@@ -1,5 +1,5 @@
 process REDUNDANS_P {
-    tag "$meta.id"
+    tag "$meta"
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -15,8 +15,9 @@ process REDUNDANS_P {
     tuple val(meta), path("redundans_purge/redundans_purge_contig.fasta")               , emit: assembly_fasta
 
     script:
+    def prefix = task.ext.prefix ?: "${meta}"
     """
-    redundans.py -v -f $fasta -i $shortreads -t $task.cpus --nogapclosing --noscaffolding -o redundans_purge
+    redundans.py -v -f $fasta -i $shortreads -t $task.cpus --nogapclosing --noscaffolding -o ${prefix}_redundans_purge
     
     cd redundans_purge
     mv scaffolds.reduced.fa redundans_purge_scaf.fasta
