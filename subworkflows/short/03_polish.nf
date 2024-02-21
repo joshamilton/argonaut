@@ -10,6 +10,8 @@ workflow POLISH2 {
 
     ch_versions = Channel.empty() 
 
+        println "polishing assemblies with short reads using POLCA!"
+
         POLCA (flye_assembly, shortreads)
 
 
