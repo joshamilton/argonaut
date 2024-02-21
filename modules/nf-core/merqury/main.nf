@@ -1,5 +1,5 @@
 process MERQURY {
-    tag "$meta.id"
+    tag "$meta"
     label 'process_low'
 
     conda "bioconda::merqury=1.3"
@@ -37,7 +37,7 @@ process MERQURY {
 
     script:
     // def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta}"
     def VERSION = 1.3
     def genome_size
     """
