@@ -398,10 +398,10 @@ workflow GENOMEASSEMBLY {
     } 
 
     if (params.shortread == true && params.purge == true) {
-    sr_assemblies
-        .flatten()
-        .map { file -> tuple(file.baseName, file) }
-        .set{assemblies_sr_meta}
+        sr_assemblies
+            .flatten()
+            .map { file -> tuple(file.baseName, file) }
+            .set{assemblies_sr_meta}
         PURGE2 (assemblies_sr_meta, READ_QC2.out[1])
         sr_purge = PURGE2.out[0]
         purged_assemblies_common = sr_purge.concat(purged_assemblies_common)
