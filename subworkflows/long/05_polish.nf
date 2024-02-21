@@ -15,7 +15,7 @@ workflow POLISH {
     ch_versions = Channel.empty() 
 
         if (params.racon_polish == true) {
-
+            println "polishing assemblies with racon!"
             RACON (ch_racon)
             
             no_meta_polished_assembly = RACON.out.improved_assembly
@@ -31,6 +31,7 @@ workflow POLISH {
         }
         
         if (params.medaka_polish == true && params.racon_polish == true) {
+            println "polishing racon-polished assemblies with medaka!"
             MEDAKA (fastq_filt, racon_polished_assembly, model)
         ch_versions = ch_versions.mix(MEDAKA.out.versions)
  
@@ -45,6 +46,8 @@ workflow POLISH {
                 .set{no_meta_polished_assembly}
             
         } else if (params.medaka_polish == true && params.racon_polish == false){
+
+            println "polishing assemblies with medaka!"
             MEDAKA (fastq_filt, assembly, model)
         ch_versions = ch_versions.mix(MEDAKA.out.versions)
  
