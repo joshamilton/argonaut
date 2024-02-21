@@ -231,13 +231,13 @@ workflow GENOMEASSEMBLY {
     if (params.longread == true && params.shortread == true){
         //assembly inputting long & short reads
         ASSEMBLY (ch_longreads, READ_QC2.out[1], readable_size, full_size, combined_lr, no_meta_fastq, ch_PacBiolongreads)
-        lr_assemblies   = ASSEMBLY.out[0]
+        lr_assemblies   = ASSEMBLY.out[4]
         lr_assemblies.view { "Initial Long Read Assembly: $it" }
     } else if (params.longread == true && params.shortread == false) {
         ch_shortdata = Channel.empty() 
         //assembly of decontam and length filtered (if specified) long reads
         ASSEMBLY (ch_longreads, [], readable_size, full_size, combined_lr, no_meta_fastq, ch_PacBiolongreads)
-        lr_assemblies   = ASSEMBLY.out[0]
+        lr_assemblies   = ASSEMBLY.out[4]
         lr_assemblies.view { "Initial Long Read Assembly: $it" }
     ch_versions = ch_versions.mix(ASSEMBLY.out.versions)   
     } else {
@@ -285,9 +285,7 @@ workflow GENOMEASSEMBLY {
     if ( params.shortread == true) {
     masurca_asm
         .concat(redundans_asm)
-        .flatten()
-        .map { file -> tuple(file.baseName, file) }
-        .view()
+        .collect()
         .set { sr_assemblies }
 
     sr_assemblies.view { "Initial Short Read Assembly: $it" }
@@ -297,9 +295,10 @@ workflow GENOMEASSEMBLY {
     
     lr_assemblies
         .concat(sr_assemblies)
+        .flatten()
+        .map { file -> tuple(file.baseName, file) }
+        .view()
         .set{all_assemblies}
-
-    all_assemblies.view()
 
     if ( params.summary_txt_file == true) {
         ch_summtxt = Channel.fromPath(params.summary_txt) 
