@@ -299,7 +299,6 @@ workflow GENOMEASSEMBLY {
     
     lr_assemblies
         .concat(sr_assemblies)
-        .flatten()
         .set{all_assemblies}
 
     all_assemblies.view()
