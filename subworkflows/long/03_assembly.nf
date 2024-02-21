@@ -113,19 +113,21 @@ workflow ASSEMBLY {
             existing_assembly = Channel.empty() 
         }
 
-        assemblies
-            .concat(f_assembly, c_assembly, m_assembly, h_assembly, ex_assembly)
-            .collect()
-            .set { all_assemblies }
-
-        all_assemblies.view()
-
         no_meta_assemblies = Channel.empty()
 
         no_meta_assemblies
             .concat(flye_assembly, canu_assembly, masurca_assembly, hifi_assembly, existing_assembly)
             .collect()
             .set { all_assemblies_no_meta }
+
+        no_meta_assemblies
+            .concat(flye_assembly, canu_assembly, masurca_assembly, hifi_assembly, existing_assembly)
+            .flatten()
+            .map { file -> tuple(file.baseName, file) }
+            .view()
+            .set { all_assemblies }
+
+        all_assemblies.view()
 
     emit:
         all_assemblies  
