@@ -461,10 +461,18 @@ workflow GENOMEASSEMBLY {
         ch_quast = QC_4.out[1]
         ch_busco = QC_4.out[2]
         ch_merqury = QC_4.out[3]
-    } else {
+    } else if (params.purge == true){
         ch_quast = QC_3.out[1]
         ch_busco = QC_3.out[2]
         ch_merqury = QC_3.out[3]
+    } else if (params.medaka_polish || params.racon_polish == true || params.shortread == true) {
+        qc_quast = QC_2.out[3]
+        qc_busco = QC_2.out[4]
+        qc_merqury = QC_2.out[5]
+    } else {
+        qc_quast = QC_1.out[3]
+        qc_busco = QC_1.out[4]
+        qc_merqury = QC_1.out[5]
     }
 
     bam_1
