@@ -28,8 +28,6 @@ process RACON {
         "${assembly}" > \\
         ${prefix}_assembly_consensus.fasta
 
-    gzip -n ${prefix}_assembly_consensus.fasta
-
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         racon: \$( racon --version 2>&1 | sed 's/^.*v//' )
