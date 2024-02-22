@@ -353,7 +353,7 @@ workflow GENOMEASSEMBLY {
         sr_polish
             .concat(medaka_racon_polish)
             .flatten()
-            .map { file -> tuple(file.baseName, file) }
+            .map { file -> tuple(id: file.baseName, file) }
             .set { polished_assemblies }
 
     ch_versions = ch_versions.mix(POLISH2.out.versions)
