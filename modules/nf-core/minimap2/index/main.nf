@@ -1,4 +1,5 @@
 process MINIMAP2_INDEX {
+    tag "$meta"
     label 'process_medium'
 
     // Note: the versions here need to match the versions used in minimap2/align
