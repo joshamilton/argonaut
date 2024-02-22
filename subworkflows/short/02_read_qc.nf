@@ -40,6 +40,10 @@ workflow READ_QC2 {
 
         filt_shortreads = KRAKEN2_KRAKEN2_SR.out.unclassified_reads_fastq   
 
+        filt_shortreads
+            .map { file -> file }
+            .set { filt_sr_no_meta }
+
         //qc decontaminated short reads
         FASTQC_3(filt_shortreads)
 
@@ -56,6 +60,7 @@ workflow READ_QC2 {
         GUNZIP.out.gunzip
         fastp_report = FASTP.out.json
         genome_size_est = GENOMESCOPE2.out.summary
+        filt_sr_no_meta
 
     versions = ch_versions                     // channel: [ versions.yml ]
 }
