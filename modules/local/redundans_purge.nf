@@ -19,7 +19,7 @@ process REDUNDANS_P {
     """
     redundans.py -v -f $fasta -i $shortreads -t $task.cpus --nogapclosing --noscaffolding -o ${prefix}_redundans_purge
     
-    cd redundans_purge
+    cd ${prefix}_redundans_purge
     mv scaffolds.reduced.fa redundans_purge_scaf.fasta
     mv contigs.reduced.fa redundans_purge_contig.fasta
     """
