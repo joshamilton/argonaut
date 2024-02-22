@@ -482,6 +482,8 @@ workflow GENOMEASSEMBLY {
 
     if (params.blobtools_visualization == true){
         VISUALIZE(final_assemblies, ch_ONTlongreads, ch_PacBiolongreads, filt_sr_unzip, qc_bam)
+    } else if (params.blobtools_visualization == false){
+        println "no blobtools"
     }
 
     OUTPUT (ch_quast, ch_busco, ch_merqury)
