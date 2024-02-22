@@ -37,7 +37,7 @@ process MERQURY {
 
     script:
     // def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     def VERSION = 1.3
     def genome_size
     """
