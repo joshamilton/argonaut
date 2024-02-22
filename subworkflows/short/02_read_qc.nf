@@ -1,7 +1,7 @@
 include { GZIP } from '../../modules/local/gzip'
 include { FASTP } from '../../modules/nf-core/fastp/main'
 include { FASTQC } from '../../modules/nf-core/fastqc/main'
-include { KRAKEN2_KRAKEN2 } from '../../modules/nf-core/kraken2/kraken2/main'
+include { KRAKEN2_KRAKEN2_SR } from '../../modules/local/kraken2_sr'
 include { FASTQC_2 } from '../../modules/local/fastqc2/main'
 include { FASTQC_3 } from '../../modules/local/fastqc3/main'
 include { GUNZIP } from '../../modules/nf-core/gunzip/main'
@@ -33,12 +33,12 @@ workflow READ_QC2 {
         FASTQC_2(FASTP.out.reads)
 
         //decontamination of trimmed short reads
-        KRAKEN2_KRAKEN2(FASTP.out.reads, ch_db, params.save_output_fastqs, params.save_reads_assignment)
+        KRAKEN2_KRAKEN2_SR(FASTP.out.reads, ch_db, params.save_output_fastqs, params.save_reads_assignment)
 
         //summarizing and visualizing decontam
-        RECENTRIFUGE_KR(KRAKEN2_KRAKEN2.out.classified_reads_assignment, params.rcf_db)
+        RECENTRIFUGE_KR(KRAKEN2_KRAKEN2_SR.out.classified_reads_assignment, params.rcf_db)
 
-        filt_shortreads = KRAKEN2_KRAKEN2.out.unclassified_reads_fastq   
+        filt_shortreads = KRAKEN2_KRAKEN2_SR.out.unclassified_reads_fastq   
 
         //qc decontaminated short reads
         FASTQC_3(filt_shortreads)
@@ -59,4 +59,3 @@ workflow READ_QC2 {
 
     versions = ch_versions                     // channel: [ versions.yml ]
 }
-
