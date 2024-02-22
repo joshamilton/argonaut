@@ -328,8 +328,11 @@ workflow GENOMEASSEMBLY {
     //polish assemblies
      if ( params.longread == true) {
         if ( params.medaka_polish == true || params.racon_polish == true){
-        
-        POLISH (ASSEMBLY.out[0], ch_longreads, params.model, QC_1.out[8], ch_racon)
+            if (params.ONT_lr == true){
+                POLISH (ASSEMBLY.out[0], ch_ONTlongreads, params.model, QC_1.out[8], ch_racon)
+            } else if (params.PacBioHifi_lr == true){
+                POLISH (ASSEMBLY.out[0], ch_PacBiolongreads, params.model, QC_1.out[8], ch_racon)
+            }
         medaka_racon_polish   = POLISH.out[0]   
         
     ch_versions = ch_versions.mix(POLISH.out.versions) } else {medaka_racon_polish = Channel.empty()}
