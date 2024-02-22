@@ -16,6 +16,19 @@
                     "default": true,
                     "description": "Boolean whether long reads are available for assembly"
                 },
+                "ONT_lr": {
+                    "type": "boolean",
+                    "description": "Boolean whether long reads are Oxford Nanopore"
+                },
+                "ONT_lr_ultralong": {
+                    "type": "boolean",
+                    "description": "Boolean whether long reads are ultra long Oxford Nanopore (will be used for Hifiasm if PacBio is available)"
+                },
+                "PacBioHifi_lr": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Boolean whether long reads are PacBio Hifi"
+                },
                 "tar": {
                     "type": "boolean",
                     "description": "Boolean whether long reads are in a tar archive for storage purposes"
@@ -172,15 +185,20 @@
                 }
             }
         },
-        "polishing_options": {
-            "title": "Polishing options",
+        "polish_options": {
+            "title": "Polish options",
             "type": "object",
             "description": "",
             "default": "",
             "properties": {
-                "medaka_racon_polish": {
+                "medaka_polish": {
                     "type": "boolean",
-                    "default": true
+                    "description": "Boolean to polish assemblies with medaka"
+                },
+                "racon_polish": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Boolean to polish assemblies with racon"
                 }
             }
         },
@@ -190,6 +208,10 @@
             "description": "",
             "default": "",
             "properties": {
+                "purge": {
+                    "type": "boolean",
+                    "description": "Boolean to run purge histogram on assemblies"
+                },
                 "low": {
                     "type": "integer",
                     "description": "Low threshold of purge histogram, must be inputted after histogram is generated to reduce erroneous duplication with purge"
@@ -221,6 +243,19 @@
                 }
             }
         },
+        "visualization_options": {
+            "title": "Visualization options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "blobtools_visualization": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Boolean to visualize assemblies with blobtools"
+                }
+            }
+        },
         "required_params": {
             "title": "Required params",
             "type": "object",
@@ -229,7 +264,11 @@
             "properties": {
                 "input": {
                     "type": "string",
-                    "description": "Path to comma-separated file containing information about the long reads"
+                    "description": "Path to comma-separated file containing information about the ONT long reads (or PacBio if no ONT available)"
+                },
+                "pb_input": {
+                    "type": "string",
+                    "description": "Path to comma-separated file containing information about the PacBio long reads"
                 },
                 "shortinput": {
                     "type": "string",
@@ -295,6 +334,10 @@
                     "type": "string",
                     "default": "\"-nanopore\"",
                     "description": "Mode of long read sequencing (ex. \"-nanopore\")"
+                },
+                "masurca_config": {
+                    "type": "string",
+                    "description": "Path to masurca config file, to be inputted by users modifying specific configurations"
                 },
                 "model": {
                     "type": "string",
@@ -532,13 +575,16 @@
             "$ref": "#/definitions/assembly_qc_options"
         },
         {
-            "$ref": "#/definitions/polishing_options"
+            "$ref": "#/definitions/polish_options"
         },
         {
             "$ref": "#/definitions/purge_options"
         },
         {
             "$ref": "#/definitions/scaffolding_options"
+        },
+        {
+            "$ref": "#/definitions/visualization_options"
         },
         {
             "$ref": "#/definitions/required_params"
