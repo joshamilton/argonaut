@@ -52,6 +52,7 @@ workflow READ_QC {
         centrifuge_out       = CENTRIFUGE_KREPORT.out.kreport
         gce_genome_size
         nanoplot_report_txt  = NANOPLOT.out.txt
+        fastq_filt
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
