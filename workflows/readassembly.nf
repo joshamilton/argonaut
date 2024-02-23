@@ -335,7 +335,7 @@ workflow GENOMEASSEMBLY {
             ch_racon_pt1
                 .concat(no_meta_ch_ONT)
                 .set{ch_racon}
-        } else if {
+        } else if (params.PacBioHifi_lr == true){
             ch_racon_pt1
                 .concat(no_meta_ch_PB)
                 .set{ch_racon}
