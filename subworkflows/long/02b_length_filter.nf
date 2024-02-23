@@ -6,7 +6,8 @@ workflow LENGTH_FILT {
     take:
   
         decontam_reads  // channel: [ val(meta), [ decontam reads ] ] 
-           
+        no_meta_decontam
+
     main:
     
     ch_versions = Channel.empty()
@@ -14,16 +15,23 @@ workflow LENGTH_FILT {
         // if statement for if min_read_length exists for length filter
         if(params.min_readlength > 0){
             BIOAWK(decontam_reads)
-            NANOPLOT(BIOAWK.out.output)
 
-            longreads = BIOAWK.out.output  // channel: [ val(meta), path(decontam+length filtered fastq) ]
+            BIOAWK.out.output
+                .map { file -> tuple([id:file.baseName, single_end:true], file)  }
+                .set { longreads }
+
+            NANOPLOT(longreads)
+
+            no_meta_longreads = BIOAWK.out.output  // channel: [ val(meta), path(decontam+length filtered fastq) ]
         }
         else{
             longreads = decontam_reads  // channel: [ val(meta), path(decontaminated fastq) ]
+            no_meta_longreads = no_meta_decontam
         }
 
     emit:
         longreads
-        
+        no_meta_longreads
+
     versions = ch_versions                     // channel: [ versions.yml ]
 }
