@@ -325,21 +325,11 @@ workflow GENOMEASSEMBLY {
     bam_1 = QC_1.out[1]
 
     if (params.racon_polish == true){
-        ASSEMBLY.out[0]
-            .concat(QC_1.out[8])
+        ch_ONTlongreads
+            .concat(ASSEMBLY.out[4], QC_1.out[8])
             .collect()
-            .groupTuple()
             .view()
-            .set { ch_racon_pt1 }
-        if (params.ONT_lr == true){
-            ch_racon_pt1
-                .concat(no_meta_ch_ONT)
-                .set{ch_racon}
-        } else if (params.PacBioHifi_lr == true){
-            ch_racon_pt1
-                .concat(no_meta_ch_PB)
-                .set{ch_racon}
-        }
+            .set { ch_racon }
     } else { ch_racon = Channel.empty() }
 
     //polish assemblies
