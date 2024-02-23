@@ -115,8 +115,9 @@ workflow GENOMEASSEMBLY {
             no_meta_fastq = READ_QC.out[5]
 
             //optional read filtering by length with bioawk
-            LENGTH_FILT (READ_QC.out[0])
+            LENGTH_FILT (READ_QC.out[0], no_meta_fastq)
             ch_ONTlongreads = LENGTH_FILT.out[0]
+            no_meta_ch_ONT = LENGTH_FILT.out[1]
 
             ch_versions = ch_versions.mix(LENGTH_FILT.out.versions)
 
@@ -124,23 +125,29 @@ workflow GENOMEASSEMBLY {
                 ch_longreads = LENGTH_FILT.out[0]
         }} else {
             ch_ONTlongreads = Channel.empty()
-            no_meta_fastq = Channel.empty()}
+            no_meta_fastq = Channel.empty()
+            no_meta_ch_ONT = Channel.empty()}
         if (params.PacBioHifi_lr == true) {
             ch_PB_data = INPUT_CHECK3 ( ch_pb_input )
             ch_versions = ch_versions.mix(INPUT_CHECK3.out.versions)    
         
             //decontamination and quality checking of long reads
             READ_QC3 (ch_PB_data.reads, ch_kraken_db)
+            no_meta_decontamPB = READ_QC3.out[5]
+
             ch_versions = ch_versions.mix(READ_QC3.out.versions)
 
-            LENGTH_FILT3 (READ_QC3.out[0])
+            LENGTH_FILT3 (READ_QC3.out[0], no_meta_decontamPB)
             ch_PacBiolongreads = LENGTH_FILT3.out[0]
+            no_meta_ch_PB = LENGTH_FILT3.out[1]
 
             ch_versions = ch_versions.mix(LENGTH_FILT3.out.versions)
 
             if (params.ONT_lr == false){
                 ch_longreads = LENGTH_FILT3.out[0]
-        }} else {ch_PacBiolongreads = Channel.empty()}
+        }} else {
+            ch_PacBiolongreads = Channel.empty()
+            no_meta_ch_PB = Channel.empty()}
         if (params.PacBioHifi_lr == true || params.ONT_lr == true || params.longread == true) {
             ch_ONTlongreads
                 .concat(ch_PacBiolongreads)
@@ -318,12 +325,22 @@ workflow GENOMEASSEMBLY {
     bam_1 = QC_1.out[1]
 
     if (params.racon_polish == true){
-        ch_ONTlongreads
-            .concat(ASSEMBLY.out[4], QC_1.out[8])
+        ASSEMBLY.out[0]
+            .concat(QC_1.out[8])
             .collect()
+            .groupTuple()
             .view()
-            .set { ch_racon }
-        } else { ch_racon = Channel.empty() }
+            .set { ch_racon_pt1 }
+        if (params.ONT_lr == true){
+            ch_racon_pt1
+                .concat(no_meta_ch_ONT)
+                .set{ch_racon}
+        } else if {
+            ch_racon_pt1
+                .concat(no_meta_ch_PB)
+                .set{ch_racon}
+        }
+    } else { ch_racon = Channel.empty() }
 
     //polish assemblies
      if ( params.longread == true) {
