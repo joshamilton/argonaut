@@ -8,7 +8,7 @@ process RACON {
         'biocontainers/racon:1.4.20--h9a82719_1' }"
 
     input:
-    tuple val(meta), path(reads), path(assembly), path(paf)
+    tuple val(meta), path(assembly), path(paf), path(reads)
 
     output:
     path('*_assembly_consensus.fasta.gz') , emit: improved_assembly
