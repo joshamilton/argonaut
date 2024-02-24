@@ -330,12 +330,12 @@ workflow GENOMEASSEMBLY {
             .set{ch_racon_1}
         if (params.ONT_lr == true){
             ch_racon_1
-                .combine(ch_ONTlongreads)
+                .combine(no_meta_ch_ONT)
                 .view()
                 .set { ch_racon }
         } else if(params.PacBioHifi_lr == true){
             ch_racon_1
-                .combine(ch_PacBiolongreads)
+                .combine(no_meta_ch_PB)
                 .view()
                 .set { ch_racon }
         }
