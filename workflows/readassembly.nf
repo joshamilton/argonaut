@@ -328,11 +328,17 @@ workflow GENOMEASSEMBLY {
         all_assemblies
             .join(QC_1.out[1])
             .set{ch_racon_1}
-
-        ch_racon_1
-            .concat(ch_ONTlongreads)
-            .view()
-            .set { ch_racon }
+        if (params.ONT_lr == true){
+            ch_racon_1
+                .concat(ch_ONTlongreads)
+                .view()
+                .set { ch_racon }
+        } else if(params.PacBioHifi_lr == true){
+            ch_racon_1
+                .concat(ch_PacBiolongreads)
+                .view()
+                .set { ch_racon }
+        }
     } else { ch_racon = Channel.empty() }
 
     //polish assemblies
