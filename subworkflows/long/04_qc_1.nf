@@ -20,8 +20,6 @@ workflow QC_1 {
 
     ch_versions = Channel.empty() 
 
-    assemblies.view()
-
         // build index
         MINIMAP2_INDEX(assemblies)
         ch_versions = ch_versions.mix(MINIMAP2_INDEX.out.versions)
@@ -31,6 +29,8 @@ workflow QC_1 {
         MINIMAP2_ALIGN(fastq_filt, assemblies, params.bam_format, params.cigar_paf_format, params.cigar_bam)
         ch_align_bam = MINIMAP2_ALIGN.out.bam
         ch_align_paf = MINIMAP2_ALIGN.out.paf
+
+        ch_align_bam.view() 
 
         // run quast
         QUAST(
