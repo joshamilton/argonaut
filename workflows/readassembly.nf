@@ -326,7 +326,7 @@ workflow GENOMEASSEMBLY {
 
     if (params.racon_polish == true){
         ASSEMBLY.out[0]
-            .join(QC_1.out[8])
+            .join(QC_1.out[1])
             .set{ch_racon_1}
             .view()
 
