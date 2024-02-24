@@ -325,7 +325,7 @@ workflow GENOMEASSEMBLY {
     bam_1 = QC_1.out[1]
 
     if (params.racon_polish == true){
-        ASSEMBLY.out[4]
+        ASSEMBLY.out[0]
             .join(QC_1.out[8])
             .set{ch_racon_1}
             .view()
