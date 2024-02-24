@@ -325,10 +325,9 @@ workflow GENOMEASSEMBLY {
     bam_1 = QC_1.out[1]
 
     if (params.racon_polish == true){
-        ASSEMBLY.out[0]
+        all_assemblies
             .join(QC_1.out[1])
             .set{ch_racon_1}
-            .view()
 
         ch_racon_1
             .concat(ch_ONTlongreads)
