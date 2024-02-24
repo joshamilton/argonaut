@@ -417,7 +417,9 @@ workflow GENOMEASSEMBLY {
             .set{assemblies_sr_meta}
         PURGE2 (assemblies_sr_meta, READ_QC2.out[1])
         sr_purge = PURGE2.out[0]
-        purged_assemblies_common = sr_purge.concat(purged_assemblies_common)
+        sr_purge
+            .concat(purged_assemblies_common)
+            .set{purged_assemblies_common}
     } else {
         sr_purge = Channel.empty()
     }
