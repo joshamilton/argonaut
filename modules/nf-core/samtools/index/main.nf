@@ -14,7 +14,7 @@ process SAMTOOLS_INDEX {
     tuple val(meta), path("*.bai") , optional:true, emit: bai
     tuple val(meta), path("*.csi") , optional:true, emit: csi
     tuple val(meta), path("*.crai"), optional:true, emit: crai
-    path("*.sam"), emit: sam
+    tuple val(meta), path("*.sam"), emit: sam
     path  "versions.yml"           , emit: versions
 
     when:
