@@ -154,7 +154,7 @@ workflow GENOMEASSEMBLY {
                 .set{ch_longreads}
 
             ch_ONTlongreads
-                .join(ch_PacBiolongreads)
+                .combine(no_meta_ch_PB)
                 .set{ch_combo_longreads}
         }else if (params.PacBioHifi_lr == false && params.ONT_lr == false){ 
             ch_longreads = Channel.empty()
