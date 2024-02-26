@@ -11,7 +11,7 @@ process RACON {
     tuple val(meta), path(assembly), path(paf), path(reads)
 
     output:
-    path('*_assembly_consensus.fasta.gz') , emit: improved_assembly
+    path('*_assembly_consensus.fasta') , emit: improved_assembly
     path "versions.yml"          , emit: versions
 
     when:
