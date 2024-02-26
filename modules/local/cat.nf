@@ -3,8 +3,7 @@ process CAT {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(ont)
-    path(hifi)
+    tuple val(meta), path(ont), path(hifi)
 
     output:
     tuple val(meta), path("*.gz")        , emit: cat_longreads
