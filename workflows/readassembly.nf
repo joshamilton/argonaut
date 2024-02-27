@@ -332,19 +332,19 @@ workflow GENOMEASSEMBLY {
 
         assemblies
             .join(sam)
-            .set{ch_racon_1}
+            .set{ch_fake_racon}
 
-            ch_racon_1
-                .combine(no_meta_ch_ONT)
-                .view()
-                .set { ch_racon }
+        ch_fake_racon
+            .combine(no_meta_ch_ONT)
+            .view()
+            .set { ch_racon }
     } else if(params.racon_polish == true && params.PacBioHifi_lr == true){
             ASSEMBLY.out[0]
                 .join(QC_1.out[8])
-                .set{ch_racon_1}
+                .set{ch_fake_racon}
                 .view()
 
-            ch_racon_1
+            ch_fake_racon
                 .combine(no_meta_ch_PB)
                 .view()
                 .set { ch_racon }
