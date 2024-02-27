@@ -127,8 +127,6 @@ workflow ASSEMBLY {
             .view()
             .set { all_assemblies }
 
-        all_assemblies.view()
-
     emit:
         all_assemblies  
         longreads   
