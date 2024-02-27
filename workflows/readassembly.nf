@@ -325,10 +325,14 @@ workflow GENOMEASSEMBLY {
     bam_1 = QC_1.out[1]
 
     if (params.racon_polish == true && params.ONT_lr == true){
-        ASSEMBLY.out[0]
-            .join(QC_1.out[8])
+        assemblies = ASSEMBLY.out[0]
+
+        sam = QC_1.out[8]
+        sam.view()
+
+        assemblies
+            .join(sam)
             .set{ch_racon_1}
-            .view()
 
             ch_racon_1
                 .combine(no_meta_ch_ONT)
