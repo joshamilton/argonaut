@@ -42,6 +42,7 @@ workflow QC_1 {
         // run BUSCO
         BUSCO(assemblies, params.busco_lineage, [], [])
         ch_busco = BUSCO.out.short_summaries_txt
+        ch_busco_full_table = BUSCO.out.full_table
         ch_versions = ch_versions.mix(BUSCO.out.versions)
 
         SAMTOOLS_INDEX (MINIMAP2_ALIGN.out.bam)
@@ -80,6 +81,8 @@ workflow QC_1 {
         ch_summarytxt
         ch_meryl = MERYL_COUNT.out.meryl_db
         ch_sam
+        ch_busco_full_table
+
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
