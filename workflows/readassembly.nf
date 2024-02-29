@@ -321,7 +321,8 @@ workflow GENOMEASSEMBLY {
     } else if ( params.shortread == true && params.longread == false ) {
         QC_1 (all_assemblies, READ_QC2.out[0], ch_summtxt, READ_QC2.out[0], full_size)
     ch_versions = ch_versions.mix(QC_1.out.versions)}
-
+    
+    busco_tsv = QC_1.out[9]
     bam_1 = QC_1.out[1]
 
     if (params.racon_polish == true && params.ONT_lr == true){
@@ -402,6 +403,10 @@ workflow GENOMEASSEMBLY {
         } else if ( params.shortread == true && params.longread == false ) {
             QC_2 (polished_assemblies, READ_QC2.out[0], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], full_size, QC_1.out[7])
     } 
+    busco_tsv
+        .concat(QC_2.out[6]) 
+        .set{busco_tsv}
+
     bam_2 = QC_2.out[1]
     qc_quast = QC_2.out[3]
     qc_busco = QC_2.out[4]
@@ -449,7 +454,10 @@ workflow GENOMEASSEMBLY {
         QC_3 (purged_assemblies_common, ch_longreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, [], full_size, QC_1.out[7])  
     } else if ( params.shortread == true && params.longread == false) {
         QC_3 (purged_assemblies_common, READ_QC2.out[0], ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7])
-    }    
+    } 
+    busco_tsv
+        .concat(QC_3.out[5]) 
+        .set{busco_tsv}
     bam_3 = QC_3.out[4] 
     } else {
     bam_3 = Channel.empty()
@@ -472,6 +480,11 @@ workflow GENOMEASSEMBLY {
             QC_4 (SCAFFOLD.out[0], ch_longreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, [], full_size, QC_1.out[7])  
         } else if ( params.shortread == true && params.longread == false ) {
             QC_4 (SCAFFOLD.out[0], READ_QC2.out[0], ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7]) }
+
+        busco_tsv
+            .concat(QC_4.out[5]) 
+            .set{busco_tsv}
+
         bam_4 = QC_4.out[4]
 
         SCAFFOLD.out[0]
@@ -479,11 +492,23 @@ workflow GENOMEASSEMBLY {
             .collect()
             .set{final_assemblies}
 
+        SCAFFOLD.out[1]
+            .concat(no_meta_lr_purge, no_meta_sr_purge, no_meta_medaka_racon_polish, ASSEMBLY.out[4], sr_masurca, sr_redundans)
+            .flatten()
+            .map { file -> tuple(id: file.baseName, file)  }
+            .set{ch_all_assemblies}
+
     } else {
         bam_4 = Channel.empty()
 
-        purged_assemblies_common
-            .concat(polished_assemblies, all_assemblies)
+        ASSEMBLY.out[4]
+            .concat(no_meta_lr_purge, no_meta_sr_purge, no_meta_medaka_racon_polish, sr_masurca, sr_redundans)
+            .flatten()
+            .map { file -> tuple(id: file.baseName, file)  }
+            .set{ch_all_assemblies}
+
+        all_assemblies
+            .concat(polished_assemblies, purged_assemblies_common)
             .collect() 
             .set {final_assemblies}
     }
@@ -511,8 +536,22 @@ workflow GENOMEASSEMBLY {
         .set{qc_bam}
 
     if (params.blobtools_visualization == true){
-        VISUALIZE(final_assemblies, ch_ONTlongreads, ch_PacBiolongreads, filt_sr_unzip, qc_bam)
-    } 
+        if(params.shortread == true && params.ONT_lr == true && params.PacBioHifi_lr == true){
+            VISUALIZE(ch_all_assemblies, no_meta_ch_ONT, no_meta_ch_PB, filt_sr_nometa, qc_bam, busco_tsv)
+        } else if (params.shortread == false && params.ONT_lr == true && params.PacBioHifi_lr == true){
+            VISUALIZE(ch_all_assemblies, no_meta_ch_ONT, no_meta_ch_PB, [], qc_bam, busco_tsv)
+        } else if (params.shortread == true && params.ONT_lr == false && params.PacBioHifi_lr == true){
+            VISUALIZE(ch_all_assemblies, [], no_meta_ch_PB, filt_sr_nometa, qc_bam, busco_tsv)
+        } else if (params.shortread == true && params.ONT_lr == true && params.PacBioHifi_lr == false){
+            VISUALIZE(ch_all_assemblies, no_meta_ch_ONT, [], filt_sr_nometa, qc_bam, busco_tsv)
+        } else if (params.shortread == true && params.ONT_lr == false && params.PacBioHifi_lr == false){
+            VISUALIZE(ch_all_assemblies, [], [], filt_sr_nometa, qc_bam, busco_tsv)
+        } else if (params.shortread == false && params.ONT_lr == true && params.PacBioHifi_lr == false){
+            VISUALIZE(ch_all_assemblies, no_meta_ch_ONT, [], [], qc_bam, busco_tsv)
+        } else if (params.shortread == false && params.ONT_lr == false && params.PacBioHifi_lr == true){
+            VISUALIZE(ch_all_assemblies, [], no_meta_ch_PB, [], qc_bam, busco_tsv)
+        }
+    }
 
     OUTPUT (ch_quast, ch_busco, ch_merqury)
 
