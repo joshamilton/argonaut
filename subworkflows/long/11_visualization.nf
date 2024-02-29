@@ -9,16 +9,38 @@ workflow VISUALIZE {
         pb_fastq
         sr_fastq
         bam
+        busco_table
 
     main:
         ch_versions = Channel.empty() 
-        println "visualizing assemblies with blobtools!"
 
-		BLOBTOOLS_CONFIG(assemblies, ont_fastq, pb_fastq, sr_fastq)
+        if (params.PacBioHifi_lr == true && params.ONT_lr == false && params.shortread == false){
+            BLOBTOOLS_CONFIG(assemblies, [], pb_fastq, [])
+        } else if (params.PacBioHifi_lr == true && params.ONT_lr == true && params.shortread == false){
+            BLOBTOOLS_CONFIG(assemblies, ont_fastq, pb_fastq, [])
+        } else if (params.PacBioHifi_lr == false && params.ONT_lr == true && params.shortread == false){
+            BLOBTOOLS_CONFIG(assemblies, ont_fastq, [], [])
+        } else if (params.PacBioHifi_lr == false && params.ONT_lr == true && params.shortread == true){
+            BLOBTOOLS_CONFIG(assemblies, ont_fastq, [], sr_fastq)
+        } else if (params.PacBioHifi_lr == true && params.ONT_lr == false && params.shortread == true){
+            BLOBTOOLS_CONFIG(assemblies, [], pb_fastq, sr_fastq)
+        } else if (params.PacBioHifi_lr == false && params.ONT_lr == false && params.shortread == true){
+            BLOBTOOLS_CONFIG(assemblies, [], [], sr_fastq)
+        } else if (params.PacBioHifi_lr == true && params.ONT_lr == true && params.shortread == true){
+            BLOBTOOLS_CONFIG(assemblies, ont_fastq, pb_fastq, sr_fastq)
+        } 
 		blobtools_config=BLOBTOOLS_CONFIG.out.config
 		
-		BLOBTOOLS_RUN(assemblies, ont_fastq, pb_fastq, sr_fastq, blobtools_config, bam)
-	    
+        assemblies
+            .join(busco_table)
+            .set{assembly_busco_combo}
+
+        if (params.taxon_taxid && params.taxon_taxdump){
+            BLOBTOOLS_RUN(assembly_busco_combo, blobtools_config, bam, params.taxon_taxid, params.taxon_taxdump)
+        } else {
+            BLOBTOOLS_RUN(assembly_busco_combo, blobtools_config, bam, [], [])
+        }
+
 	    ch_versions = ch_versions.mix(BLOBTOOLS_RUN.out.versions)
 		
     emit:
