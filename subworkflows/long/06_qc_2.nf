@@ -52,6 +52,9 @@ workflow QC_2 {
         ch_busco
             .concat(BUSCO.out.short_summaries_txt)
             .set { ch_busco }
+
+        ch_busco_full_table = BUSCO.out.full_table
+
         ch_versions = ch_versions.mix(BUSCO.out.versions)
 
         SAMTOOLS_INDEX (ch_bam)
@@ -82,6 +85,8 @@ workflow QC_2 {
         ch_quast
         ch_busco
         ch_merqury
+        ch_busco_full_table
+
                 
     versions = ch_versions                     // channel: [ versions.yml ]
 }
