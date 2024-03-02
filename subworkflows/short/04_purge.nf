@@ -10,14 +10,20 @@ workflow PURGE2 {
 
     ch_versions = Channel.empty() 
 
-        println "purging short read assemblies with redundans!"
-
         REDUNDANS_P (assembly, shortreads)
 
+        purged_sr_assembly      = REDUNDANS_P.out.assembly_fasta 
+
+            purged_sr_assembly
+                .map { file -> tuple(id: file.baseName, file)  }
+                .set { purged_assembly }
+
+        purged_assembly.view()
 
     emit:
-    
-        sr_assembly_polished      = REDUNDANS_P.out.assembly_fasta          
+        purged_assembly
+        purged_sr_assembly
+                 
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
