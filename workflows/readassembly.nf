@@ -388,7 +388,11 @@ workflow GENOMEASSEMBLY {
     ch_versions = ch_versions.mix(POLISH2.out.versions)
     } else {
         medaka_racon_polish
+            .flatten()
+            .map { file -> tuple(id: file.baseName, file) }
             .set { polished_assemblies }
+
+
     }
 
     polished_assemblies.view()
