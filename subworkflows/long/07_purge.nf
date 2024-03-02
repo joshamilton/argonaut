@@ -31,6 +31,7 @@ workflow HAPS {
 
     emit:
         assemblies_polished_purged
+        purged_assemblies
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
