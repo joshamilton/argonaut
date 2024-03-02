@@ -17,6 +17,7 @@ workflow HAPS {
         ALIGN(reads, assembly, params.bam_format, params.cigar_paf_format, params.cigar_bam)
         HISTOGRAM(assembly, ALIGN.out.bam)
         assemblies_polished_purged      = Channel.empty()
+        purged_assemblies               = Channel.empty()
 
         } else if (params.low != null && params.mid != null && params.high != null){
         println "purging assemblies with purge haplotigs!"
