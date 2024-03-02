@@ -12,7 +12,7 @@ process REDUNDANS_P {
     tuple val(meta), path(shortreads)
 
     output:
-    tuple val(meta), path("*redundans_purge/redundans_purge_contig.fasta")               , emit: assembly_fasta
+    path("*redundans_purge/redundans_purge_contig.fasta")               , emit: assembly_fasta
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
