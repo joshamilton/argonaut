@@ -359,7 +359,7 @@ workflow GENOMEASSEMBLY {
             } else if (params.PacBioHifi_lr == true){
                 POLISH (ASSEMBLY.out[0], ch_PacBiolongreads, params.model, QC_1.out[8], ch_racon)
             }
-        medaka_racon_polish   = POLISH.out[0]   
+        medaka_racon_polish   = POLISH.out[0] 
         
     ch_versions = ch_versions.mix(POLISH.out.versions) } else {medaka_racon_polish = Channel.empty()}
     } else {
@@ -431,8 +431,12 @@ workflow GENOMEASSEMBLY {
         lr_purge
             .concat(purged_assemblies_common)
             .set { purged_assemblies_common }
+        no_meta_lr_purge = HAPS.out[1]
         ch_versions = ch_versions.mix(HAPS.out.versions)
-    } 
+    } else {
+        lr_purge = Channel.empty()
+        no_meta_lr_purge = Channel.empty()
+    }
 
     if (params.shortread == true && params.purge == true) {
         sr_assemblies
@@ -444,8 +448,10 @@ workflow GENOMEASSEMBLY {
         sr_purge
             .concat(purged_assemblies_common)
             .set{purged_assemblies_common}
+        no_meta_sr_purge = PURGE2.out[1]
     } else {
         sr_purge = Channel.empty()
+        no_meta_sr_purge = Channel.empty()
     }
 
     purged_assemblies_common.view()
@@ -497,7 +503,7 @@ workflow GENOMEASSEMBLY {
             .set{final_assemblies}
 
         SCAFFOLD.out[1]
-            .concat(no_meta_lr_purge, no_meta_sr_purge, no_meta_medaka_racon_polish, ASSEMBLY.out[4], sr_masurca, sr_redundans)
+            .concat(no_meta_lr_purge, no_meta_sr_purge, medaka_racon_polish, sr_polish, ASSEMBLY.out[4], masurca_asm, redundans_asm)
             .flatten()
             .map { file -> tuple(id: file.baseName, file)  }
             .set{ch_all_assemblies}
@@ -506,7 +512,7 @@ workflow GENOMEASSEMBLY {
         bam_4 = Channel.empty()
 
         ASSEMBLY.out[4]
-            .concat(no_meta_lr_purge, no_meta_sr_purge, no_meta_medaka_racon_polish, sr_masurca, sr_redundans)
+            .concat(no_meta_lr_purge, no_meta_sr_purge, medaka_racon_polish, sr_polish, masurca_asm, redundans_asm)
             .flatten()
             .map { file -> tuple(id: file.baseName, file)  }
             .set{ch_all_assemblies}
