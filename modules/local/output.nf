@@ -8,6 +8,7 @@ process OUTPUT {
 
     output:
     tuple val(meta), path("*.assemblyStats.txt")       , emit: assemblyStats
+    tuple val(meta), path("all_assemblies.tsv")       , emit: ALLassemblyStats
    
     script: 
     def prefix
