@@ -21,5 +21,10 @@ process OUTPUT {
 
     echo -ne "merqury quality score\n" >> \$prefix.assemblyStats.txt
     awk '{ print \$4 }' $ch_merqury >> \$prefix.assemblyStats.txt
+
+    total_summ=\$(cat \$prefix.assemblyStats.txt)
+    
+    awk 'BEGIN{ FS = OFS = "\t" } { print $0, "\$prefix" : "\$total_summ" }'  > all_assemblies.tsv
+    
     """
 }
