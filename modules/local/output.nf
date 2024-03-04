@@ -25,7 +25,7 @@ process OUTPUT {
 
     total_summ=\$(cat \$prefix.assemblyStats.txt)
     
-    awk 'BEGIN{ FS = OFS = "\t" } { print $0, "\$prefix" : "\$total_summ" }'  > all_assemblies.tsv
+    awk 'BEGIN{ FS = OFS = "\t" } { print $0, "\$prefix" : "\$total_summ" }' all_assemblies.tsv
     
     """
 }
