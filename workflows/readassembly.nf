@@ -304,8 +304,11 @@ workflow GENOMEASSEMBLY {
         .concat(sr_assemblies)
         .flatten()
         .map { file -> tuple(id: file.baseName, file) }
-        .view()
         .set{all_assemblies}
+
+    lr_assemblies
+        .concat(sr_assemblies)
+        .set{all_assemblies_nm}
 
     if ( params.summary_txt_file == true) {
         ch_summtxt = Channel.fromPath(params.summary_txt) 
@@ -396,6 +399,12 @@ workflow GENOMEASSEMBLY {
 
     }
 
+    all_assemblies_nm
+        .concat(medaka_racon_polish, sr_polish)
+        .flatten()
+        .map { file -> tuple(id: file.baseName, file) }
+        .set { polished_assemblies_and_no_polish }
+
     polished_assemblies.view()
 
     if ( params.medaka_polish == true || params.racon_polish == true || params.shortread == true) {
@@ -427,7 +436,7 @@ workflow GENOMEASSEMBLY {
     purged_assemblies_common = Channel.empty()
 
     if (params.longread == true && params.purge == true) {
-        HAPS (polished_assemblies, ch_longreads)
+        HAPS (polished_assemblies_and_no_polish, ch_longreads)
         lr_purge = HAPS.out[0]
         lr_purge
             .concat(purged_assemblies_common)
