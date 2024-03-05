@@ -86,9 +86,6 @@ include { LENGTH_FILT3 } from '../subworkflows/long_pb/02b_length_filter'
 // MODULE: Installed directly from nf-core/modules
 //
 
-
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -576,10 +573,6 @@ workflow GENOMEASSEMBLY {
     OUTPUT (ch_quast, ch_busco, ch_merqury)
 
     assembly_stats  =   OUTPUT.out.assemblyStats
-
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    )
 
     //
     // MODULE: MultiQC
