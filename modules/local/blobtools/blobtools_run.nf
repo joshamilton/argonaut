@@ -13,7 +13,7 @@ process BLOBTOOLS_RUN {
 
     output:
     tuple val(meta), path('*/*.json'), emit: json
-    tuple val(meta), path('*/*.png') , emit: png
+    tuple val(meta), path('*.png') , emit: png
     path "versions.yml"                     , emit: versions
 
     when:
