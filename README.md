@@ -76,7 +76,7 @@ sample,fastq_1,fastq_2,single_end
 maca_jans_ont,SRR11191910.fastq.gz,,TRUE
 ```
 
-If more than one read input type is available, prepare a second and/or third samplesheet with your other input data as follows:
+If more than one read input type is available, prepare a second (and third) samplesheet with your other input data as follows:
 
 `illumina_samplesheet.csv`:
 
