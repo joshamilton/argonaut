@@ -38,7 +38,6 @@ process BLOBTOOLS_RUN {
         ${prefix}
 
     blobtools view \\
-        --timeout 600 \\
 	    --ports 8010-8099 \\
         --view snail \\
         --host http://localhost \\
