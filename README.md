@@ -23,56 +23,76 @@
    
 ## Pipeline Summary
 
-Long Read Assembly
+Illumina Short Read 
+1. Read QC, Adaptor Trimming, Contaminant Filtering([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/), [`FastP`](https://github.com/OpenGene/fastp), [`GenomeScope`](http://qb.cshl.edu/genomescope/),[`Jellyfish`](https://github.com/gmarcais/Jellyfish),[`Kraken2`](https://ccb.jhu.edu/software/kraken2/), [`Recentrifuge`](https://github.com/khyox/recentrifuge),)
+    
+ONT Long Read
 1. Read QC and Contaminant Filtering([`Nanoplot`](https://github.com/wdecoster/NanoPlot),[`KmerFreq`](https://github.com/fanagislab/kmerfreq), [`GCE`](https://github.com/fanagislab/GCE), [`Centrifuge`](https://ccb.jhu.edu/software/centrifuge/), [`Recentrifuge`](https://github.com/khyox/recentrifuge))
 2. Length Filtering (optional)([`Bioawk`](https://github.com/lh3/bioawk), [`Nanoplot`](https://github.com/wdecoster/NanoPlot))
-3. Assembly([`Flye`](https://github.com/fenderglass/Flye), [`Canu`](https://github.com/marbl/canu), [`Hifiasm`](https://github.com/chhylp123/hifiasm))
-4. Assembly QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
-5. Polish([`Medaka`](https://github.com/nanoporetech/medaka),[`Racon`](https://github.com/isovic/racon))
-6. Polish QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
-7. Purge([`PurgeHaplotigs`](https://bitbucket.org/mroachawri/purge_haplotigs/src/master/))
-8. Purge QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
-9. Scaffolding([`RagTag`](https://github.com/malonge/RagTag))
-10. Final QC([`BUSCO`](https://busco.ezlab.org/),[`Quast`](https://quast.sourceforge.net/),[`Minimap2`](https://github.com/lh3/minimap2),[`PycoQC`](https://github.com/a-slide/pycoQC),[`Merqury`](https://github.com/marbl/merqury))
+   
+PacBio Hifi Long Read 
+1. Read QC, Adaptor Trimming, Contaminant Filtering([`Nanoplot`](https://github.com/wdecoster/NanoPlot),[`CutAdapt`](https://cutadapt.readthedocs.io/en/stable/),[`GenomeScope`](http://qb.cshl.edu/genomescope/),[`Jellyfish`](https://github.com/gmarcais/Jellyfish),[`Kraken2`](https://ccb.jhu.edu/software/kraken2/), [`Recentrifuge`](https://github.com/khyox/recentrifuge))
+2. Length Filtering (optional)([`Bioawk`](https://github.com/lh3/bioawk), [`Nanoplot`](https://github.com/wdecoster/NanoPlot))
 
-Short Read and Hybrid Assembly
-1. Read QC, Contaminant Filtering, Adaptor Trimming([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/),[`GenomeScope`](http://qb.cshl.edu/genomescope/),[`Jellyfish`](https://github.com/gmarcais/Jellyfish),[`Kraken2`](https://ccb.jhu.edu/software/kraken2/), [`Recentrifuge`](https://github.com/khyox/recentrifuge),[`FastP`](https://github.com/OpenGene/fastp))
-2. Assembly([`MaSuRCA`](https://github.com/alekseyzimin/masurca), [`Redundans`](https://github.com/Gabaldonlab/redundans))
-3. Polish([`POLCA`](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007981))
-4. Purge([`Redundans`](https://github.com/Gabaldonlab/redundans))
+3. Assembly &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;             4. Assembly QC**
+- [`Flye`](https://github.com/fenderglass/Flye)  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;- [`BUSCO`](https://busco.ezlab.org/)
+- [`Canu`](https://github.com/marbl/canu) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp; - [`Quast`](https://quast.sourceforge.net/)
+- [`Hifiasm`](https://github.com/chhylp123/hifiasm) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;  - [`Minimap2`](https://github.com/lh3/minimap2)
+- [`MaSuRCA`](https://github.com/alekseyzimin/masurca) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;  - [`PycoQC`](https://github.com/a-slide/pycoQC)
+- [`Redundans`](https://github.com/Gabaldonlab/redundans) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;  - [`Merqury`](https://github.com/marbl/merqury)  
+  
+5. Polish  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;          6. Polish QC**  
+- [`Medaka`](https://github.com/nanoporetech/medaka)
+- [`Racon`](https://github.com/isovic/racon)
+- [`POLCA`](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007981)
+  
+7. Purge  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;   8. Purge QC**  
+- [`PurgeHaplotigs`](https://bitbucket.org/mroachawri/purge_haplotigs/src/master/)
+- [`Redundans`](https://github.com/Gabaldonlab/redundans)
+  
+9. Scaffolding &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;     10. Scaffold QC**  
+- ([`RagTag`](https://github.com/malonge/RagTag))  
+
+11. Assembly Visualization
+- ([`Blobtools`](https://blobtoolkit.genomehubs.org/blobtools2/))  
 
 Below is a figure detailing the major workflow steps involved in hybrid assembly.
 
 <img align="center" width="700" alt="Argonaut Hybrid Workflow" src="https://github.com/emilytrybulec/argonaut/assets/114685119/54fd9e52-d657-4a29-99a6-953f736e1630">
 
-  
-Hybrid assembly is conducted within the long read assembly subworkflow, and short read assembly is conducted within the main workflow. Downstream quality checking of short read and hybrid assemblies is also conducted in the long read QC subworkflows.  
-  
-Purge Haplotigs is the first step of manual curation, as it produces a histogram that needs to be analyzed for -l, -m, -h flags. The pipeline will stop at the purge step and wait for manual input of parameters according to the histogram of your assembly, which can be found in your out directory.
+    
+Purge Haplotigs is the first step of manual curation, as it produces a histogram that needs to be analyzed for -l, -m, -h flags. The pipeline will stop at the purge step if purge is activated in your configuration and wait for manual input of parameters according to the histogram of your assembly, which can be found in your out directory.
 
 ## Quick Start
 
-First, prepare a samplesheet with your long read input data that looks as follows:
+First, prepare a samplesheet with your input data as follows:
 
-`longread_samplesheet.csv`:
-
-```csv
-sample,fastq_1,fastq_2,single_end
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,,TRUE
-```
-
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
-
-If short reads are available, prepare a second samplesheet with your short read input data that looks as follows:
-
-`shortread_samplesheet.csv`:
+`ont_samplesheet.csv`:
 
 ```csv
 sample,fastq_1,fastq_2,single_end
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz,FALSE
+maca_jans_ont,SRR11191910.fastq.gz,,TRUE
 ```
 
-Next, create a params.yaml file to specify the paths to your samplesheet(s), contaminant databases, etc. Most likely, a config file will also need to be made to modify the default settings of the pipeline. Please look through the [nextflow.config](nextflow.config) file to browse the defaults and specify which you would like to change in your my_config file. More information is located in the [usage](docs/usage.md) section.
+If more than one read input type is available, prepare a second and/or third samplesheet with your other input data as follows:
+
+`illumina_samplesheet.csv`:
+
+```csv
+sample,fastq_1,fastq_2,single_end
+maca_jans_ill,SRR11191912_1.fastq.gz,SRR11191912_2.fastq.gz,FALSE
+```
+
+`pb_hifi_samplesheet.csv`:
+
+```csv
+sample,fastq_1,fastq_2,single_end
+maca_jans_pb,SRR11191909.fastq.gz,,TRUE
+```
+
+Please note that the sample name inputted in your samplesheet will serve as the prefix for your output files. If you have more than one read type, please indicate which kind of read is being inputted in the sample name. Failure to do so may result in outputs being overwritten.  
+
+After you have your samplesheet(s), create a params.yaml file to specify the paths to your samplesheet(s), contaminant databases, etc. Most likely, a config file will also need to be made to modify the default settings of the pipeline. Please look through the [nextflow.config](nextflow.config) file to browse the defaults and specify which you would like to change in your my_config file. More information is located in the [usage](docs/usage.md) section.
 
 Now, you can run the pipeline using:
 
@@ -93,7 +113,8 @@ All of the output from the programs run in the pipeline pipeline will be located
 * polish  
 * purge  
 * scaffold  
-* assembly qc  
+* assembly qc
+* visualization
 * output  
 * pipeline info
 
