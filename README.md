@@ -34,6 +34,8 @@ PacBio Hifi Long Read
 1. Read QC, Adaptor Trimming, Contaminant Filtering([`Nanoplot`](https://github.com/wdecoster/NanoPlot),[`CutAdapt`](https://cutadapt.readthedocs.io/en/stable/),[`GenomeScope`](http://qb.cshl.edu/genomescope/),[`Jellyfish`](https://github.com/gmarcais/Jellyfish),[`Kraken2`](https://ccb.jhu.edu/software/kraken2/), [`Recentrifuge`](https://github.com/khyox/recentrifuge))
 2. Length Filtering (optional)([`Bioawk`](https://github.com/lh3/bioawk), [`Nanoplot`](https://github.com/wdecoster/NanoPlot))
 
+All reads are used for the following steps:  
+  
 3. Assembly &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;             4. Assembly QC**
 - [`Flye`](https://github.com/fenderglass/Flye)  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;- [`BUSCO`](https://busco.ezlab.org/)
 - [`Canu`](https://github.com/marbl/canu) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp; - [`Quast`](https://quast.sourceforge.net/)
