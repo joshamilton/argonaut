@@ -12,20 +12,20 @@ You will need to create a samplesheet with information about the samples you wou
 
 ### Using long and short reads
 
-The `sample` identifiers are important for naming throughout the pipeline, and we recommend that specific sample names are used. The pipeline requires concatenated raw reads before performing any downstream analysis. For best results, please provide the entire path to the reads.
+The `sample` identifiers are important for naming throughout the pipeline, and we recommend that specific sample names are used, indicating read type. The pipeline requires concatenated raw reads before performing any downstream analysis. For best results, please provide the entire path to the reads.
 Below is an example samplesheet for long reads:
 
 ```csv
 sample,fastq_1,fastq_2,single_end
-Mo_191,Mo_191_p1s.fastq.gz,,TRUE
+Mo_191_ont,Mo_191_p1s.fastq.gz,,TRUE
 ```
 
-An additional samplesheet must be constructed if short reads are available.
+An additional samplesheet must be constructed if more than one read type is available.
 Below is an example samplesheet for short reads:
 
 ```csv
 sample,fastq_1,fastq_2,single_end
-Mo_short,SRR10443809_1.fastq,SRR10443809_2.fastq,FALSE
+Mo_191_illumina,SRR10443809_1.fastq,SRR10443809_2.fastq,FALSE
 ```
 
 |   `sample`    | Custom sample name.  
@@ -45,8 +45,9 @@ The params.yaml file feeds the pipeline all of your input paths! Create a params
 An example `params.yaml` contains:
 
 ```yaml
-input                  :  "./samplesheet_test.csv"
-shortinput             :  "./shortread_samplesheet.csv"
+input                  :  "./ont_samplesheet.csv"
+shortinput             :  "./illumina_samplesheet.csv"
+pb_input               :  "./pb_samplesheet.csv"
 outdir                 :  "test_outdir"
 fastq                  :  "./Mo_191_p1s.fastq"
 centrifuge_db          :  "./f+b+a+v/"
@@ -63,9 +64,11 @@ ragtag_reference       :  "./assembly.fasta"
 For best results, please provide full paths. Paths have been truncated for readability.  
 
 General tips for your params file:
+* The input path should point to your ONT samplesheet (or PacBio HiFi samplesheet if no ONT available, or Illumina samplesheet if no long reads). The short input path should point to your Illumina samplesheet. The pb_input path should point to your PacBio HiFi samplesheet.
 * When providing a centrifuge database, please ensure that the path points to a DIRECTORY, not a file.
 * Please ensure that your BUSCO lineage aligns with your organism type. (e.g. for japanese walnut tree: "embryophyta_odb10")
 * If you are using PacBio HiFi data, please change the flye and canu modes to indicate so. The above example indicates ONT long read input.
+
 
 Not all parameters are required, and the default settings can be modified for individualized use. If you would like to change any settings dictating which assemblers run, whether short reads are available, or options like length filtering and scaffolding, please create a config file using the directions [below](#Configurations).
 
