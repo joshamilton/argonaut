@@ -69,6 +69,7 @@ General tips for your params file:
 * Please ensure that your BUSCO lineage aligns with your organism type. (e.g. for japanese walnut tree: "embryophyta_odb10")
 * If you are using PacBio HiFi data, please change the flye and canu modes to indicate so. The above example indicates ONT long read input.
 
+[Here](https://github.com/emilytrybulec/argonaut/blob/main/params.yaml) is a full params.yaml example for a test run.
 
 Not all parameters are required, and the default settings can be modified for individualized use. If you would like to change any settings dictating which assemblers run, whether short reads are available, or options like length filtering and scaffolding, please create a config file using the directions [below](#Configurations).
 
