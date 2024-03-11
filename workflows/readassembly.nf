@@ -110,6 +110,7 @@ workflow GENOMEASSEMBLY {
             READ_QC (ch_data.reads, ch_centrifuge_db)
             ch_versions = ch_versions.mix(READ_QC.out.versions)
             no_meta_fastq = READ_QC.out[5]
+            no_meta_ch_ONT = READ_QC.out[5]
 
             //optional read filtering by length with bioawk
             LENGTH_FILT (READ_QC.out[0], no_meta_fastq)
@@ -120,7 +121,10 @@ workflow GENOMEASSEMBLY {
 
             if (params.PacBioHifi_lr == false){
                 ch_longreads = LENGTH_FILT.out[0]
-        }} else {
+            }
+
+            if(params.
+        } else {
             ch_ONTlongreads = Channel.empty()
             no_meta_fastq = Channel.empty()
             no_meta_ch_ONT = Channel.empty()}
@@ -131,6 +135,7 @@ workflow GENOMEASSEMBLY {
             //decontamination and quality checking of long reads
             READ_QC3 (ch_PB_data.reads, ch_kraken_db)
             no_meta_decontamPB = READ_QC3.out[5]
+            no_meta_ch_PB = READ_QC3.out[5]
 
             ch_versions = ch_versions.mix(READ_QC3.out.versions)
 
