@@ -24,10 +24,11 @@ workflow LENGTH_FILT {
 
 
             no_meta_longreads = BIOAWK.out.output  // channel: [ val(meta), path(decontam+length filtered fastq) ]
-        }
-        else{
-            longreads = decontam_reads  // channel: [ val(meta), path(decontaminated fastq) ]
-            no_meta_longreads = no_meta_decontam
+        } else{
+            decontam_reads  // channel: [ val(meta), path(decontaminated fastq) ]
+                .set{longreads}
+            no_meta_decontam
+                .set{no_meta_longreads}
         }
 
     emit:
