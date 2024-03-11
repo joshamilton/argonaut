@@ -556,6 +556,8 @@ workflow GENOMEASSEMBLY {
         .set{qc_bam}
 
     if (params.blobtools_visualization == true){
+        ch_all_assemblies.view()
+        no_meta_ch_ONT.view()
         if(params.shortread == true && params.ONT_lr == true && params.PacBioHifi_lr == true){
             VISUALIZE(ch_all_assemblies, no_meta_ch_ONT, no_meta_ch_PB, filt_sr_nometa, qc_bam, busco_tsv)
         } else if (params.shortread == false && params.ONT_lr == true && params.PacBioHifi_lr == true){
