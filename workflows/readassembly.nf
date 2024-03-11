@@ -122,8 +122,6 @@ workflow GENOMEASSEMBLY {
             if (params.PacBioHifi_lr == false){
                 ch_longreads = LENGTH_FILT.out[0]
             }
-
-            if(params.
         } else {
             ch_ONTlongreads = Channel.empty()
             no_meta_fastq = Channel.empty()
