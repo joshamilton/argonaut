@@ -17,9 +17,9 @@ process BLOBTOOLS_CONFIG {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    if (illumina_fastq){
-    """
-    echo "assembly:
+
+    def configContent = """
+    assembly:
       accession: ${meta.id}
       file: $assembly
       level: scaffold
@@ -31,56 +31,37 @@ process BLOBTOOLS_CONFIG {
       basal_lineages:
         - ${params.busco_lineage}
     reads:
-        paired:
-          - prefix: ${meta.id}
-            platform: ILLUMINA
-            file: $illumina_fastq
-    version: 1" >> ${prefix}_config.yaml  
     """
+
+    if (illumina_fastq) {
+        configContent += """
+          paired:
+            - prefix: ${meta.id}
+              platform: ILLUMINA
+              file: $illumina_fastq
+        """
     }
 
-    if (ont_fastq){
-    """
-    echo "assembly:
-      accession: ${meta.id}
-      file: $assembly
-      level: scaffold
-      prefix: ${meta.id}
-    busco:
-      download_dir: ${params.busco_lineage}
-      lineages:
-        - ${params.busco_lineage}
-      basal_lineages:
-        - ${params.busco_lineage}
-    reads:
-        single:
-          - prefix: ${meta.id}
-            platform: ONT
-            file: $ont_fastq
-    version: 1" >> ${prefix}_config.yaml  
-
-    """
+    if (ont_fastq) {
+        configContent += """
+          single:
+            - prefix: ${meta.id}
+              platform: ONT
+              file: $ont_fastq
+        """
     }
 
-    if (pacbio_fastq){
-    """
-    echo "assembly:
-      accession: ${meta.id}
-      file: $assembly
-      level: scaffold
-      prefix: ${meta.id}
-    busco:
-      download_dir: ${params.busco_lineage}
-      lineages:
-        - ${params.busco_lineage}
-      basal_lineages:
-        - ${params.busco_lineage}
-    reads:
-        single:
-          - prefix: ${meta.id}
-            platform: PACBIO
-            file: $pacbio_fastq
-    version: 1" >> ${prefix}_config.yaml  
-    """
+    if (pacbio_fastq) {
+        configContent += """
+          single:
+            - prefix: ${meta.id}
+              platform: PACBIO
+              file: $pacbio_fastq
+        """
     }
+
+    // Write the combined configuration to the output file
+    """
+    echo '$configContent' > ${prefix}_config.yaml
+    """
 }
