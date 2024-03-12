@@ -14,6 +14,8 @@ workflow VISUALIZE {
     main:
         ch_versions = Channel.empty() 
 
+        ont_fastq.view()
+
         if (params.PacBioHifi_lr == true && params.ONT_lr == false && params.shortread == false){
             BLOBTOOLS_CONFIG(assemblies, [], pb_fastq, [])
         } else if (params.PacBioHifi_lr == true && params.ONT_lr == true && params.shortread == false){
