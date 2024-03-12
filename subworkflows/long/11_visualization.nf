@@ -14,7 +14,7 @@ workflow VISUALIZE {
     main:
         ch_versions = Channel.empty() 
 
-        ont_fastq.view()
+        ont_fastq.view { "ONT reads: $it" }
 
         if (params.PacBioHifi_lr == true && params.ONT_lr == false && params.shortread == false){
             BLOBTOOLS_CONFIG(assemblies, [], pb_fastq, [])
