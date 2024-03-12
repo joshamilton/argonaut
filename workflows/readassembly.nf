@@ -110,12 +110,12 @@ workflow GENOMEASSEMBLY {
             READ_QC (ch_data.reads, ch_centrifuge_db)
             ch_versions = ch_versions.mix(READ_QC.out.versions)
             no_meta_fastq = READ_QC.out[5]
-            no_meta_ch_ONT = READ_QC.out[5]
 
             //optional read filtering by length with bioawk
             LENGTH_FILT (READ_QC.out[0], no_meta_fastq)
             ch_ONTlongreads = LENGTH_FILT.out[0]
-            no_meta_ch_ONT = LENGTH_FILT.out[1]
+            LENGTH_FILT.out[1]
+                .set{no_meta_ch_ONT}
 
             ch_versions = ch_versions.mix(LENGTH_FILT.out.versions)
 
@@ -133,7 +133,6 @@ workflow GENOMEASSEMBLY {
             //decontamination and quality checking of long reads
             READ_QC3 (ch_PB_data.reads, ch_kraken_db)
             no_meta_decontamPB = READ_QC3.out[5]
-            no_meta_ch_PB = READ_QC3.out[5]
 
             ch_versions = ch_versions.mix(READ_QC3.out.versions)
 
