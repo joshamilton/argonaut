@@ -1,5 +1,6 @@
 include { BLOBTOOLS_RUN } from '../../modules/local/blobtools/blobtools_run' 
 include { BLOBTOOLS_CONFIG } from '../../modules/local/blobtools/blobtools_config' 
+include { BLOBTOOLS_VIEW } from '../../modules/local/blobtools/blobtools_view' 
 
 workflow VISUALIZE {
 
@@ -13,8 +14,6 @@ workflow VISUALIZE {
 
     main:
         ch_versions = Channel.empty() 
-
-        ont_fastq.view { "ONT reads: $it" }
 
         if (params.PacBioHifi_lr == true && params.ONT_lr == false && params.shortread == false){
             BLOBTOOLS_CONFIG(assemblies, [], pb_fastq, [])
@@ -45,8 +44,10 @@ workflow VISUALIZE {
 
 	    ch_versions = ch_versions.mix(BLOBTOOLS_RUN.out.versions)
 		
+        BLOBTOOLS_VIEW(BLOBTOOLS_RUN.out.db)
+
     emit:
-        BLOBTOOLS_RUN.out.png
+        BLOBTOOLS_VIEW.out.png
         
     versions = ch_versions          
 }
