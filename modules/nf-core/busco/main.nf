@@ -18,7 +18,7 @@ process BUSCO {
     tuple val(meta), path("short_summary.*.txt")      , emit: short_summaries_txt, optional: true
     tuple val(meta), path("short_summary.*.json")     , emit: short_summaries_json, optional: true
     tuple val(meta), path("*-busco")                  , emit: busco_dir
-    tuple val(meta), path("*-busco/*.fasta/run*/*.tsv")                  , emit: full_table
+    tuple val(meta), path("*-busco/*.fasta/run*/*table.tsv")                  , emit: full_table
 
     path "versions.yml"                               , emit: versions
 
