@@ -1,6 +1,6 @@
 process BLOBTOOLS_RUN {
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_high'
 
     container 'genomehubs/blobtoolkit:latest'
 
@@ -13,7 +13,7 @@ process BLOBTOOLS_RUN {
 
     output:
     tuple val(meta), path('*/*.json'), emit: json
-    tuple val(meta), path('*.png') , emit: png
+    tuple val(meta), path('db_*') , emit: db
     path "versions.yml"                     , emit: versions
 
     when:
@@ -30,19 +30,13 @@ process BLOBTOOLS_RUN {
         --meta $config \\
         $taxid \\
         $taxdump \\
-        ${prefix}
+        db_${prefix}
 
 
     blobtools add \\
         --busco $busco_full_table_tsv \\
-        ${prefix}
+        db_${prefix}
 
-    blobtools view \\
-	    --ports 8010-8099 \\
-        --view snail \\
-        --host http://localhost \\
-        --format png \\
-        ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
