@@ -520,8 +520,8 @@ workflow GENOMEASSEMBLY {
 
         SCAFFOLD.out[1]
             .concat(no_meta_lr_purge, no_meta_sr_purge, medaka_racon_polish, sr_polish, ASSEMBLY.out[4], masurca_asm, redundans_asm)
-            .collect() 
             .map { file -> tuple(id: file.baseName, file)  }
+            .collect() 
             .set{ch_all_assemblies}
 
     } else {
@@ -529,8 +529,8 @@ workflow GENOMEASSEMBLY {
 
         ASSEMBLY.out[4]
             .concat(no_meta_lr_purge, no_meta_sr_purge, medaka_racon_polish, sr_polish, masurca_asm, redundans_asm)
-            .collect() 
             .map { file -> tuple(id: file.baseName, file)  }
+            .collect() 
             .set{ch_all_assemblies}
 
         all_assemblies
