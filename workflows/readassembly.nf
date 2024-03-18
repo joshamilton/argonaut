@@ -256,14 +256,16 @@ workflow GENOMEASSEMBLY {
             ch_config = Channel.fromPath(params.masurca_config)
             MASURCA_SR_ADV (ch_config)
             println "assembling short reads with maSuRCA!"
-            masurca_asm = MASURCA_SR_ADV.out.fasta
+            MASURCA_SR_ADV.out.fasta
+                .set{masurca_asm}
             masurca_asm
                 .map { file -> tuple(id: file.baseName, file)  }
                 .set { masurca_sr_assembly }
         } else {
             MASURCA_SR (READ_QC2.out[1])
             println "assembling short reads with maSuRCA!"
-            masurca_asm = MASURCA_SR.out.fasta
+            MASURCA_SR.out.fasta
+                .set{masurca_asm}
             masurca_asm
                 .map { file -> tuple(id: file.baseName, file)  }
                 .set { masurca_sr_assembly }
@@ -278,7 +280,8 @@ workflow GENOMEASSEMBLY {
     if ( params.shortread == true && params.redundans == true){
         REDUNDANS_A (ch_shortdata.reads)
         println "assembling short reads with redundans!"
-        redundans_asm = REDUNDANS_A.out.assembly_fasta
+        REDUNDANS_A.out.assembly_fasta
+            .set{redundans_asm}
         redundans_asm
             .map { file -> tuple(id: file.baseName, file)  }
             .set { redundans_assembly }
@@ -361,7 +364,8 @@ workflow GENOMEASSEMBLY {
             } else if (params.PacBioHifi_lr == true){
                 POLISH (ASSEMBLY.out[0], ch_PacBiolongreads, params.model, QC_1.out[8], ch_racon)
             }
-        medaka_racon_polish   = POLISH.out[0] 
+        POLISH.out[0] 
+            .set{medaka_racon_polish}
         
     ch_versions = ch_versions.mix(POLISH.out.versions) } else {medaka_racon_polish = Channel.empty()}
     } else {
@@ -374,7 +378,8 @@ workflow GENOMEASSEMBLY {
         } else {
             POLISH2 (ASSEMBLY.out[0], READ_QC2.out[1])
         }
-        sr_polish   = POLISH2.out[0]
+        POLISH2.out[0]
+            .set{sr_polish}
 
         sr_polish
                 .map { file -> tuple(id: file.baseName, file)  }
@@ -440,7 +445,8 @@ workflow GENOMEASSEMBLY {
         lr_purge
             .concat(purged_assemblies_common)
             .set { purged_assemblies_common }
-        no_meta_lr_purge = HAPS.out[1]
+        HAPS.out[1]
+            .set{no_meta_lr_purge}
         ch_versions = ch_versions.mix(HAPS.out.versions)
     } else {
         lr_purge = Channel.empty()
@@ -457,7 +463,8 @@ workflow GENOMEASSEMBLY {
         sr_purge
             .concat(purged_assemblies_common)
             .set{purged_assemblies_common}
-        no_meta_sr_purge = PURGE2.out[1]
+        PURGE2.out[1]
+            .set{no_meta_sr_purge}
     } else {
         sr_purge = Channel.empty()
         no_meta_sr_purge = Channel.empty()
