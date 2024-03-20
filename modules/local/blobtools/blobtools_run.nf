@@ -5,9 +5,8 @@ process BLOBTOOLS_RUN {
     container 'genomehubs/blobtoolkit:latest'
 
     input:
-    tuple val(meta), path(assembly), path(busco_full_table_tsv)
+    tuple val(meta), path(assembly), path(busco_full_table_tsv), path(bam)
     tuple val(meta), path(config)
-    tuple val(meta), path(bam)
     path taxon_taxid
     path taxon_taxdump
 
@@ -35,6 +34,7 @@ process BLOBTOOLS_RUN {
 
     blobtools add \\
         --busco $busco_full_table_tsv \\
+        --cov $bam \\
         db_${prefix}
 
 
