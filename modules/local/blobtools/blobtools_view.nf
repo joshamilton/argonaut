@@ -20,5 +20,7 @@ process BLOBTOOLS_VIEW {
 
     blobtk plot -v cumulative -d $db -o ${prefix}_cumulative.png
 
+    blobtk plot -v blob -d $db -o ${prefix}_blob.png 
+
     """
 }
