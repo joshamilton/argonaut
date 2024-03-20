@@ -36,10 +36,14 @@ workflow VISUALIZE {
             .join(busco_table)
             .set{assembly_busco_combo}
 
+        assembly_busco_combo
+            .join(bam)
+            .set{assembly_busco_bam_combo}
+
         if (params.taxon_taxid && params.taxon_taxdump){
-            BLOBTOOLS_RUN(assembly_busco_combo, blobtools_config, bam, params.taxon_taxid, params.taxon_taxdump)
+            BLOBTOOLS_RUN(assembly_busco_bam_combo, blobtools_config, params.taxon_taxid, params.taxon_taxdump)
         } else {
-            BLOBTOOLS_RUN(assembly_busco_combo, blobtools_config, bam, [], [])
+            BLOBTOOLS_RUN(assembly_busco_bam_combo, blobtools_config, [], [])
         }
 
 	    ch_versions = ch_versions.mix(BLOBTOOLS_RUN.out.versions)
