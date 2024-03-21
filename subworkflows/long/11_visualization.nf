@@ -58,7 +58,6 @@ workflow VISUALIZE {
                 BLOBTOOLS_RUN(assembly_busco_bam_combo, blobtools_config, BLOBTOOLS_BLAST.out.hits, params.taxon_taxid, params.taxon_taxdump)}
             else{
                 BLOBTOOLS_RUN(assembly_busco_bam_combo, blobtools_config, [], params.taxon_taxid, params.taxon_taxdump)}
-            }
         } else {
             if (params.blast_db){
                 BLOBTOOLS_BLAST(assemblies)
