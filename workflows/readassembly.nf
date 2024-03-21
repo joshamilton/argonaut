@@ -527,7 +527,7 @@ workflow GENOMEASSEMBLY {
     } else {
         bam_4 = Channel.empty()
 
-        ASSEMBLY.out[4]
+        ASSEMBLY.out[5]
             .concat(no_meta_lr_purge, no_meta_sr_purge, medaka_racon_polish, sr_polish, masurca_asm, redundans_asm)
             .flatten()
             .map { file -> tuple(id: file.baseName, file)  }
