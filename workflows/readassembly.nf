@@ -168,8 +168,10 @@ workflow GENOMEASSEMBLY {
         READ_QC2 (ch_shortdata.reads, ch_kraken_db)
     ch_versions = ch_versions.mix(READ_QC2.out.versions)
         filt_sr_unzip = READ_QC2.out[1]
+        filt_sr_nometa = READ_QC2.out[4]
     } else {
         filt_sr_unzip = Channel.empty()
+        filt_sr_nometa = Channel.empty()
     }
 
     // extracting and formatting genome size est
