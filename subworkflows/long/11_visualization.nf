@@ -15,22 +15,32 @@ workflow VISUALIZE {
 
     main:
         ch_versions = Channel.empty() 
-        assemblies.view()
+        assemblies
+            .concat(ont_fastq)
+            .set{assembly_ont}
+
+        assemblies
+            .concat(pb_fastq)
+            .set{assembly_pb}
+
+        assemblies
+            .concat(sr_fastq)
+            .set{assembly_sr}
 
         if (params.PacBioHifi_lr == true && params.ONT_lr == false && params.shortread == false){
-            BLOBTOOLS_CONFIG(assemblies, [], pb_fastq, [])
+            BLOBTOOLS_CONFIG([], assembly_pb, [])
         } else if (params.PacBioHifi_lr == true && params.ONT_lr == true && params.shortread == false){
-            BLOBTOOLS_CONFIG(assemblies, ont_fastq, pb_fastq, [])
+            BLOBTOOLS_CONFIG(assembly_ont, assembly_pb, [])
         } else if (params.PacBioHifi_lr == false && params.ONT_lr == true && params.shortread == false){
-            BLOBTOOLS_CONFIG(assemblies, ont_fastq, [], [])
+            BLOBTOOLS_CONFIG(assembly_ont, [], [])
         } else if (params.PacBioHifi_lr == false && params.ONT_lr == true && params.shortread == true){
-            BLOBTOOLS_CONFIG(assemblies, ont_fastq, [], sr_fastq)
+            BLOBTOOLS_CONFIG(assembly_ont, [], assembly_sr)
         } else if (params.PacBioHifi_lr == true && params.ONT_lr == false && params.shortread == true){
-            BLOBTOOLS_CONFIG(assemblies, [], pb_fastq, sr_fastq)
+            BLOBTOOLS_CONFIG([], assembly_pb, assembly_sr)
         } else if (params.PacBioHifi_lr == false && params.ONT_lr == false && params.shortread == true){
-            BLOBTOOLS_CONFIG(assemblies, [], [], sr_fastq)
+            BLOBTOOLS_CONFIG([], [], assembly_sr)
         } else if (params.PacBioHifi_lr == true && params.ONT_lr == true && params.shortread == true){
-            BLOBTOOLS_CONFIG(assemblies, ont_fastq, pb_fastq, sr_fastq)
+            BLOBTOOLS_CONFIG(assembly_ont, assembly_pb, assembly_sr)
         } 
 		blobtools_config=BLOBTOOLS_CONFIG.out.config
 		
