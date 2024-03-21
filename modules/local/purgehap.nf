@@ -55,8 +55,7 @@ process HISTOGRAM {
         'biocontainers/purge_haplotigs:1.1.2--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(contigs)
-    tuple val(meta), path(aligned_bam)
+    tuple val(meta), path(contigs), path(aligned_bam)
 
     output:
     tuple val(meta), path ("*aligned.bam.gencov"), emit: gencov
