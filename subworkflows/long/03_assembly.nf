@@ -127,12 +127,17 @@ workflow ASSEMBLY {
             .view()
             .set { all_assemblies }
 
+        no_meta_assemblies
+            .concat(flye_assembly, canu_assembly, masurca_assembly, hifi_assembly, existing_assembly)
+            .set{blob_test}
+
     emit:
         all_assemblies  
         longreads   
         nanoplot_filtered_out   = NANOPLOT.out.html
         f_assembly
         all_assemblies_no_meta
+        blob_test
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
