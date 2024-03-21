@@ -36,6 +36,7 @@ process HIFIASM {
         hifiasm \\
             $args \\
             -o ${prefix}.asm \\
+            --primary \\
             -t $task.cpus \\
             --ul $ont \\
             $hifi_reads
@@ -52,6 +53,7 @@ process HIFIASM {
         hifiasm \\
             $args \\
             -o ${prefix}.asm \\
+            --primary \\
             -t $task.cpus \\
             $hifi_reads
 
