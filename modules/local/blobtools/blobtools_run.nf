@@ -31,8 +31,6 @@ process BLOBTOOLS_RUN {
         $taxid \\
         $taxdump \\
         db_${prefix}
-
-    mv $taxon_taxdump/*.json db_${prefix}
     
     blobtools add \\
         --busco $busco_full_table_tsv \\
