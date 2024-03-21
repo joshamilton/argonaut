@@ -15,33 +15,52 @@ workflow VISUALIZE {
 
     main:
         ch_versions = Channel.empty() 
-        assemblies
-            .concat(ont_fastq)
-            .set{assembly_ont}
 
-        assemblies
-            .concat(pb_fastq)
-            .set{assembly_pb}
+        if (params.PacBioHifi_lr == true){
+            assemblies
+                .concat(pb_fastq)
+                .set{assembly_pb}
+            if (params.ONT_lr == true){
+                 assemblies
+                    .concat(ont_fastq)
+                    .set{assembly_ont}
+                if (params.shortread == true){
+                    assemblies
+                        .concat(sr_fastq)
+                        .set{assembly_sr}
+                    BLOBTOOLS_CONFIG(assembly_ont, assembly_pb, assembly_sr)
+                } else if (params.shortread == false){
+                    BLOBTOOLS_CONFIG(assembly_ont, assembly_pb, [])
+                }
+            } else if (params.ONT_lr == false && params.shortread == false){
+                BLOBTOOLS_CONFIG([], assembly_pb, [])
+            } else if (params.ONT_lr == false && params.shortread == true){
+                assemblies
+                    .concat(sr_fastq)
+                    .set{assembly_sr}
+                BLOBTOOLS_CONFIG([], assembly_pb, assembly_sr)
+            }
+        } else if (params.PacBioHifi_lr == false){
+            if (params.ONT_lr == true){
+                assemblies
+                    .concat(ont_fastq)
+                    .set{assembly_ont}
+                if (params.shortread == true){
+                    assemblies
+                        .concat(sr_fastq)
+                        .set{assembly_sr}
+                    BLOBTOOLS_CONFIG(assembly_ont, [], assembly_sr)
+                } else if (params.shortread == false){
+                    BLOBTOOLS_CONFIG(assembly_ont, [], [])
+                }
+            } else if (params.ONT_lr == false && params.shortread == true) {
+                assemblies
+                    .concat(sr_fastq)
+                    .set{assembly_sr}
+                BLOBTOOLS_CONFIG([], [], assembly_sr)
+            }
+        }
 
-        assemblies
-            .concat(sr_fastq)
-            .set{assembly_sr}
-
-        if (params.PacBioHifi_lr == true && params.ONT_lr == false && params.shortread == false){
-            BLOBTOOLS_CONFIG([], assembly_pb, [])
-        } else if (params.PacBioHifi_lr == true && params.ONT_lr == true && params.shortread == false){
-            BLOBTOOLS_CONFIG(assembly_ont, assembly_pb, [])
-        } else if (params.PacBioHifi_lr == false && params.ONT_lr == true && params.shortread == false){
-            BLOBTOOLS_CONFIG(assembly_ont, [], [])
-        } else if (params.PacBioHifi_lr == false && params.ONT_lr == true && params.shortread == true){
-            BLOBTOOLS_CONFIG(assembly_ont, [], assembly_sr)
-        } else if (params.PacBioHifi_lr == true && params.ONT_lr == false && params.shortread == true){
-            BLOBTOOLS_CONFIG([], assembly_pb, assembly_sr)
-        } else if (params.PacBioHifi_lr == false && params.ONT_lr == false && params.shortread == true){
-            BLOBTOOLS_CONFIG([], [], assembly_sr)
-        } else if (params.PacBioHifi_lr == true && params.ONT_lr == true && params.shortread == true){
-            BLOBTOOLS_CONFIG(assembly_ont, assembly_pb, assembly_sr)
-        } 
 		blobtools_config=BLOBTOOLS_CONFIG.out.config
 		
         assemblies
