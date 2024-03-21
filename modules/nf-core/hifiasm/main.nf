@@ -20,8 +20,6 @@ process HIFIASM {
     tuple val(meta), path("*.p_utg.gfa")       , emit: processed_unitigs, optional: true
     tuple val(meta), path("*.asm.p_ctg.gfa")   , emit: primary_contigs  , optional: true
     tuple val(meta), path("*.asm.a_ctg.gfa")   , emit: alternate_contigs, optional: true
-    tuple val(meta), path("*.hap1.p_ctg.gfa")  , emit: paternal_contigs , optional: false
-    tuple val(meta), path("*.hap2.p_ctg.gfa")  , emit: maternal_contigs , optional: false
     path("*.fasta")           , emit: assembly_fasta
     path  "versions.yml"                       , emit: versions
 
