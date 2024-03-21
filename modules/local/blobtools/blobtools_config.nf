@@ -3,7 +3,7 @@ process BLOBTOOLS_CONFIG {
     label 'process_medium'
 
     input:
-    tuple val(meta), path(assembly) from assemblies
+    tuple val(meta), path(assembly)
     path ont_fastq
     path pacbio_fastq
     path illumina_fastq
