@@ -1,6 +1,7 @@
 include { BLOBTOOLS_RUN } from '../../modules/local/blobtools/blobtools_run' 
 include { BLOBTOOLS_CONFIG } from '../../modules/local/blobtools/blobtools_config' 
 include { BLOBTOOLS_VIEW } from '../../modules/local/blobtools/blobtools_view' 
+include { BLOBTOOLS_BLAST } from '../../modules/local/blobtools/blobtools_blast' 
 
 workflow VISUALIZE {
 
