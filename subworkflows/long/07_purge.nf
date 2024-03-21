@@ -15,7 +15,12 @@ workflow HAPS {
         println "generating assembly histogram with purge haplotigs!"
 
         ALIGN(reads, assembly, params.bam_format, params.cigar_paf_format, params.cigar_bam)
-        HISTOGRAM(assembly, ALIGN.out.bam)
+
+        assembly
+            .join(ALIGN.out.bam)
+            .set{assembly_alignment}
+
+        HISTOGRAM(assembly_alignment)
         assemblies_polished_purged      = Channel.empty()
         purged_assemblies               = Channel.empty()
 
