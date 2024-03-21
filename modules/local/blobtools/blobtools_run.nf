@@ -7,6 +7,7 @@ process BLOBTOOLS_RUN {
     input:
     tuple val(meta), path(assembly), path(busco_full_table_tsv), path(bam)
     tuple val(meta), path(config)
+    tuple val(meta), path(blast_hits)
     val taxon_taxid
     path taxon_taxdump
 
@@ -31,10 +32,14 @@ process BLOBTOOLS_RUN {
         $taxdump \\
         db_${prefix}
 
-
+    mv $taxon_taxdump/*.json db_${prefix}
+    
     blobtools add \\
         --busco $busco_full_table_tsv \\
         --cov $bam \\
+        --hits $blast_hits \\
+        $taxid \\
+        $taxdump \\
         db_${prefix}
 
 
