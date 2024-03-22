@@ -21,6 +21,7 @@ workflow VISUALIZE {
                 .concat(pb_fastq)
                 .set{assembly_pb}
             if (params.ONT_lr == true){
+                ont_fastq.view()
                  assemblies
                     .concat(ont_fastq)
                     .set{assembly_ont}
