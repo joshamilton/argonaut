@@ -8,7 +8,7 @@ process BLOBTOOLS_BLAST {
     tuple val(meta), path(assembly)
 
     output:
-    tuple val(meta), path('*.out'), emit: hits
+    path('*.out'), emit: hits
 
     when:
     task.ext.when == null || task.ext.when
