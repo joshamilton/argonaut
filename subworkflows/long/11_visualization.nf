@@ -20,15 +20,18 @@ workflow VISUALIZE {
             assemblies
                 .concat(pb_fastq)
                 .set{assembly_pb}
+                .view{ "PB Channel: $it" }
             if (params.ONT_lr == true){
                 ont_fastq.view()
                  assemblies
                     .concat(ont_fastq)
                     .set{assembly_ont}
+                    .view{ "ONT Channel: $it" }
                 if (params.shortread == true){
                     assemblies
                         .concat(sr_fastq)
                         .set{assembly_sr}
+                        .view{ "SR Channel: $it" }
                     BLOBTOOLS_CONFIG(assembly_ont, assembly_pb, assembly_sr)
                 } else if (params.shortread == false){
                     BLOBTOOLS_CONFIG(assembly_ont, assembly_pb, [])
