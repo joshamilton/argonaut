@@ -7,7 +7,7 @@ process BLOBTOOLS_RUN {
     input:
     tuple val(meta), path(assembly), path(busco_full_table_tsv), path(bam)
     tuple val(meta), path(config)
-    tuple val(meta), path(blast_hits)
+    path blast_hits
     val taxon_taxid
     path taxon_taxdump
 
