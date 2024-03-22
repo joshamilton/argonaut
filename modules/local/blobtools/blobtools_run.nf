@@ -31,14 +31,14 @@ process BLOBTOOLS_RUN {
         --meta $config \\
         $taxid \\
         $taxdump \\
-        db_${prefix}
+        db_${assembly}
     
     blobtools add \\
         --busco $busco_full_table_tsv \\
         --cov $bam \\
         $blast \\
         $taxid \\
-        db_${prefix}
+        db_${assembly}
 
 
     cat <<-END_VERSIONS > versions.yml
