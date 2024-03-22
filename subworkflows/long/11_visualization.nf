@@ -24,7 +24,6 @@ pb_fastq.view{ "PB Fastq: $it" }
                 
             if (params.ONT_lr == true){
 ont_fastq.view{ "ONT Fastq: $it" }
-                ont_fastq.view()
                  assemblies
                     .concat(ont_fastq)
                     .set{assembly_ont}
