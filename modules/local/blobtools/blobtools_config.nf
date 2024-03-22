@@ -32,33 +32,6 @@ process BLOBTOOLS_CONFIG {
     reads:
     """
 
-    if (illumina_fastq) {
-        configContent += """
-          paired:
-            - prefix: ${meta.id}
-              platform: ILLUMINA
-              file: $illumina_fastq
-        """
-    }
-
-    if (ont_fastq) {
-        configContent += """
-          single:
-            - prefix: ${meta.id}
-              platform: ONT
-              file: $ont_fastq
-        """
-    }
-
-    if (pacbio_fastq) {
-        configContent += """
-          single:
-            - prefix: ${meta.id}
-              platform: PACBIO
-              file: $pacbio_fastq
-        """
-    }
-
     // Write the combined configuration to the output file
     """
     echo '$configContent' > ${prefix}_config.yaml
