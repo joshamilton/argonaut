@@ -19,19 +19,19 @@ workflow VISUALIZE {
         if (params.PacBioHifi_lr == true){
 pb_fastq.view{ "PB Fastq: $it" }
             assemblies
-                .concat(pb_fastq)
+                .combine(pb_fastq)
                 .set{assembly_pb}
                 
             if (params.ONT_lr == true){
 ont_fastq.view{ "ONT Fastq: $it" }
                  assemblies
-                    .concat(ont_fastq)
+                    .combine(ont_fastq)
                     .set{assembly_ont}
                     
                 if (params.shortread == true){
 sr_fastq.view{ "SR Fastq: $it" }
                     assemblies
-                        .concat(sr_fastq)
+                        .combine(sr_fastq)
                         .set{assembly_sr}
             
                     BLOBTOOLS_CONFIG(assembly_ont, assembly_pb, assembly_sr)
