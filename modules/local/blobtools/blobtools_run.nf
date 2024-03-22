@@ -24,6 +24,7 @@ process BLOBTOOLS_RUN {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def taxid = taxon_taxid ? "--taxid ${taxon_taxid}" : ''
     def taxdump = taxon_taxdump ? "--taxdump ${taxon_taxdump}" : ''
+    def blast = blast_hits ? "--hits ${blast_hits}" : ''
     """
     blobtools create \\
         --fasta $assembly \\
@@ -35,7 +36,7 @@ process BLOBTOOLS_RUN {
     blobtools add \\
         --busco $busco_full_table_tsv \\
         --cov $bam \\
-        --hits $blast_hits \\
+        $blast \\
         $taxid \\
         db_${prefix}
 
