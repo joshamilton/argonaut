@@ -3,9 +3,9 @@ process BLOBTOOLS_CONFIG {
     label 'process_medium'
 
     input:
-    tuple val(meta), path(assembly), path (ont_fastq)
-    tuple val(meta), path(assembly), path (pacbio_fastq)
-    tuple val(meta), path(assembly), val(meta), path (illumina_fastq)
+    tuple val(meta), path(assembly, stageAs: "*_ont"), path (ont_fastq)
+    tuple val(meta), path(assembly, stageAs: "*_pb"), path (pacbio_fastq)
+    tuple val(meta), path(assembly, stageAs: "*_sr"), val(meta), path (illumina_fastq)
 
     output:
     tuple val(meta), path('*config.yaml'), emit: config
