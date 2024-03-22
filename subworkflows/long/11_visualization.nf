@@ -42,18 +42,18 @@ sr_fastq.view{ "SR Fastq: $it" }
                 BLOBTOOLS_CONFIG([], assembly_pb, [])
             } else if (params.ONT_lr == false && params.shortread == true){
                 assemblies
-                    .concat(sr_fastq)
+                    .combine(sr_fastq)
                     .set{assembly_sr}
                 BLOBTOOLS_CONFIG([], assembly_pb, assembly_sr)
             }
         } else if (params.PacBioHifi_lr == false){
             if (params.ONT_lr == true){
                 assemblies
-                    .concat(ont_fastq)
+                    .combine(ont_fastq)
                     .set{assembly_ont}
                 if (params.shortread == true){
                     assemblies
-                        .concat(sr_fastq)
+                        .combine(sr_fastq)
                         .set{assembly_sr}
                     BLOBTOOLS_CONFIG(assembly_ont, [], assembly_sr)
                 } else if (params.shortread == false){
@@ -61,7 +61,7 @@ sr_fastq.view{ "SR Fastq: $it" }
                 }
             } else if (params.ONT_lr == false && params.shortread == true) {
                 assemblies
-                    .concat(sr_fastq)
+                    .combine(sr_fastq)
                     .set{assembly_sr}
                 BLOBTOOLS_CONFIG([], [], assembly_sr)
             }
