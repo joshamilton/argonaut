@@ -37,7 +37,6 @@ process BLOBTOOLS_RUN {
         --cov $bam \\
         --hits $blast_hits \\
         $taxid \\
-        $taxdump \\
         db_${prefix}
 
 
