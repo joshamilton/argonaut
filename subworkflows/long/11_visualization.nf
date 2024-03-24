@@ -23,7 +23,7 @@ pb_fastq.view{ "PB Fastq: $it" }
                 .set{assembly_pb}
                 
             if (params.ONT_lr == true){
-ont_fastq.view{ "ONT Fastq: $it" }
+
                  assemblies
                     .combine(ont_fastq)
                     .set{assembly_ont}
@@ -48,6 +48,7 @@ sr_fastq.view{ "SR Fastq: $it" }
             }
         } else if (params.PacBioHifi_lr == false){
             if (params.ONT_lr == true){
+                ont_fastq.view{ "ONT Fastq: $it" }
                 assemblies
                     .combine(ont_fastq)
                     .set{assembly_ont}
