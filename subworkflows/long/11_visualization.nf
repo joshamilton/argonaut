@@ -55,7 +55,7 @@ workflow VISUALIZE {
                         .set{assembly_sr}
                     BLOBTOOLS_CONFIG(assembly_ont, [], assembly_sr)
                 } else if (params.shortread == false){
-                    BLOBTOOLS_CONFIG(assembly_ont, [], [])
+                    BLOBTOOLS_CONFIG(assemblies, ont_fastq, [], [])
                 }
             } else if (params.ONT_lr == false && params.shortread == true) {
                 assemblies
