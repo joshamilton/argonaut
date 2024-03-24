@@ -4,9 +4,6 @@ process BLOBTOOLS_CONFIG {
 
     input:
     tuple val(meta), path(assembly)
-    path (ont_fastq)
-    path (pacbio_fastq)
-    path (illumina_fastq)
 
     output:
     tuple val(meta), path('*config.yaml'), emit: config
@@ -23,7 +20,7 @@ process BLOBTOOLS_CONFIG {
 
     def configContent = """
     assembly:
-      accession: $ont$pb$ill${meta.id}
+      accession: ${meta.id}
       file: $assembly
       level: scaffold
       prefix: ${meta.id}
