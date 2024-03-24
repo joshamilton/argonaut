@@ -23,7 +23,7 @@ process BLOBTOOLS_CONFIG {
 
     def configContent = """
     assembly:
-      accession: $ont$pb$ill_${meta.id}
+      accession: $ont$pb$ill${meta.id}
       file: $assembly
       level: scaffold
       prefix: ${meta.id}
