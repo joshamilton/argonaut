@@ -3,9 +3,10 @@ process BLOBTOOLS_CONFIG {
     label 'process_medium'
 
     input:
-    tuple val(meta), path(assembly, stageAs: "*_ont"), path (ont_fastq)
-    tuple val(meta), path(assembly, stageAs: "*_pb"), path (pacbio_fastq)
-    tuple val(meta), path(assembly, stageAs: "*_sr"), val(meta), path (illumina_fastq)
+    tuple val(meta), path(assembly)
+    path (ont_fastq)
+    path (pacbio_fastq)
+    path (illumina_fastq)
 
     output:
     tuple val(meta), path('*config.yaml'), emit: config
@@ -16,10 +17,13 @@ process BLOBTOOLS_CONFIG {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def ont = ont_fastq ? "${ont_fastq}" : ''
+    def pb = pacbio_fastq ? "${pacbio_fastq}" : ''
+    def ill = illumina_fastq ? "${illumina_fastq}" : ''
 
     def configContent = """
     assembly:
-      accession: ${meta.id}
+      accession: ${ont_fastq}_${pacbio_fastq}_${illumina_fastq}_${meta.id}
       file: $assembly
       level: scaffold
       prefix: ${meta.id}
@@ -29,7 +33,7 @@ process BLOBTOOLS_CONFIG {
         - ${params.busco_lineage}
       basal_lineages:
         - ${params.busco_lineage}
-    reads:
+        
     """
 
     // Write the combined configuration to the output file
