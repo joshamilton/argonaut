@@ -16,54 +16,7 @@ workflow VISUALIZE {
     main:
         ch_versions = Channel.empty() 
 
-        if (params.PacBioHifi_lr == true){
-            assemblies
-                .combine(pb_fastq)
-                .set{assembly_pb}
-                
-            if (params.ONT_lr == true){
-
-                 assemblies
-                    .combine(ont_fastq)
-                    .set{assembly_ont}
-                    
-                if (params.shortread == true){
-                    assemblies
-                        .combine(sr_fastq)
-                        .set{assembly_sr}
-            
-                    BLOBTOOLS_CONFIG(assembly_ont, assembly_pb, assembly_sr)
-                } else if (params.shortread == false){
-                    BLOBTOOLS_CONFIG(assembly_ont, assembly_pb, [])
-                }
-            } else if (params.ONT_lr == false && params.shortread == false){
-                BLOBTOOLS_CONFIG([], assembly_pb, [])
-            } else if (params.ONT_lr == false && params.shortread == true){
-                assemblies
-                    .combine(sr_fastq)
-                    .set{assembly_sr}
-                BLOBTOOLS_CONFIG([], assembly_pb, assembly_sr)
-            }
-        } else if (params.PacBioHifi_lr == false){
-            if (params.ONT_lr == true){
-                assemblies
-                    .combine(ont_fastq)
-                    .set{assembly_ont}
-                if (params.shortread == true){
-                    assemblies
-                        .combine(sr_fastq)
-                        .set{assembly_sr}
-                    BLOBTOOLS_CONFIG(assembly_ont, [], assembly_sr)
-                } else if (params.shortread == false){
-                    BLOBTOOLS_CONFIG(assemblies, ont_fastq, [], [])
-                }
-            } else if (params.ONT_lr == false && params.shortread == true) {
-                assemblies
-                    .combine(sr_fastq)
-                    .set{assembly_sr}
-                BLOBTOOLS_CONFIG([], [], assembly_sr)
-            }
-        }
+        BLOBTOOLS_CONFIG (assemblies)
 
 		blobtools_config=BLOBTOOLS_CONFIG.out.config
 		
