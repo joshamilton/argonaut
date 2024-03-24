@@ -14,9 +14,6 @@ process BLOBTOOLS_CONFIG {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def ont = ont_fastq ? "${ont_fastq}" : ''
-    def pb = pacbio_fastq ? "${pacbio_fastq}" : ''
-    def ill = illumina_fastq ? "${illumina_fastq}" : ''
 
     def configContent = """
     assembly:
