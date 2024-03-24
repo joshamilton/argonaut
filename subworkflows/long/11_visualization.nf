@@ -17,7 +17,6 @@ workflow VISUALIZE {
         ch_versions = Channel.empty() 
 
         if (params.PacBioHifi_lr == true){
-pb_fastq.view{ "PB Fastq: $it" }
             assemblies
                 .combine(pb_fastq)
                 .set{assembly_pb}
@@ -29,7 +28,6 @@ pb_fastq.view{ "PB Fastq: $it" }
                     .set{assembly_ont}
                     
                 if (params.shortread == true){
-sr_fastq.view{ "SR Fastq: $it" }
                     assemblies
                         .combine(sr_fastq)
                         .set{assembly_sr}
@@ -48,11 +46,9 @@ sr_fastq.view{ "SR Fastq: $it" }
             }
         } else if (params.PacBioHifi_lr == false){
             if (params.ONT_lr == true){
-                ont_fastq.view{ "ONT Fastq: $it" }
                 assemblies
                     .combine(ont_fastq)
                     .set{assembly_ont}
-                    .view()
                 if (params.shortread == true){
                     assemblies
                         .combine(sr_fastq)
