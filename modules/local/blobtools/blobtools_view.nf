@@ -16,11 +16,11 @@ process BLOBTOOLS_VIEW {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """        
-    blobtk plot -v snail -d $db -o ${prefix}_snail.png 
+    blobtk plot -v snail -d $db -o ${db}_snail.png 
 
-    blobtk plot -v cumulative -d $db -o ${prefix}_cumulative.png
+    blobtk plot -v cumulative -d $db -o ${db}_cumulative.png
 
-    blobtk plot -v blob -d $db -o ${prefix}_blob.png 
+    blobtk plot -v blob -d $db -o ${db}_blob.png 
 
     """
 }
