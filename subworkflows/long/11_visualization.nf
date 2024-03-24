@@ -7,7 +7,7 @@ workflow VISUALIZE {
 
     take:
         assemblies // channel: [ val(meta), path(assemblies) ]
-        ont_fastq // channel: [ val(meta), path(filtered reads) ]
+        ont_fastq // channel: [ path(filtered reads) ]
         pb_fastq
         sr_fastq
         bam
