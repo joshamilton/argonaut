@@ -51,6 +51,7 @@ sr_fastq.view{ "SR Fastq: $it" }
                 assemblies
                     .combine(ont_fastq)
                     .set{assembly_ont}
+                    .view()
                 if (params.shortread == true){
                     assemblies
                         .combine(sr_fastq)
