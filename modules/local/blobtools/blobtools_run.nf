@@ -27,7 +27,12 @@ process BLOBTOOLS_RUN {
     def blast = blast_hits ? "--hits ${blast_hits}" : ''
     def nodesdb_a = taxon_taxdump ? "cd ${taxon_taxdump}" : ''
     def nodesdb_b = taxon_taxdump ? "blobtools nodesdb --nodes data/nodes.dmp --names data/names.dmp" : ''
+    def nodesdb_c = taxon_taxdump ? "cd .." : ''
     """
+    $nodesdb_a
+    $nodesdb_b
+    $nodesdb_c
+
     blobtools create \\
         --fasta $assembly \\
         --meta $config \\
