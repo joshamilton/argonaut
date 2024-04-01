@@ -38,6 +38,7 @@ process BLOBTOOLS_RUN {
         --cov $bam \\
         $blast \\
         $taxid \\
+        $taxdump
         db_${assembly}
 
 
