@@ -33,7 +33,9 @@ workflow READ_QC {
 
         SEQKIT_GREP(CENTRIFUGE_CENTRIFUGE.out.results, reads)
 
+        if( params.rcf_db ){
         RECENTRIFUGE_C(CENTRIFUGE_CENTRIFUGE.out.results, params.rcf_db)
+        }
 
         fastq_filt           = SEQKIT_GREP.out.filter
 
