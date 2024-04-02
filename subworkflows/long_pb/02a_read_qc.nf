@@ -42,8 +42,10 @@ workflow READ_QC3 {
         //decontamination of trimmed short reads
         KRAKEN2_KRAKEN2_PB(CUTADAPT.out.reads, ch_db, params.save_output_fastqs, params.save_reads_assignment)
 
+        if( params.rcf_db ){
         //summarizing and visualizing decontam
         RECENTRIFUGE_KR(KRAKEN2_KRAKEN2_PB.out.classified_reads_assignment, params.rcf_db)
+        }
 
         filt_pbhifi = KRAKEN2_KRAKEN2_PB.out.unclassified_reads_fastq   
 
