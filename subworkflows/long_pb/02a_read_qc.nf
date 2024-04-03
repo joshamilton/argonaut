@@ -58,7 +58,7 @@ workflow READ_QC3 {
         JELLYFISH_KMER(GUNZIP.out.gunzip, params.kmer_num)
         JELLYFISH_HIST(JELLYFISH_KMER.out.shortkmer, params.kmer_num)
         
-        GENOMESCOPE2(JELLYFISH_HIST.out.shortkmer_hist)
+        GENOMESCOPE2(JELLYFISH_HIST.out.shortkmer_hist, params.kmer_num)
 
     emit:
         filtered_fastq    // channel: [ val(meta), path(decontaminated fastq) ]
