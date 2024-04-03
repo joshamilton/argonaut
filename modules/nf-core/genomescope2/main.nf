@@ -9,6 +9,7 @@ process GENOMESCOPE2 {
 
     input:
     tuple val(meta), path(histogram)
+    val kmer_num
 
     output:
     tuple val(meta), path("*_linear_plot.png")            , emit: linear_plot_png
@@ -30,6 +31,7 @@ process GENOMESCOPE2 {
         --input $histogram \\
         $args \\
         --output . \\
+        -k $kmer_num \\
         --name_prefix $prefix
 
     cat <<-END_VERSIONS > versions.yml
