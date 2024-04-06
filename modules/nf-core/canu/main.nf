@@ -9,7 +9,6 @@ process CANU {
 
     input:
     tuple val(meta), path(reads)
-    val mode
     path(genome_size_est)
 
     output:
