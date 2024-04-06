@@ -46,7 +46,7 @@ workflow ASSEMBLY {
 
         if ( params.canu == true ) {
             println "assembling long reads with canu!"
-            CANU(longreads, params.canu_mode, genome_size_est)
+            CANU(longreads, genome_size_est)
             canu_assembly      = CANU.out.assembly   
 
             canu_assembly
