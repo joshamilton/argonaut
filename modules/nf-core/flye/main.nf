@@ -29,11 +29,14 @@ process FLYE {
     def prefix = task.ext.prefix ?: "flye_${meta.id}"
     def size
     def valid_mode = ["--pacbio-raw", "--pacbio-corr", "--pacbio-hifi", "--nano-raw", "--nano-corr", "--nano-hq"]
+    def auto_ont_mode = reads.contains('ont') ? "--nano-raw" : ''
+    def auto_pb_mode = reads.contains('pb') ? "--pacbio-hifi" : ''
     if ( !valid_mode.contains(mode) )  { error "Unrecognised mode to run Flye. Options: ${valid_mode.join(', ')}" }
     """
     size=\$(echo "\$(<${genome_size_est})")
     flye \\
-        $mode \\
+        $auto_ont_mode \\
+        $auto_pb_mode
         $reads \\
         --out-dir . \\
         --threads \\
