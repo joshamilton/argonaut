@@ -30,8 +30,10 @@ process CANU {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "canu_${meta.id}"
     def genomesize 
-    def valid_mode = ["-pacbio", "-nanopore", "-pacbio-hifi"]
-    if ( !valid_mode.contains(mode) )  { error "Unrecognised mode to run Canu. Options: ${valid_mode.join(', ')}" }
+    def read_name = "${reads}"
+    def auto_ont_mode = read_name.contains('ont') ? '-nanopore' : ''
+    def auto_pb_mode = read_name.contains('pb') ? '-pacbio-hifi' : ''
+
     """
     genomesize=\$(echo "\$(<${genome_size_est})")
 
@@ -40,7 +42,9 @@ process CANU {
         genomeSize=\$genomesize \\
         $args \\
         maxThreads=$task.cpus \\
-        $mode $reads
+        ${auto_ont_mode} \\
+        ${auto_pb_mode} \\ 
+        $reads
         
 
     gzip *.fasta
