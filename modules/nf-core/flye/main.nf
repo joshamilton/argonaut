@@ -9,7 +9,6 @@ process FLYE {
 
     input:
     tuple val(meta), path(reads)
-    val mode
     path(genome_size_est)
 
     output:
@@ -29,10 +28,9 @@ process FLYE {
     def prefix = task.ext.prefix ?: "flye_${meta.id}"
     def size
     def read_name = "${reads}"
-    def valid_mode = ["--pacbio-raw", "--pacbio-corr", "--pacbio-hifi", "--nano-raw", "--nano-corr", "--nano-hq"]
     def auto_ont_mode = read_name.contains('ont') ? '--nano-raw' : ''
     def auto_pb_mode = read_name.contains('pb') ? '--pacbio-hifi' : ''
-    if ( !valid_mode.contains(mode) )  { error "Unrecognised mode to run Flye. Options: ${valid_mode.join(', ')}" }
+   
     """
     size=\$(echo "\$(<${genome_size_est})")
     flye \\
