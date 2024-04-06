@@ -36,8 +36,8 @@ process FLYE {
     """
     size=\$(echo "\$(<${genome_size_est})")
     flye \\
-        $auto_ont_mode \\
-        $auto_pb_mode \\
+        ${auto_ont_mode} \\
+        ${auto_pb_mode} \\
         $reads \\
         --out-dir . \\
         --threads \\
