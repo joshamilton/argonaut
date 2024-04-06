@@ -88,7 +88,7 @@ sample,fastq_1,fastq_2,single_end
 maca_jans_pb,SRR11191909.fastq.gz,,TRUE
 ```
 
-!!! PLEASE ADD "ont", "pb", AND/OR "illumina" TO YOUR SAMPLES NAMES !!! Failure to do so will result in flye not recognizing your read type.
+!!! PLEASE ADD "ont", "pb", AND/OR "illumina" TO YOUR SAMPLES NAMES !!! Failure to do so will result in assemblers not recognizing your read type.
 
 Additionally, the sample name inputted in your samplesheet will serve as the prefix for your output files. Please indicate which kind of read is being inputted in the sample name. Failure to do so may result in outputs being overwritten. 
 
