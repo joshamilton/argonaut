@@ -6,8 +6,6 @@ fastq                  :  "/core/projects/EBP/conservation/zigzag_coral/191/long
 centrifuge_db          :  "/core/labs/Wegrzyn/IngaGenome/Contam/longReads/f+b+a+v/"
 busco_lineage          :  "metazoa_odb10"
 summary_txt            :  "/archive/projects/EBP/roneill/reads/nanopore/promethion/DOG/Madrepora/Mo_S0424_FK21-191/2023JAN17_DOG_Mo_S0424_FK21-191_PAM25097/2023JAN17_DOG_Mo_S0424_FK21-191_PAM25097/20230117_2211_1C_PAM25097_ab58fe1c/sequencing_summary_PAM25097_ab58fe1c_a47ef4ef.txt"
-flye_mode              :  "--nano-raw"
-canu_mode              :  "-nanopore"
 kraken_db              :  "/isg/shared/databases/kraken2/microDB"
 rcf_db                 :  "/isg/shared/databases/recentrifuge/taxdump/"
 model                  :  "r1041_e82_400bps_sup_g615"
