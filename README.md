@@ -88,7 +88,11 @@ sample,fastq_1,fastq_2,single_end
 maca_jans_pb,SRR11191909.fastq.gz,,TRUE
 ```
 
-Please note that the sample name inputted in your samplesheet will serve as the prefix for your output files. If you have more than one read type, please indicate which kind of read is being inputted in the sample name. Failure to do so may result in outputs being overwritten.  
+!!! PLEASE ADD "ont", "pb", AND/OR "illumina" TO YOUR SAMPLES NAMES !!! Failure to do so will result in flye not recognizing your read type.
+
+Additionally, the sample name inputted in your samplesheet will serve as the prefix for your output files. Please indicate which kind of read is being inputted in the sample name. Failure to do so may result in outputs being overwritten. 
+
+
 
 After you have your samplesheet(s), create a params.yaml file to specify the paths to your samplesheet(s), contaminant databases, etc. Most likely, a config file will also need to be made to modify the default settings of the pipeline. Please look through the [nextflow.config](nextflow.config) file to browse the defaults and specify which you would like to change in your my_config file. More information is located in the [usage](docs/usage.md) section.
 
