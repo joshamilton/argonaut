@@ -124,7 +124,6 @@ workflow ASSEMBLY {
             .concat(flye_assembly, canu_assembly, masurca_assembly, hifi_assembly, existing_assembly)
             .flatten()
             .map { file -> tuple(id: file.baseName, file) }
-            .view()
             .set { all_assemblies }
 
         no_meta_assemblies
