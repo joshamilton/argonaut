@@ -240,13 +240,11 @@ workflow GENOMEASSEMBLY {
         //assembly inputting long & short reads
         ASSEMBLY (ch_longreads, READ_QC2.out[1], readable_size, full_size, combined_lr, no_meta_fastq, ch_PacBiolongreads)
         lr_assemblies   = ASSEMBLY.out[4]
-        lr_assemblies.view { "Initial Long Read Assembly: $it" }
     } else if (params.longread == true && params.shortread == false) {
         ch_shortdata = Channel.empty() 
         //assembly of decontam and length filtered (if specified) long reads
         ASSEMBLY (ch_longreads, [], readable_size, full_size, combined_lr, no_meta_fastq, ch_PacBiolongreads)
         lr_assemblies   = ASSEMBLY.out[4]
-        lr_assemblies.view { "Initial Long Read Assembly: $it" }
     ch_versions = ch_versions.mix(ASSEMBLY.out.versions)   
     } else {
         lr_assemblies = Channel.empty()
@@ -299,7 +297,6 @@ workflow GENOMEASSEMBLY {
         .collect()
         .set { sr_assemblies }
 
-    sr_assemblies.view { "Initial Short Read Assembly: $it" }
     } else {
         sr_assemblies = Channel.empty()
     }
@@ -336,7 +333,6 @@ workflow GENOMEASSEMBLY {
         assemblies = ASSEMBLY.out[0]
 
         sam = QC_1.out[8]
-        sam.view()
 
         assemblies
             .join(sam)
@@ -344,17 +340,14 @@ workflow GENOMEASSEMBLY {
 
         ch_fake_racon
             .combine(no_meta_ch_ONT)
-            .view()
             .set { ch_racon }
     } else if(params.racon_polish == true && params.PacBioHifi_lr == true){
             ASSEMBLY.out[0]
                 .join(QC_1.out[8])
                 .set{ch_fake_racon}
-                .view()
 
             ch_fake_racon
                 .combine(no_meta_ch_PB)
-                .view()
                 .set { ch_racon }
     } else { ch_racon = Channel.empty() }
 
@@ -411,7 +404,6 @@ workflow GENOMEASSEMBLY {
         .map { file -> tuple(id: file.baseName, file) }
         .set { polished_assemblies_and_no_polish }
 
-    polished_assemblies.view()
 
     if ( params.medaka_polish == true || params.racon_polish == true || params.shortread == true) {
         if ( params.shortread == true && params.longread == true ) {
@@ -472,7 +464,6 @@ workflow GENOMEASSEMBLY {
         no_meta_sr_purge = Channel.empty()
     }
 
-    purged_assemblies_common.view()
 
     if ( params.purge == true ) {
     if ( params.shortread == true && params.longread == true) {
@@ -565,7 +556,6 @@ workflow GENOMEASSEMBLY {
 
     if (params.blobtools_visualization == true){
         ch_all_assemblies.view { "Final Assemblies: $it" }
-        no_meta_ch_ONT.view { "ONT reads for blobtools: $it" }
 
         if(params.shortread == true && params.ONT_lr == true && params.PacBioHifi_lr == true){
             VISUALIZE(ch_all_assemblies, no_meta_ch_ONT, no_meta_ch_PB, filt_sr_nometa, qc_bam, busco_tsv)
