@@ -11,7 +11,7 @@ process BIOAWK {
     tuple val(meta), path(input)
 
     output:
-    tuple val(meta), path("*.gz"), emit: output
+    path("*.gz"), emit: output
     path "versions.yml"             , emit: versions
 
     when:
@@ -26,9 +26,9 @@ process BIOAWK {
     bioawk \\
         $args \\
         $input \\
-        > ${prefix}
+        > length_filt_${prefix}
 
-    gzip ${prefix}
+    gzip length_filt_${prefix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
