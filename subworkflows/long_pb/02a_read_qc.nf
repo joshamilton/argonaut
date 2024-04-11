@@ -42,6 +42,15 @@ workflow READ_QC3 {
         if (params.kraken_pb == true){
             //decontamination of trimmed short reads
             KRAKEN2_KRAKEN2_PB(CUTADAPT.out.reads, ch_db, params.save_output_fastqs, params.save_reads_assignment)
+            filt_pbhifi = KRAKEN2_KRAKEN2_PB.out.unclassified_reads_fastq   
+
+            filt_pbhifi
+                .map { file -> tuple([id:file.baseName, single_end:true], file)  }
+                .set { filtered_fastq }
+
+        } else {
+            filt_pbhifi = CUTADAPT.out.reads
+            filtered_fastq = CUTADAPT.out.reads
         }
         
 
@@ -50,12 +59,7 @@ workflow READ_QC3 {
         RECENTRIFUGE_KR(KRAKEN2_KRAKEN2_PB.out.classified_reads_assignment, params.rcf_db)
         }
 
-        filt_pbhifi = KRAKEN2_KRAKEN2_PB.out.unclassified_reads_fastq   
-
-        filt_pbhifi
-            .map { file -> tuple([id:file.baseName, single_end:true], file)  }
-            .set { filtered_fastq }
-
+        
         GUNZIP(filtered_fastq)
 
         JELLYFISH_KMER(GUNZIP.out.gunzip, params.kmer_num)
