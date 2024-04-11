@@ -39,8 +39,11 @@ workflow READ_QC3 {
 	    CUTADAPT (input_pacbio)
 	    ch_versions = ch_versions.mix(CUTADAPT.out.versions)
 
-        //decontamination of trimmed short reads
-        KRAKEN2_KRAKEN2_PB(CUTADAPT.out.reads, ch_db, params.save_output_fastqs, params.save_reads_assignment)
+        if (params.kraken_pb == true){
+            //decontamination of trimmed short reads
+            KRAKEN2_KRAKEN2_PB(CUTADAPT.out.reads, ch_db, params.save_output_fastqs, params.save_reads_assignment)
+        }
+        
 
         if( params.rcf_db ){
         //summarizing and visualizing decontam
