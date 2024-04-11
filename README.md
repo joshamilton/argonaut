@@ -20,39 +20,39 @@
 ## Pipeline Summary
 
 Illumina Short Read 
-1. Read QC, Adaptor Trimming, Contaminant Filtering([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/), [`FastP`](https://github.com/OpenGene/fastp), [`GenomeScope`](http://qb.cshl.edu/genomescope/),[`Jellyfish`](https://github.com/gmarcais/Jellyfish),[`Kraken2`](https://ccb.jhu.edu/software/kraken2/), [`Recentrifuge`](https://github.com/khyox/recentrifuge),)
+1. Read QC, Adaptor Trimming, Contaminant Filtering([`FastQC v0.11.9`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/), [`FastP v0.23.4`](https://github.com/OpenGene/fastp), [`GenomeScope2 v2.0`](http://qb.cshl.edu/genomescope/),[`Jellyfish v2.2.6`](https://github.com/gmarcais/Jellyfish),[`Kraken2 v2.1.2`](https://ccb.jhu.edu/software/kraken2/), [`Recentrifuge v1.9.1`](https://github.com/khyox/recentrifuge),)
     
 ONT Long Read
-1. Read QC and Contaminant Filtering([`Nanoplot`](https://github.com/wdecoster/NanoPlot),[`KmerFreq`](https://github.com/fanagislab/kmerfreq), [`GCE`](https://github.com/fanagislab/GCE), [`Centrifuge`](https://ccb.jhu.edu/software/centrifuge/), [`Recentrifuge`](https://github.com/khyox/recentrifuge))
-2. Length Filtering (optional)([`Bioawk`](https://github.com/lh3/bioawk), [`Nanoplot`](https://github.com/wdecoster/NanoPlot))
+1. Read QC and Contaminant Filtering([`Nanoplot v1.41.0`](https://github.com/wdecoster/NanoPlot),[`KmerFreq`](https://github.com/fanagislab/kmerfreq), [`GCE`](https://github.com/fanagislab/GCE), [`Centrifuge v1.0.4`](https://ccb.jhu.edu/software/centrifuge/), [`Recentrifuge v1.9.1`](https://github.com/khyox/recentrifuge))
+2. Length Filtering (optional)([`Bioawk v1.0`](https://github.com/lh3/bioawk), [`Nanoplot v1.41.0`](https://github.com/wdecoster/NanoPlot))
    
 PacBio Hifi Long Read (CCS format)
-1. Read QC, Adaptor Trimming, Contaminant Filtering([`Nanoplot`](https://github.com/wdecoster/NanoPlot),[`CutAdapt`](https://cutadapt.readthedocs.io/en/stable/),[`GenomeScope`](http://qb.cshl.edu/genomescope/),[`Jellyfish`](https://github.com/gmarcais/Jellyfish),[`Kraken2`](https://ccb.jhu.edu/software/kraken2/), [`Recentrifuge`](https://github.com/khyox/recentrifuge))
-2. Length Filtering (optional)([`Bioawk`](https://github.com/lh3/bioawk), [`Nanoplot`](https://github.com/wdecoster/NanoPlot))
+1. Read QC, Adaptor Trimming, Contaminant Filtering([`Nanoplot v1.41.0`](https://github.com/wdecoster/NanoPlot),[`CutAdapt v3.4`](https://cutadapt.readthedocs.io/en/stable/),[`GenomeScope2 v2.0`](http://qb.cshl.edu/genomescope/),[`Jellyfish v2.2.6`](https://github.com/gmarcais/Jellyfish),[`Kraken2 v2.1.2`](https://ccb.jhu.edu/software/kraken2/), [`Recentrifuge v1.9.1`](https://github.com/khyox/recentrifuge))
+2. Length Filtering (optional)([`Bioawk v1.0`](https://github.com/lh3/bioawk), [`Nanoplot v1.41.0`](https://github.com/wdecoster/NanoPlot))
 
 All reads are used for the following steps:  
   
 3. Assembly &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;             4. Assembly QC**
-- [`Flye`](https://github.com/fenderglass/Flye)  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;- [`BUSCO`](https://busco.ezlab.org/)
-- [`Canu`](https://github.com/marbl/canu) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp; - [`Quast`](https://quast.sourceforge.net/)
-- [`Hifiasm`](https://github.com/chhylp123/hifiasm) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;  - [`Minimap2`](https://github.com/lh3/minimap2)
-- [`MaSuRCA`](https://github.com/alekseyzimin/masurca) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;  - [`PycoQC`](https://github.com/a-slide/pycoQC)
-- [`Redundans`](https://github.com/Gabaldonlab/redundans) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;  - [`Merqury`](https://github.com/marbl/merqury)  
+- [`Flye v2.9`](https://github.com/fenderglass/Flye)  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;- [`BUSCO v5.4.3`](https://busco.ezlab.org/)
+- [`Canu v2.2`](https://github.com/marbl/canu) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp; - [`Quast v5.2.0`](https://quast.sourceforge.net/)
+- [`Hifiasm v0.19.8`](https://github.com/chhylp123/hifiasm) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;  - [`Minimap2 v2.24`](https://github.com/lh3/minimap2)
+- [`MaSuRCA v4.1.0`](https://github.com/alekseyzimin/masurca) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;  - [`PycoQC v4.3.9`](https://github.com/a-slide/pycoQC)
+- [`Redundans v2.01`](https://github.com/Gabaldonlab/redundans) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;  - [`Merqury v1.3`](https://github.com/marbl/merqury)  
   
 5. Polish  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;          6. Polish QC**  
-- [`Medaka`](https://github.com/nanoporetech/medaka)
-- [`Racon`](https://github.com/isovic/racon)
-- [`POLCA`](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007981)
+- [`Medaka v1.8.0`](https://github.com/nanoporetech/medaka)
+- [`Racon v1.4.20`](https://github.com/isovic/racon)
+- [`POLCA v4.1.0`](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007981)
   
 7. Purge  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;   8. Purge QC**  
-- [`PurgeHaplotigs`](https://bitbucket.org/mroachawri/purge_haplotigs/src/master/)
-- [`Redundans`](https://github.com/Gabaldonlab/redundans)
+- [`PurgeHaplotigs v1.1.2`](https://bitbucket.org/mroachawri/purge_haplotigs/src/master/)
+- [`Redundans v2.01`](https://github.com/Gabaldonlab/redundans)
   
 9. Scaffolding &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;     10. Scaffold QC**  
-- ([`RagTag`](https://github.com/malonge/RagTag))  
+- ([`RagTag v2.1.0`](https://github.com/malonge/RagTag))  
 
 11. Assembly Visualization
-- ([`Blobtools`](https://blobtoolkit.genomehubs.org/blobtools2/))  
+- ([`Blobtools `](https://blobtoolkit.genomehubs.org/blobtools2/))  
 
 Below is a figure detailing the major workflow steps involved in hybrid assembly.
 
