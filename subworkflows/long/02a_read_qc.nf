@@ -46,12 +46,7 @@ workflow READ_QC {
                 filtered_fastq = reads
             }
         }
-
         
-
-        
-        
-
         KMER_FREQ(filtered_fastq)
 
         GCE(KMER_FREQ.out.kmerstat, KMER_FREQ.out.kmernum)
