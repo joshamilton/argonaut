@@ -28,15 +28,19 @@ workflow READ_QC {
         // if a centrifuge database is provided, run centrifuge and filter out all classified results
         if( ch_db  ){
             if (params.centrifuge_ont){
-             CENTRIFUGE_CENTRIFUGE        ( reads, ch_db, params.save_unaligned, params.save_aligned, params.sam_format )
-             CENTRIFUGE_KREPORT           ( CENTRIFUGE_CENTRIFUGE.out.results, ch_db )
-             SEQKIT_GREP(CENTRIFUGE_CENTRIFUGE.out.results, reads)
+                 CENTRIFUGE_CENTRIFUGE        ( reads, ch_db, params.save_unaligned, params.save_aligned, params.sam_format )
+                 CENTRIFUGE_KREPORT           ( CENTRIFUGE_CENTRIFUGE.out.results, ch_db )
+                 SEQKIT_GREP(CENTRIFUGE_CENTRIFUGE.out.results, reads)
 
-             fastq_filt           = SEQKIT_GREP.out.filter
+                 fastq_filt           = SEQKIT_GREP.out.filter
 
-             fastq_filt
-                .map { file -> tuple([id:file.baseName, single_end:true], file)  }
-                .set { filtered_fastq }
+                 fastq_filt
+                    .map { file -> tuple([id:file.baseName, single_end:true], file)  }
+                    .set { filtered_fastq }
+
+                 if( params.rcf_db ){
+                    RECENTRIFUGE_C(CENTRIFUGE_CENTRIFUGE.out.results, params.rcf_db)
+                 }
             } else {
                 fastq_filt = reads
                 filtered_fastq = reads
@@ -45,10 +49,7 @@ workflow READ_QC {
 
         
 
-        if( params.rcf_db ){
-        RECENTRIFUGE_C(CENTRIFUGE_CENTRIFUGE.out.results, params.rcf_db)
-        }
-
+        
         
 
         KMER_FREQ(filtered_fastq)
