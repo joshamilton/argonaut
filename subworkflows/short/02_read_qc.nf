@@ -32,19 +32,24 @@ workflow READ_QC2 {
         //qc adapter trimmed short reads
         FASTQC_2(FASTP.out.reads)
 
+        if (params.kraken_ill == true){
         //decontamination of trimmed short reads
         KRAKEN2_KRAKEN2_SR(FASTP.out.reads, ch_db, params.save_output_fastqs, params.save_reads_assignment)
+        
+            if( params.rcf_db ){
+            //summarizing and visualizing decontam
+            RECENTRIFUGE_KR(KRAKEN2_KRAKEN2_SR.out.classified_reads_assignment, params.rcf_db)
+            }
 
-        if( params.rcf_db ){
-        //summarizing and visualizing decontam
-        RECENTRIFUGE_KR(KRAKEN2_KRAKEN2_SR.out.classified_reads_assignment, params.rcf_db)
+            filt_shortreads = KRAKEN2_KRAKEN2_SR.out.unclassified_reads_fastq   
+    
+            filt_shortreads
+                .map { file -> file }
+                .set { filt_sr_no_meta }
+        } else {
+            filt_shortreads = FASTP.out.reads
+            filt_sr_no_meta = FASTP.out.reads
         }
-
-        filt_shortreads = KRAKEN2_KRAKEN2_SR.out.unclassified_reads_fastq   
-
-        filt_shortreads
-            .map { file -> file }
-            .set { filt_sr_no_meta }
 
         //qc decontaminated short reads
         FASTQC_3(filt_shortreads)
