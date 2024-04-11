@@ -116,7 +116,7 @@ nextflow run emilytrybulec/argonaut \
   -profile singularity,xanadu \
 ```
 
-This will launch the pipeline with the `xanadu` configuration profile. See below for more information about profiles.
+This will launch the pipeline with the `xanadu` configuration profile, which will allocate resources correctly for Xanadu users running Argonaut at the University of Connecticut. See [below](#Core-Nextflow-arguments) for more information about profiles.
 
 Note that the pipeline will create the following files in your working directory:
 
