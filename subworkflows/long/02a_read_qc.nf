@@ -31,6 +31,15 @@ workflow READ_QC {
              CENTRIFUGE_CENTRIFUGE        ( reads, ch_db, params.save_unaligned, params.save_aligned, params.sam_format )
              CENTRIFUGE_KREPORT           ( CENTRIFUGE_CENTRIFUGE.out.results, ch_db )
              SEQKIT_GREP(CENTRIFUGE_CENTRIFUGE.out.results, reads)
+
+             fastq_filt           = SEQKIT_GREP.out.filter
+
+             fastq_filt
+                .map { file -> tuple([id:file.baseName, single_end:true], file)  }
+                .set { filtered_fastq }
+            } else {
+                fastq_filt = reads
+                filtered_fastq = reads
             }
         }
 
@@ -40,11 +49,7 @@ workflow READ_QC {
         RECENTRIFUGE_C(CENTRIFUGE_CENTRIFUGE.out.results, params.rcf_db)
         }
 
-        fastq_filt           = SEQKIT_GREP.out.filter
-
-        fastq_filt
-            .map { file -> tuple([id:file.baseName, single_end:true], file)  }
-            .set { filtered_fastq }
+        
 
         KMER_FREQ(filtered_fastq)
 
