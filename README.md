@@ -35,8 +35,8 @@ All reads are used for the following steps:
 3. Assembly &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;             4. Assembly QC**
 - [`Flye v2.9`](https://github.com/fenderglass/Flye)  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;- [`BUSCO v5.4.3`](https://busco.ezlab.org/)
 - [`Canu v2.2`](https://github.com/marbl/canu) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp; - [`Quast v5.2.0`](https://quast.sourceforge.net/)
-- [`Hifiasm v0.19.8`](https://github.com/chhylp123/hifiasm) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;  - [`Minimap2 v2.24`](https://github.com/lh3/minimap2)
-- [`MaSuRCA v4.1.0`](https://github.com/alekseyzimin/masurca) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;  - [`PycoQC v4.3.9`](https://github.com/a-slide/pycoQC)
+- [`Hifiasm v0.19.8`](https://github.com/chhylp123/hifiasm) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  - [`Minimap2 v2.24`](https://github.com/lh3/minimap2)
+- [`MaSuRCA v4.1.0`](https://github.com/alekseyzimin/masurca) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  - [`PycoQC v4.3.9`](https://github.com/a-slide/pycoQC)
 - [`Redundans v2.01`](https://github.com/Gabaldonlab/redundans) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  - [`Merqury v1.3`](https://github.com/marbl/merqury)  
   
 5. Polish  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;          6. Polish QC**  
