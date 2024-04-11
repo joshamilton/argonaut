@@ -15,18 +15,31 @@ You will need to create a samplesheet with information about the samples you wou
 The `sample` identifiers are important for naming throughout the pipeline, and we recommend that specific sample names are used, indicating read type. The pipeline requires concatenated raw reads before performing any downstream analysis. For best results, please provide the entire path to the reads.
 Below is an example samplesheet for long reads:
 
-```csv
-sample,fastq_1,fastq_2,single_end
-Mo_191_ont,Mo_191_p1s.fastq.gz,,TRUE
-```
-
-An additional samplesheet must be constructed if more than one read type is available.
-Below is an example samplesheet for short reads:
+`ont_samplesheet.csv`:
 
 ```csv
 sample,fastq_1,fastq_2,single_end
-Mo_191_illumina,SRR10443809_1.fastq,SRR10443809_2.fastq,FALSE
+maca_jans_ont,SRR11191910.fastq.gz,,TRUE
 ```
+
+If more than one read input type is available, prepare a second (and third) samplesheet with your other input data as follows:
+
+`illumina_samplesheet.csv`:
+
+```csv
+sample,fastq_1,fastq_2,single_end
+maca_jans_ill,SRR11191912_1.fastq.gz,SRR11191912_2.fastq.gz,FALSE
+```
+
+`pb_hifi_samplesheet.csv`:
+
+```csv
+sample,fastq_1,fastq_2,single_end
+maca_jans_pb,SRR11191909.fastq.gz,,TRUE
+```
+
+!!! PLEASE ADD "ont", "pb", AND/OR "ill" TO YOUR SAMPLES NAMES !!! Failure to do so will result in assemblers not recognizing your read type.  
+
 
 |   `sample`    | Custom sample name.  
 |   `fastq_1`   | Full path to FastQ file for ONT long reads or Illumina short reads 1. File must have the extension ".fastq" or ".fastq.qz".  
@@ -62,6 +75,8 @@ ragtag_reference       :  "./assembly.fasta"
 <...>
 ```
 For best results, please provide full paths. Paths have been truncated for readability.  
+
+For detailed information about parameters, please refer to the [config](../nextflow.config) file.
 
 General tips for your params file:
 * The input path should point to your ONT samplesheet (or PacBio HiFi samplesheet if no ONT available, or Illumina samplesheet if no long reads). The short input path should point to your Illumina samplesheet. The pb_input path should point to your PacBio HiFi samplesheet.
