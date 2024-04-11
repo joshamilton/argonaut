@@ -48,15 +48,14 @@ workflow READ_QC3 {
                 .map { file -> tuple([id:file.baseName, single_end:true], file)  }
                 .set { filtered_fastq }
 
+            if( params.rcf_db ){
+                //summarizing and visualizing decontam
+                RECENTRIFUGE_KR(KRAKEN2_KRAKEN2_PB.out.classified_reads_assignment, params.rcf_db)
+            }
+
         } else {
             filt_pbhifi = CUTADAPT.out.reads
             filtered_fastq = CUTADAPT.out.reads
-        }
-        
-
-        if( params.rcf_db ){
-        //summarizing and visualizing decontam
-        RECENTRIFUGE_KR(KRAKEN2_KRAKEN2_PB.out.classified_reads_assignment, params.rcf_db)
         }
 
         
