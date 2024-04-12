@@ -13,7 +13,7 @@ process SEQKIT_SEQ {
     val min_len
 
     output:
-    tuple val(meta), path("*.gz")  , emit: filter
+    path("*.gz")  , emit: filter
     path "versions.yml"                    , emit: versions
 
     when:
