@@ -35,3 +35,4 @@ process SEQKIT_SEQ {
         seqkit: \$( seqkit version | sed 's/seqkit v//' )
     END_VERSIONS
     """
+}
