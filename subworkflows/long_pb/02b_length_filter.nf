@@ -1,4 +1,4 @@
-include { BIOAWK } from '../../modules/nf-core/bioawk/main'
+include { SEQKIT_SEQ } from '../../modules/local/seqkit'
 include { NANOPLOT } from '../../modules/nf-core/nanoplot/main'
 
 workflow LENGTH_FILT3 {
@@ -15,9 +15,9 @@ workflow LENGTH_FILT3 {
         if(params.min_readlength > 0){
             NANOPLOT(decontam_reads)
 
-            BIOAWK(decontam_reads)
+            SEQKIT_SEQ(decontam_reads, params.min_readlength)
 
-            BIOAWK.out.output
+            SEQKIT_SEQ.out.filter
                 .map { file -> tuple([id:file.baseName, single_end:true], file)  }
                 .set { longreads }
 
