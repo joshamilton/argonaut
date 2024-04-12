@@ -22,7 +22,7 @@ workflow LENGTH_FILT3 {
                 .set { longreads }
 
 
-            no_meta_longreads = BIOAWK.out.output  // channel: [ val(meta), path(decontam+length filtered fastq) ]
+            no_meta_longreads = SEQKIT_SEQ.out.filter  // channel: [ val(meta), path(decontam+length filtered fastq) ]
         }
         else{
             longreads = decontam_reads  // channel: [ val(meta), path(decontaminated fastq) ]
