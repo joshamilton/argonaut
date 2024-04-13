@@ -14,7 +14,6 @@ workflow READ_QC {
   
         reads  // channel: [ val(meta), [ reads ] ]
         ch_db 
-        fastq
            
     main:
     
@@ -43,13 +42,14 @@ workflow READ_QC {
                     RECENTRIFUGE_C(CENTRIFUGE_CENTRIFUGE.out.results, params.rcf_db)
                  }
             } else {
-                fastq
-                    .set{fastq_filt}
-                reads
+                 reads
                     .set{filtered_fastq}
+                 filtered_fastq
+                    .map { file -> file }
+                    .set { fastq_filt }
             }
         }
-        
+
         KMER_FREQ(filtered_fastq)
 
         GCE(KMER_FREQ.out.kmerstat, KMER_FREQ.out.kmernum)
