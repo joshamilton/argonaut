@@ -22,13 +22,17 @@
 Illumina Short Read 
 1. Read QC, Adaptor Trimming, Contaminant Filtering([`FastQC v0.11.9`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/), [`FastP v0.23.4`](https://github.com/OpenGene/fastp), [`GenomeScope2 v2.0`](http://qb.cshl.edu/genomescope/),[`Jellyfish v2.2.6`](https://github.com/gmarcais/Jellyfish),[`Kraken2 v2.1.2`](https://ccb.jhu.edu/software/kraken2/), [`Recentrifuge v1.9.1`](https://github.com/khyox/recentrifuge),)
     
+PacBio HiFi Long Read (CCS format)
+1. Read QC, Adaptor Trimming, Contaminant Filtering([`Nanoplot v1.41.0`](https://github.com/wdecoster/NanoPlot),[`CutAdapt v3.4`](https://cutadapt.readthedocs.io/en/stable/),[`GenomeScope2 v2.0`](http://qb.cshl.edu/genomescope/),[`Jellyfish v2.2.6`](https://github.com/gmarcais/Jellyfish),[`Kraken2 v2.1.2`](https://ccb.jhu.edu/software/kraken2/), [`Recentrifuge v1.9.1`](https://github.com/khyox/recentrifuge))
+2. Length Filtering (optional)([`Bioawk v1.0`](https://github.com/lh3/bioawk), [`Nanoplot v1.41.0`](https://github.com/wdecoster/NanoPlot))
+
+  
 ONT Long Read
 1. Read QC and Contaminant Filtering([`Nanoplot v1.41.0`](https://github.com/wdecoster/NanoPlot),[`KmerFreq`](https://github.com/fanagislab/kmerfreq), [`GCE`](https://github.com/fanagislab/GCE), [`Centrifuge v1.0.4`](https://ccb.jhu.edu/software/centrifuge/), [`Recentrifuge v1.9.1`](https://github.com/khyox/recentrifuge))
 2. Length Filtering (optional)([`Bioawk v1.0`](https://github.com/lh3/bioawk), [`Nanoplot v1.41.0`](https://github.com/wdecoster/NanoPlot))
    
-PacBio Hifi Long Read (CCS format)
-1. Read QC, Adaptor Trimming, Contaminant Filtering([`Nanoplot v1.41.0`](https://github.com/wdecoster/NanoPlot),[`CutAdapt v3.4`](https://cutadapt.readthedocs.io/en/stable/),[`GenomeScope2 v2.0`](http://qb.cshl.edu/genomescope/),[`Jellyfish v2.2.6`](https://github.com/gmarcais/Jellyfish),[`Kraken2 v2.1.2`](https://ccb.jhu.edu/software/kraken2/), [`Recentrifuge v1.9.1`](https://github.com/khyox/recentrifuge))
-2. Length Filtering (optional)([`Bioawk v1.0`](https://github.com/lh3/bioawk), [`Nanoplot v1.41.0`](https://github.com/wdecoster/NanoPlot))
+<img align="right" width="500" alt="Argonaut Hybrid Workflow" src="https://github.com/emilytrybulec/argonaut/assets/114685119/59a533e0-a8a7-47d9-87f4-24893d7ff66a">  
+
 
 All reads are used for the following steps:  
   
@@ -49,16 +53,16 @@ All reads are used for the following steps:
 - [`Redundans v2.01`](https://github.com/Gabaldonlab/redundans)
   
 9. Scaffolding &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;     10. Scaffold QC**  
-- ([`RagTag v2.1.0`](https://github.com/malonge/RagTag))  
+- ([`RagTag v2.1.0`](https://github.com/malonge/RagTag))
+  
+
 
 11. Assembly Visualization
 - ([`Blobtools `](https://blobtoolkit.genomehubs.org/blobtools2/))  
 
-Below is a figure detailing the major workflow steps involved in hybrid assembly.
+To the right is a figure detailing the major workflow steps involved in hybrid assembly.
 
-<img align="center" width="700" alt="Argonaut Hybrid Workflow" src="https://github.com/emilytrybulec/argonaut/assets/114685119/54fd9e52-d657-4a29-99a6-953f736e1630">
-
-    
+  
 Purge Haplotigs is the first step of manual curation, as it produces a histogram that needs to be analyzed for -l, -m, -h flags. The pipeline will stop at the purge step if purge is activated in your configuration and wait for manual input of parameters according to the histogram of your assembly, which can be found in your out directory.
 
 ## Quick Start
