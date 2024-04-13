@@ -39,9 +39,13 @@ workflow READ_QC3 {
 	    CUTADAPT (input_pacbio)
 	    ch_versions = ch_versions.mix(CUTADAPT.out.versions)
 
+        CUTADAPT.out.reads
+                .map { file -> tuple([id:file.baseName, single_end:true], file)  }
+                .set { adaptor_trimmed }
+
         if (params.kraken_pb == true){
             //decontamination of trimmed short reads
-            KRAKEN2_KRAKEN2_PB(CUTADAPT.out.reads, ch_db, params.save_output_fastqs, params.save_reads_assignment)
+            KRAKEN2_KRAKEN2_PB(adaptor_trimmed, ch_db, params.save_output_fastqs, params.save_reads_assignment)
             filt_pbhifi = KRAKEN2_KRAKEN2_PB.out.unclassified_reads_fastq   
 
             filt_pbhifi
@@ -55,7 +59,8 @@ workflow READ_QC3 {
 
         } else {
             filt_pbhifi = CUTADAPT.out.reads
-            filtered_fastq = CUTADAPT.out.reads
+            adaptor_trimmed
+                .set{filtered_fastq}
         }
 
         
