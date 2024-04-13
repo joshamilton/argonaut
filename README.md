@@ -33,7 +33,7 @@ ONT Long Read
    
 
 All reads are used for the following steps:  
-    <img align="right" width="500" alt="Argonaut Hybrid Workflow" src="https://github.com/emilytrybulec/argonaut/assets/114685119/59a533e0-a8a7-47d9-87f4-24893d7ff66a">  
+    <img align="right" width="600" alt="Argonaut Hybrid Workflow" src="https://github.com/emilytrybulec/argonaut/assets/114685119/59a533e0-a8a7-47d9-87f4-24893d7ff66a">  
 
 3. Assembly 
 - [`Flye v2.9`](https://github.com/fenderglass/Flye) 
