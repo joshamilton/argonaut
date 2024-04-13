@@ -45,7 +45,8 @@ workflow READ_QC {
             } else {
                 fastq
                     .set{fastq_filt}
-                filtered_fastq = reads
+                reads
+                    .set{filtered_fastq}
             }
         }
         
