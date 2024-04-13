@@ -61,7 +61,8 @@ All reads are used for the following steps:
 - ([`Blobtools `](https://blobtoolkit.genomehubs.org/blobtools2/))  
 
 To the right is a figure detailing the major workflow steps involved in hybrid assembly.
-
+  
+If you indicate that you would like for long read polishers to be run, the pipeline will default to using PacBio HiFi reads, and using ONT if no PacBio HiFi is available. If short reads are also available, they will automatically be used to polish the assemblies after long read polishing (or assembly if long read polishing is off).   
   
 Purge Haplotigs is the first step of manual curation, as it produces a histogram that needs to be analyzed for -l, -m, -h flags. The pipeline will stop at the purge step if purge is activated in your configuration and wait for manual input of parameters according to the histogram of your assembly, which can be found in your out directory.
 
