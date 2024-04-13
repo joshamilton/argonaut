@@ -31,18 +31,17 @@ ONT Long Read
 1. Read QC and Contaminant Filtering([`Nanoplot v1.41.0`](https://github.com/wdecoster/NanoPlot),[`KmerFreq`](https://github.com/fanagislab/kmerfreq), [`GCE`](https://github.com/fanagislab/GCE), [`Centrifuge v1.0.4`](https://ccb.jhu.edu/software/centrifuge/), [`Recentrifuge v1.9.1`](https://github.com/khyox/recentrifuge))
 2. Length Filtering (optional)([`Bioawk v1.0`](https://github.com/lh3/bioawk), [`Nanoplot v1.41.0`](https://github.com/wdecoster/NanoPlot))
    
-<img align="right" width="500" alt="Argonaut Hybrid Workflow" src="https://github.com/emilytrybulec/argonaut/assets/114685119/59a533e0-a8a7-47d9-87f4-24893d7ff66a">  
-
 
 All reads are used for the following steps:  
-  
+    <img align="right" width="500" alt="Argonaut Hybrid Workflow" src="https://github.com/emilytrybulec/argonaut/assets/114685119/59a533e0-a8a7-47d9-87f4-24893d7ff66a">  
+
 3. Assembly 
 - [`Flye v2.9`](https://github.com/fenderglass/Flye) 
 - [`Canu v2.2`](https://github.com/marbl/canu)
 - [`Hifiasm v0.19.8`](https://github.com/chhylp123/hifiasm) 
 - [`MaSuRCA v4.1.0`](https://github.com/alekseyzimin/masurca) 
 - [`Redundans v2.01`](https://github.com/Gabaldonlab/redundans) 
-  
+
 4. Polish  
 - [`Medaka v1.8.0`](https://github.com/nanoporetech/medaka)
 - [`Racon v1.4.20`](https://github.com/isovic/racon)
