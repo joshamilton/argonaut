@@ -43,13 +43,13 @@ workflow READ_QC2 {
 
             filt_shortreads = KRAKEN2_KRAKEN2_SR.out.unclassified_reads_fastq   
     
-            filt_shortreads
-                .map { file -> file }
-                .set { filt_sr_no_meta }
         } else {
             filt_shortreads = FASTP.out.reads
-            filt_sr_no_meta = FASTP.out.reads
         }
+
+        filt_shortreads
+            .map { file -> file }
+            .set { filt_sr_no_meta }
 
         //qc decontaminated short reads
         FASTQC_3(filt_shortreads)
