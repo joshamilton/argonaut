@@ -14,6 +14,7 @@ workflow READ_QC {
   
         reads  // channel: [ val(meta), [ reads ] ]
         ch_db 
+        fastq
            
     main:
     
@@ -42,7 +43,8 @@ workflow READ_QC {
                     RECENTRIFUGE_C(CENTRIFUGE_CENTRIFUGE.out.results, params.rcf_db)
                  }
             } else {
-                fastq_filt = reads
+                fastq
+                    .set{fastq_filt}
                 filtered_fastq = reads
             }
         }
