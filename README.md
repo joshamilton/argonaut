@@ -36,28 +36,33 @@ ONT Long Read
 
 All reads are used for the following steps:  
   
-3. Assembly &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;             4. Assembly QC**
-- [`Flye v2.9`](https://github.com/fenderglass/Flye)  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;- [`BUSCO v5.4.3`](https://busco.ezlab.org/)
-- [`Canu v2.2`](https://github.com/marbl/canu) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp; - [`Quast v5.2.0`](https://quast.sourceforge.net/)
-- [`Hifiasm v0.19.8`](https://github.com/chhylp123/hifiasm) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;  - [`Minimap2 v2.24`](https://github.com/lh3/minimap2)
-- [`MaSuRCA v4.1.0`](https://github.com/alekseyzimin/masurca) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;  - [`PycoQC v4.3.9`](https://github.com/a-slide/pycoQC)
-- [`Redundans v2.01`](https://github.com/Gabaldonlab/redundans) &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;  - [`Merqury v1.3`](https://github.com/marbl/merqury)  
+3. Assembly 
+- [`Flye v2.9`](https://github.com/fenderglass/Flye) 
+- [`Canu v2.2`](https://github.com/marbl/canu)
+- [`Hifiasm v0.19.8`](https://github.com/chhylp123/hifiasm) 
+- [`MaSuRCA v4.1.0`](https://github.com/alekseyzimin/masurca) 
+- [`Redundans v2.01`](https://github.com/Gabaldonlab/redundans) 
   
-5. Polish  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;          6. Polish QC**  
+4. Polish  
 - [`Medaka v1.8.0`](https://github.com/nanoporetech/medaka)
 - [`Racon v1.4.20`](https://github.com/isovic/racon)
 - [`POLCA v4.1.0`](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007981)
   
-7. Purge  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;   8. Purge QC**  
+5. Purge 
 - [`PurgeHaplotigs v1.1.2`](https://bitbucket.org/mroachawri/purge_haplotigs/src/master/)
 - [`Redundans v2.01`](https://github.com/Gabaldonlab/redundans)
   
-9. Scaffolding &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;     10. Scaffold QC**  
+6. Scaffolding 
 - ([`RagTag v2.1.0`](https://github.com/malonge/RagTag))
   
+7. Quality Checking
+- [`BUSCO v5.4.3`](https://busco.ezlab.org/)
+- [`Quast v5.2.0`](https://quast.sourceforge.net/)
+- [`Merqury v1.3`](https://github.com/marbl/merqury)
+- [`PycoQC v4.3.9`](https://github.com/a-slide/pycoQC)
+- [`Minimap2 v2.24`](https://github.com/lh3/minimap2)
 
-
-11. Assembly Visualization
+8. Assembly Visualization
 - ([`Blobtools `](https://blobtoolkit.genomehubs.org/blobtools2/))  
 
 To the right is a figure detailing the major workflow steps involved in hybrid assembly.
