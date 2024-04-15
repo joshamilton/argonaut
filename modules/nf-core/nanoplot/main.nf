@@ -30,7 +30,7 @@ process NANOPLOT {
         $args \\
         -p $prefix \\
         -t $task.cpus \\
-        $input_file
+        --fastq ${ontfile}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
