@@ -28,7 +28,7 @@ process SEQKIT_SEQ {
         seq \\
         --threads $task.cpus \\
         ${sequence} \\
-        --min-len $min_len >> length_filt_${prefix}.fastq.gz \\
+        --min-len $min_len >> length_filt_${sequence} \\
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
