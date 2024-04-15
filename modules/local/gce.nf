@@ -18,7 +18,7 @@ process GCE {
     """
     grep -Po '\\d+' $kmernum > extractedNum.txt
     number=\$(grep -o '[0-9]\\+' extractedNum.txt)
-    /GCE-master/gce-1.0.2/gce -g \$number -f $kmerstat -c 75 -H 1 >gce2.table 2>gce2.log
+    /GCE-master/gce-1.0.2/gce -g \$number -f $kmerstat >gce2.table 2>gce2.log
     
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
