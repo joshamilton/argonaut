@@ -78,6 +78,7 @@ workflow READ_QC3 {
         base_count           = TOTAL_BASES_LR.out.total_bases
         genome_size_est = GENOMESCOPE2.out.summary
         filt_pbhifi
+        GUNZIP.out.gunzip
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
