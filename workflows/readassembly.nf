@@ -136,7 +136,7 @@ workflow GENOMEASSEMBLY {
 
             ch_versions = ch_versions.mix(READ_QC3.out.versions)
 
-            LENGTH_FILT3 (READ_QC3.out[0], no_meta_decontamPB)
+            LENGTH_FILT3 (READ_QC3.out[6], no_meta_decontamPB)
             ch_PacBiolongreads = LENGTH_FILT3.out[0]
             no_meta_ch_PB = LENGTH_FILT3.out[1]
 
