@@ -207,12 +207,14 @@ workflow GENOMEASSEMBLY {
         readable_size = EXTRACT_SR.out[0]
         full_size = EXTRACT_SR.out[1]
     } else if (params.longread == true ){
-        if (params.ONT_lr == true) {
-            readable_size = EXTRACT_LR.out[0]
-            full_size = EXTRACT_LR.out[1]  }    
-        else if (params.PacBioHifi_lr == true) {
+        if (params.PacBioHifi_lr == true) {
             readable_size = EXTRACT_PB.out[0]
             full_size = EXTRACT_PB.out[1]
+            }    
+        else if (params.ONT_lr == true) {
+            readable_size = EXTRACT_LR.out[0]
+            full_size = EXTRACT_LR.out[1]
+            
         }
     }
 
