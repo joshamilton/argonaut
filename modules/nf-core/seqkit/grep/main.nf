@@ -13,7 +13,7 @@ process SEQKIT_GREP {
     path pattern
 
     output:
-    tuple val(meta), path("*.{fa,fq}.gz")  , emit: filter
+    path("*.{fa,fq}.gz")  , emit: filter
     path "versions.yml"                    , emit: versions
 
     when:
