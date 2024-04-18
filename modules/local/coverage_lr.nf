@@ -3,8 +3,7 @@ process COVERAGE_LR {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(total_bases)
-    val genome_size
+    tuple val(meta), path(total_bases), val(genome_size)
 
     output:
     tuple val(meta), path("*estimatedCoverageLR.txt")        , emit: coverage_est
