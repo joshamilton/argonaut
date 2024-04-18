@@ -221,7 +221,10 @@ workflow GENOMEASSEMBLY {
     //calculating coverage for long and/or short reads
     if (params.longread == true && params.ONT_lr == true){
         TOTAL_BASES_LR (READ_QC.out[4])
-        COVERAGE_LR (full_size, TOTAL_BASES_LR.out.total_bases)
+        TOTAL_BASES_LR.out.total_bases
+            .combine(full_size)
+            .set{ch_ont_cov}
+        COVERAGE_LR (ch_ont_cov)
     }   
     if (params.longread == true && params.PacBioHifi_lr == true){
         COVERAGE_LR_PB (full_size, READ_QC3.out[3])
