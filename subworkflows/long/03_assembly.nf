@@ -26,7 +26,12 @@ workflow ASSEMBLY {
         NANOPLOT (longreads)
 
         TOTAL_BASES_LR(NANOPLOT.out.txt)
-        COVERAGE_LR(genome_size_est_long, TOTAL_BASES_LR.out.total_bases)
+
+        TOTAL_BASES_LR.out.total_bases
+            .combine(genome_size_est_long)
+            .set{ch_cov}
+
+        COVERAGE_LR(ch_cov)
 
         assemblies = Channel.empty() 
         
