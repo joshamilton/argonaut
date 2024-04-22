@@ -24,12 +24,12 @@ Illumina Short Read
     
 PacBio HiFi Long Read (CCS format)
 1. Read QC, Adaptor Trimming, Contaminant Filtering([`Nanoplot v1.41.0`](https://github.com/wdecoster/NanoPlot),[`CutAdapt v3.4`](https://cutadapt.readthedocs.io/en/stable/),[`GenomeScope2 v2.0`](http://qb.cshl.edu/genomescope/),[`Jellyfish v2.2.6`](https://github.com/gmarcais/Jellyfish),[`Kraken2 v2.1.2`](https://ccb.jhu.edu/software/kraken2/), [`Recentrifuge v1.9.1`](https://github.com/khyox/recentrifuge))
-2. Length Filtering (optional)([`Bioawk v1.0`](https://github.com/lh3/bioawk), [`Nanoplot v1.41.0`](https://github.com/wdecoster/NanoPlot))
+2. Length Filtering (optional)([`Seqkit v2.4.0`](https://bioinf.shenwei.me/seqkit/usage/#seq), [`Nanoplot v1.41.0`](https://github.com/wdecoster/NanoPlot))
 
   
 ONT Long Read
 1. Read QC and Contaminant Filtering([`Nanoplot v1.41.0`](https://github.com/wdecoster/NanoPlot),[`KmerFreq`](https://github.com/fanagislab/kmerfreq), [`GCE`](https://github.com/fanagislab/GCE), [`Centrifuge v1.0.4`](https://ccb.jhu.edu/software/centrifuge/), [`Recentrifuge v1.9.1`](https://github.com/khyox/recentrifuge))
-2. Length Filtering (optional)([`Bioawk v1.0`](https://github.com/lh3/bioawk), [`Nanoplot v1.41.0`](https://github.com/wdecoster/NanoPlot))
+2. Length Filtering (optional)([`Seqkit v2.4.0`](https://bioinf.shenwei.me/seqkit/usage/#seq), [`Nanoplot v1.41.0`](https://github.com/wdecoster/NanoPlot))
    
 
 All reads are used for the following steps:  
