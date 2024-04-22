@@ -52,7 +52,7 @@ All reads are used for the following steps:
 - [`Redundans v2.01`](https://github.com/Gabaldonlab/redundans)
   
 6. Scaffolding 
-- ([`RagTag v2.1.0`](https://github.com/malonge/RagTag))
+- [`RagTag v2.1.0`](https://github.com/malonge/RagTag)
   
 7. Quality Checking
 - [`BUSCO v5.4.3`](https://busco.ezlab.org/)
@@ -71,10 +71,12 @@ If you indicate that you would like for long read polishers to be run, the pipel
 Purge Haplotigs is the first step of manual curation, as it produces a histogram that needs to be analyzed for -l, -m, -h flags. The pipeline will stop at the purge step if purge is activated in your configuration and wait for manual input of parameters according to the histogram of your assembly, which can be found in your out directory.
 
 ## Quick Start
+**Installation**
+> Only Nextflow and Singularity need to be installed to run Argonaut. Users that would like to run [Centrifuge](https://ccb.jhu.edu/software/centrifuge/manual.shtml#database-download-and-index-building) and/or [Kraken2](https://ccb.jhu.edu/software/kraken2/index.shtml?t=downloads) will need to provide a database. There are similar restrictions for running [Recentrifuge](https://github.com/khyox/recentrifuge/wiki/Installation#3-getting-the-databases) and Blobtools with [Blast](https://www.nlm.nih.gov/ncbi/workshops/2023-08_BLAST_evol/databases.html) and [NCBI](https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/new_taxdump/) taxdump. Follow the links provided for database download directions. Xanadu users running Argonaut at the University of Connecticut may use the database paths provided in the example [params.yaml](https://github.com/emilytrybulec/argonaut/blob/main/params.yaml)
 
-Only Nextflow and Singularity need to be installed to run Argonaut. Users that would like to run [Centrifuge](https://ccb.jhu.edu/software/centrifuge/manual.shtml#database-download-and-index-building) and/or [Kraken2](https://ccb.jhu.edu/software/kraken2/index.shtml?t=downloads) will need to provide a database. There are similar restrictions for running [Recentrifuge](https://github.com/khyox/recentrifuge/wiki/Installation#3-getting-the-databases) and Blobtools with [Blast](https://www.nlm.nih.gov/ncbi/workshops/2023-08_BLAST_evol/databases.html) and [NCBI](https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/new_taxdump/) taxdump. Follow the links provided for database download directions. Xanadu users running Argonaut at the University of Connecticut may use the database paths provided in the example [params.yaml](https://github.com/emilytrybulec/argonaut/blob/main/params.yaml)
+**Samplesheets**  
 
-First, prepare a samplesheet with your input data as follows:
+To get started setting up your run, prepare a samplesheet with your input data as follows:
 
 `ont_samplesheet.csv`:
 
