@@ -6,7 +6,7 @@ process CAT {
     tuple val(meta), path(ont), path(hifi)
 
     output:
-    tuple val(meta), path("*.gz")        , emit: cat_longreads
+    path("*.gz")        , emit: cat_longreads
 
     script: 
 
