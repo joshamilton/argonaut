@@ -236,7 +236,9 @@ workflow GENOMEASSEMBLY {
 
     if (params.ONT_lr == true && params.PacBioHifi_lr == true) {
         CAT(ch_combo_longreads)
-        combined_lr = CAT.out.cat_longreads
+        CAT.out.cat_longreads
+                .map { file -> tuple(id: file.baseName, file)  }
+                .set { combined_lr }
     } else {
         combined_lr = Channel.empty()
     }
@@ -334,7 +336,14 @@ workflow GENOMEASSEMBLY {
     busco_tsv = QC_1.out[9]
     bam_1 = QC_1.out[1]
 
-    if (params.racon_polish == true && params.ONT_lr == true){
+    if (params.racon_polish == true && params.ONT_lr == true && params.PacBioHifi_lr == true){
+        ASSEMBLY.out[0]
+            .join(QC_1.out[8])
+            .set{ch_fake_racon}
+        ch_fake_racon
+            .combine(CAT.out.cat_longreads)
+            .set { ch_racon }
+    } else if(params.racon_polish == true && params.ONT_lr == true){
         assemblies = ASSEMBLY.out[0]
 
         sam = QC_1.out[8]
