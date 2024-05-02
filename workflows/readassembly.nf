@@ -343,6 +343,15 @@ workflow GENOMEASSEMBLY {
         ch_fake_racon
             .combine(CAT.out.cat_longreads)
             .set { ch_racon }
+
+    } else if(params.racon_polish == true && params.PacBioHifi_lr == true){
+            ASSEMBLY.out[0]
+                .join(QC_1.out[8])
+                .set{ch_fake_racon}
+
+            ch_fake_racon
+                .combine(no_meta_ch_PB)
+                .set { ch_racon }
     } else if(params.racon_polish == true && params.ONT_lr == true){
         assemblies = ASSEMBLY.out[0]
 
@@ -355,14 +364,6 @@ workflow GENOMEASSEMBLY {
         ch_fake_racon
             .combine(no_meta_ch_ONT)
             .set { ch_racon }
-    } else if(params.racon_polish == true && params.PacBioHifi_lr == true){
-            ASSEMBLY.out[0]
-                .join(QC_1.out[8])
-                .set{ch_fake_racon}
-
-            ch_fake_racon
-                .combine(no_meta_ch_PB)
-                .set { ch_racon }
     } else { ch_racon = Channel.empty() }
 
     //polish assemblies
