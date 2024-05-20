@@ -151,7 +151,6 @@ workflow GENOMEASSEMBLY {
             ch_ONTlongreads
                 .concat(ch_PacBiolongreads)
                 .set{ch_longreads}
-                .view()
 
             ch_ONTlongreads
                 .combine(no_meta_ch_PB)
