@@ -10,7 +10,7 @@ include { SAMTOOLS_INDEX } from '../../modules/nf-core/samtools/index/main'
 workflow QC_1 {
 
     take:
-        assemblies // channel: [ val(meta), path(flye assembly.fasta) ]
+        assemblies // channel: [ val(meta), path(assembly.fasta) ]
         fastq_filt // channel: [ val(meta), path(filtered long reads) ]
         summarytxt // channel from params.summarytxt
         shortreads
