@@ -32,9 +32,6 @@ workflow QC_1 {
 
         ch_align_bam.view() 
 
-        assemblies
-            .view()
-
         // run quast
         QUAST(
             assemblies // this has to be aggregated because of how QUAST makes the output directory for reporting stats
@@ -55,10 +52,6 @@ workflow QC_1 {
         ch_sam.view()
         fastq_filt.view()
 
-        combo
-            .combine(ch_sam)
-            .set{racon}
-            .view()
     
         if ( params.summary_txt_file == true ) {
         // create summary txt channel with meta id and run pycoQC
