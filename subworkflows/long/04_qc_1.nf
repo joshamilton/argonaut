@@ -32,12 +32,9 @@ workflow QC_1 {
 
         ch_align_bam.view() 
 
-        fastq_filt
-            .combine(assemblies)
-            .set{racon}
-            .view{ "Racon channel: $it" }
-
-        
+        assemblies
+            .concat(fastq_filt)
+            .view()
 
         // run quast
         QUAST(
