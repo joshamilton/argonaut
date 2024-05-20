@@ -52,7 +52,6 @@ workflow QC_1 {
 
         assemblies
             .join(ch_sam)
-            .combine(fastq_filt)
             .set{racon}
             .view{ "Racon channel: $it" }
     
