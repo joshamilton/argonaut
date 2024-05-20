@@ -28,7 +28,6 @@ workflow LENGTH_FILT {
             decontam_reads  // channel: [ val(meta), path(decontaminated fastq) ]
                 .set{longreads}
             no_meta_decontam
-                .view()
                 .set{no_meta_longreads}
         }
 
