@@ -15,6 +15,7 @@ workflow QC_1 {
         summarytxt // channel from params.summarytxt
         shortreads
         genome_size_est
+        flattened_lr
 
     main:
 
