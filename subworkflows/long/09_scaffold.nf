@@ -22,7 +22,8 @@ workflow SCAFFOLD {
         
     emit:
     
-        assembly_polished_purged_scaffolded               
+        assembly_polished_purged_scaffolded      
+        scaffolded_assemblies
         
     versions = ch_versions                     // channel: [ versions.yml ]
 }
