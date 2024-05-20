@@ -53,7 +53,7 @@ workflow QC_1 {
         assemblies
             .join(ch_sam)
             .combine(fastq_filt)
-            .set(racon)
+            .set{racon}
             .view{ "Racon channel: $it" }
     
         if ( params.summary_txt_file == true ) {
