@@ -50,10 +50,9 @@ workflow QC_1 {
         SAMTOOLS_INDEX (MINIMAP2_ALIGN.out.bam)
         ch_sam = SAMTOOLS_INDEX.out.sam
 
-        assemblies
-            .join(ch_sam)
-            .set{racon}
-            .view{ "Racon channel: $it" }
+        assemblies.view()
+        ch_sam.view()
+        fastq_filt.view()
     
         if ( params.summary_txt_file == true ) {
         // create summary txt channel with meta id and run pycoQC
