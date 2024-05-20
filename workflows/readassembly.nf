@@ -380,9 +380,9 @@ workflow GENOMEASSEMBLY {
      if ( params.longread == true) {
         if ( params.medaka_polish == true || params.racon_polish == true){
             if (params.PacBioHifi_lr == true){
-                POLISH (ASSEMBLY.out[0], ch_PacBiolongreads, params.model, QC_1.out[8], ch_racon)
+                POLISH (ASSEMBLY.out[0], ch_PacBiolongreads, params.model, QC_1.out[8], QC_1.out[10])
             } else if (params.ONT_lr == true){
-                POLISH (ASSEMBLY.out[0], ch_ONTlongreads, params.model, QC_1.out[8], ch_racon)
+                POLISH (ASSEMBLY.out[0], ch_ONTlongreads, params.model, QC_1.out[8], QC_1.out[10])
             }
         POLISH.out[0] 
             .set{medaka_racon_polish}
