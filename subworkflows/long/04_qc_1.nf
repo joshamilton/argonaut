@@ -34,6 +34,7 @@ workflow QC_1 {
 
         assemblies
             .concat(fastq_filt)
+            .set{combo}
             .view()
 
         // run quast
@@ -55,6 +56,11 @@ workflow QC_1 {
         assemblies.view()
         ch_sam.view()
         fastq_filt.view()
+
+        combo
+            .combine(ch_sam)
+            .set{racon}
+            .view()
     
         if ( params.summary_txt_file == true ) {
         // create summary txt channel with meta id and run pycoQC
