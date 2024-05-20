@@ -156,6 +156,13 @@ workflow GENOMEASSEMBLY {
             ch_ONTlongreads
                 .combine(no_meta_ch_PB)
                 .set{ch_combo_longreads}
+
+            no_meta_ch_ONT
+                .concat(no_meta_ch_PB)
+                .flatten()
+                .map{ file -> tuple(id: file.baseName, file) }
+                .set{ch_flat_lr}
+
         }else if (params.PacBioHifi_lr == false && params.ONT_lr == false){ 
             ch_longreads = Channel.empty()
             ch_combo_longreads = Channel.empty()
@@ -325,13 +332,13 @@ workflow GENOMEASSEMBLY {
         ch_summtxt = Channel.empty() }
 
     if ( params.shortread == true && params.longread == true ) {
-        QC_1 (all_assemblies, ch_longreads, ch_summtxt, READ_QC2.out[0], full_size)
+        QC_1 (all_assemblies, ch_longreads, ch_summtxt, READ_QC2.out[0], full_size, ch_flat_lr)
     ch_versions = ch_versions.mix(QC_1.out.versions)
     } else if ( params.longread == true && params.shortread == false ) {
-        QC_1 (all_assemblies, ch_longreads, ch_summtxt, [], full_size)
+        QC_1 (all_assemblies, ch_longreads, ch_summtxt, [], full_size, ch_flat_lr)
     ch_versions = ch_versions.mix(QC_1.out.versions)
     } else if ( params.shortread == true && params.longread == false ) {
-        QC_1 (all_assemblies, READ_QC2.out[0], ch_summtxt, READ_QC2.out[0], full_size)
+        QC_1 (all_assemblies, READ_QC2.out[0], ch_summtxt, READ_QC2.out[0], full_size, ch_flat_lr)
     ch_versions = ch_versions.mix(QC_1.out.versions)}
     
     busco_tsv = QC_1.out[9]
