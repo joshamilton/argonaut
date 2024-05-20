@@ -344,7 +344,10 @@ workflow GENOMEASSEMBLY {
     busco_tsv = QC_1.out[9]
     bam_1 = QC_1.out[1]
 
+    QC_1.out[10].view()
+
     if (params.racon_polish == true && params.ONT_lr == true && params.PacBioHifi_lr == true){
+
         ASSEMBLY.out[0]
             .join(QC_1.out[8])
             .set{ch_fake_racon}
