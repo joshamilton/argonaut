@@ -32,6 +32,8 @@ workflow QC_1 {
 
         ch_align_bam.view() 
 
+        
+
         // run quast
         QUAST(
             assemblies // this has to be aggregated because of how QUAST makes the output directory for reporting stats
@@ -47,6 +49,12 @@ workflow QC_1 {
 
         SAMTOOLS_INDEX (MINIMAP2_ALIGN.out.bam)
         ch_sam = SAMTOOLS_INDEX.out.sam
+
+        assemblies
+            .join(ch_sam)
+            .combine(fastq_filt)
+            .set(racon)
+            .view{ "Racon channel: $it" }
     
         if ( params.summary_txt_file == true ) {
         // create summary txt channel with meta id and run pycoQC
