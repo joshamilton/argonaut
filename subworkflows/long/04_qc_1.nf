@@ -33,8 +33,6 @@ workflow QC_1 {
         ch_align_bam.view() 
 
         assemblies
-            .concat(fastq_filt)
-            .set{combo}
             .view()
 
         // run quast
