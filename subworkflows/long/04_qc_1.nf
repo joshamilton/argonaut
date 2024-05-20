@@ -32,6 +32,15 @@ workflow QC_1 {
 
         ch_align_bam.view() 
 
+        fastq_filt
+            .map { file -> file }
+            .flatten()
+            .set { fastq_no_meta }
+
+        assemblies
+            .combine(fastq_no_meta)
+            .set{ch_combo}
+
         // run quast
         QUAST(
             assemblies // this has to be aggregated because of how QUAST makes the output directory for reporting stats
@@ -52,6 +61,9 @@ workflow QC_1 {
         ch_sam.view()
         fastq_filt.view()
 
+        ch_combo
+            .join(ch_sam)
+            .set{racon}
     
         if ( params.summary_txt_file == true ) {
         // create summary txt channel with meta id and run pycoQC
@@ -87,6 +99,7 @@ workflow QC_1 {
         ch_meryl = MERYL_COUNT.out.meryl_db
         ch_sam
         ch_busco_full_table
+        racon
 
         
     versions = ch_versions                     // channel: [ versions.yml ]
