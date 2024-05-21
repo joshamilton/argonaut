@@ -55,7 +55,7 @@ All reads are used for the following steps:
 - [`RagTag v2.1.0`](https://github.com/malonge/RagTag)
   
 7. Quality Checking
-- [`BUSCO v5.4.3`](https://busco.ezlab.org/)
+- [`BUSCO v5.7.1`](https://busco.ezlab.org/)
 - [`Quast v5.2.0`](https://quast.sourceforge.net/)
 - [`Merqury v1.3`](https://github.com/marbl/merqury)
 - [`PycoQC v4.3.9`](https://github.com/a-slide/pycoQC)
