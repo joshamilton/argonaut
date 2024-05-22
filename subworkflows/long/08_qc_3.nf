@@ -6,6 +6,8 @@ include { MINIMAP2_ALIGN } from '../../modules/nf-core/minimap2/align/main'
 include { MERYL_COUNT } from '../../modules/nf-core/meryl/count/main' 
 include { MERQURY } from '../../modules/nf-core/merqury/main' 
 include { SAMTOOLS_INDEX } from '../../modules/nf-core/samtools/index/main' 
+include { BWAMEM2_INDEX } from '../../modules/nf-core/bwamem2/index/main' 
+include { BWAMEM2_MEM } from '../../modules/nf-core/bwamem2/mem/main' 
 
 workflow QC_3 {
 
@@ -24,6 +26,12 @@ workflow QC_3 {
 
     ch_versions = Channel.empty() 
 
+    if ( params.shortread == true ) {
+        BWAMEM2_INDEX(assemblies)
+        BWAMEM2_MEM(shortreads, BWAMEM2_INDEX.out.index)
+    }
+
+    if ( params.longread == true ){
         // build index
         MINIMAP2_INDEX(assemblies)
         ch_versions = ch_versions.mix(MINIMAP2_INDEX.out.versions)
@@ -31,7 +39,7 @@ workflow QC_3 {
 
         // align reads
         MINIMAP2_ALIGN(fastq_filt, assemblies, params.bam_format, params.cigar_paf_format, params.cigar_bam)
-        ch_bam = MINIMAP2_ALIGN.out.bam
+        ch_bam = MINIMAP2_ALIGN.out.bam }
         
         // run quast
         QUAST(
@@ -52,7 +60,12 @@ workflow QC_3 {
 
         ch_versions = ch_versions.mix(BUSCO.out.versions)
 
-        SAMTOOLS_INDEX (ch_bam)
+    if ( params.longread == true ){
+        SAMTOOLS_INDEX (MINIMAP2_ALIGN.out.bam)
+        ch_sam = SAMTOOLS_INDEX.out.sam
+    } else if ( params.shortread == true ){ 
+        SAMTOOLS_INDEX (BWAMEM2_MEM.out.bam)
+        ch_sam = SAMTOOLS_INDEX.out.sam }
 
         if ( params.summary_txt_file == true ) {
         ch_summarytxt = summarytxt.map { file -> tuple(file.baseName, file) }
