@@ -74,7 +74,11 @@ workflow QC_1 {
             .join(ch_sam)
             .set{racon}
 
-    } else { racon = Channel.empty() }
+    } else if ( params.shortread == true ){ 
+        SAMTOOLS_INDEX (BWAMEM2_MEM.out.bam)
+        ch_sam = SAMTOOLS_INDEX.out.sam
+        racon = Channel.empty() }
+
     
     if ( params.summary_txt_file == true ) {
         // create summary txt channel with meta id and run pycoQC
