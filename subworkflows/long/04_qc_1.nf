@@ -6,6 +6,8 @@ include { MINIMAP2_ALIGN } from '../../modules/nf-core/minimap2/align/main'
 include { MERYL_COUNT } from '../../modules/nf-core/meryl/count/main' 
 include { MERQURY } from '../../modules/nf-core/merqury/main' 
 include { SAMTOOLS_INDEX } from '../../modules/nf-core/samtools/index/main' 
+include { BWAMEM2_INDEX } from '../../modules/nf-core/bwamem2/index/main' 
+include { BWAMEM2_MEM } from '../../modules/nf-core/bwamem2/mem/main' 
 
 workflow QC_1 {
 
@@ -21,6 +23,12 @@ workflow QC_1 {
 
     ch_versions = Channel.empty() 
 
+    if ( params.shortread == true ) {
+        BWAMEM2_INDEX(assemblies)
+        BWAMEM2_MEM(shortreads, BWAMEM2_INDEX.out.index)
+    }
+
+    if ( params.longread == true ){
         // build index
         MINIMAP2_INDEX(assemblies)
         ch_versions = ch_versions.mix(MINIMAP2_INDEX.out.versions)
@@ -41,20 +49,20 @@ workflow QC_1 {
         assemblies
             .combine(fastq_no_meta)
             .set{ch_combo}
+    } else { ch_combo = Channel.empty() }
 
-        // run quast
-        QUAST(
-            assemblies // this has to be aggregated because of how QUAST makes the output directory for reporting stats
-        )
-        ch_quast = QUAST.out.results
-        ch_versions = ch_versions.mix(QUAST.out.versions)
+    // run quast
+    QUAST( assemblies // this has to be aggregated because of how QUAST makes the output directory for reporting stats)
+    ch_quast = QUAST.out.results
+    ch_versions = ch_versions.mix(QUAST.out.versions)
 
-        // run BUSCO
-        BUSCO(assemblies, params.busco_lineage, [], [])
-        ch_busco = BUSCO.out.short_summaries_txt
-        ch_busco_full_table = BUSCO.out.full_table
-        ch_versions = ch_versions.mix(BUSCO.out.versions)
+    // run BUSCO
+    BUSCO(assemblies, params.busco_lineage, [], [])
+    ch_busco = BUSCO.out.short_summaries_txt
+    ch_busco_full_table = BUSCO.out.full_table
+    ch_versions = ch_versions.mix(BUSCO.out.versions)
 
+    if ( params.longread == true ){
         SAMTOOLS_INDEX (MINIMAP2_ALIGN.out.bam)
         ch_sam = SAMTOOLS_INDEX.out.sam
 
@@ -65,29 +73,25 @@ workflow QC_1 {
         ch_combo
             .join(ch_sam)
             .set{racon}
+
+    } else { racon = Channel.empty() }
     
-        if ( params.summary_txt_file == true ) {
+    if ( params.summary_txt_file == true ) {
         // create summary txt channel with meta id and run pycoQC
         ch_summarytxt = summarytxt.map { file -> tuple(file.baseName, file) }
 
-        PYCOQC (
-            ch_summarytxt, MINIMAP2_ALIGN.out.bam, SAMTOOLS_INDEX.out.bai
-        )
+        PYCOQC (ch_summarytxt, MINIMAP2_ALIGN.out.bam, SAMTOOLS_INDEX.out.bai)
         ch_versions = ch_versions.mix(PYCOQC.out.versions)
-        } else {
-            ch_summarytxt = Channel.empty()
-        }
 
-        if ( params.shortread == true ) {
-            MERYL_COUNT ( shortreads, params.kmer_num ) }
-        else {
-            MERYL_COUNT ( fastq_filt, params.kmer_num )
-        }
+    } else { ch_summarytxt = Channel.empty() }
 
-        MERQURY (
-            assemblies, MERYL_COUNT.out.meryl_db, genome_size_est, params.tolerable_collision
-        )
-        ch_merqury = MERQURY.out.assembly_qv
+    if ( params.shortread == true ) {
+        MERYL_COUNT ( shortreads, params.kmer_num ) 
+    } else {
+        MERYL_COUNT ( fastq_filt, params.kmer_num ) }
+
+    MERQURY ( assemblies, MERYL_COUNT.out.meryl_db, genome_size_est, params.tolerable_collision  )
+    ch_merqury = MERQURY.out.assembly_qv
 
     emit:
         ch_index
