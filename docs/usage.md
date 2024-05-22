@@ -81,7 +81,7 @@ For detailed information about parameters, please refer to the [config](../nextf
 * The input path should point to your ONT samplesheet (or PacBio HiFi samplesheet if no ONT available, or Illumina samplesheet if no long reads). The short input path should point to your Illumina samplesheet. The pb_input path should point to your PacBio HiFi samplesheet.
 * When providing a centrifuge database, please ensure that the path points to a DIRECTORY, not a file.
 * Please ensure that your BUSCO lineage aligns with your organism type. (e.g. for japanese walnut tree: "embryophyta_odb10")
-* 
+* For more information about specific parameters, please refer to [nextflow.config](https://github.com/emilytrybulec/argonaut/blob/main/nextflow.config). It contains explanations for each possible parameter that can be set in the params.yaml file (look for the groups of "=null" labels)
 
 [Here](https://github.com/emilytrybulec/argonaut/blob/main/params.yaml) is a full params.yaml example for a test run.
 
