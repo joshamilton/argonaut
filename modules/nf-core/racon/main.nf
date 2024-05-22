@@ -8,7 +8,9 @@ process RACON {
         'biocontainers/racon:1.4.20--h9a82719_1' }"
 
     input:
-    tuple val(meta), path(assembly), path(paf), path(reads)
+    tuple val(meta), path(assembly), path(paf)
+    path ont_reads 
+    path pb_reads
 
     output:
     path('*_assembly_racon.fasta') , emit: improved_assembly
@@ -20,9 +22,14 @@ process RACON {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def auto_ont_mode = assembly_name.contains('ont') ? "${ont_reads}" : ''
+    def auto_pb_mode = assembly_name.contains('pb') ? "${pb_reads}" : ''
+    def auto_hybrid_mode = assembly_name.contains('hybrid') ? "${pb_reads}" : ''
     """
     racon -t "$task.cpus" \\
-        "${reads}" \\
+        $auto_ont_mode \\
+        $auto_pb_mode \\
+        $auto_hybrid_mode \\
         "${paf}" \\
         $args \\
         "${assembly}" > \\
