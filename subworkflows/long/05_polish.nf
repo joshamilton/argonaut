@@ -9,11 +9,21 @@ workflow POLISH {
         model
         paf
         ch_racon
+        no_meta_ont
+        no_meta_pb
     main:
 
     ch_versions = Channel.empty() 
 
         if (params.racon_polish == true) {
+            if (params.ONT_lr  == true && params.PacBioHifi_lr == true){
+                RACON (ch_racon, no_meta_ont, no_meta_pb)
+            } else if (params.ONT_lr  == true && params.PacBioHifi_lr == false){
+                RACON (ch_racon, no_meta_ont, [])
+            } else if (params.ONT_lr  == false && params.PacBioHifi_lr == true){
+                RACON (ch_racon, [], no_meta_pb)
+            }
+        
             println "polishing assemblies with racon!"
             RACON (ch_racon)
             
