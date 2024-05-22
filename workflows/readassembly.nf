@@ -345,45 +345,37 @@ workflow GENOMEASSEMBLY {
 
     QC_1.out[10].view()
 
-    if (params.racon_polish == true && params.ONT_lr == true && params.PacBioHifi_lr == true){
+    ASSEMBLY.out[0]
+        .join(QC_1.out[8])
+        .set{assembly_sam_combo}
 
-        ASSEMBLY.out[0]
-            .join(QC_1.out[8])
-            .set{ch_fake_racon}
-        ch_fake_racon
+    if (params.racon_polish == true && params.ONT_lr == true && params.PacBioHifi_lr == true){
+        assembly_sam_combo
             .combine(CAT.out.cat_longreads)
             .set { ch_racon }
 
     } else if(params.racon_polish == true && params.PacBioHifi_lr == true){
-            ASSEMBLY.out[0]
-                .join(QC_1.out[8])
-                .set{ch_fake_racon}
+        assembly_sam_combo
+            .combine(no_meta_ch_PB)
+            .set { ch_racon }
 
-            ch_fake_racon
-                .combine(no_meta_ch_PB)
-                .set { ch_racon }
     } else if(params.racon_polish == true && params.ONT_lr == true){
-        assemblies = ASSEMBLY.out[0]
-
-        sam = QC_1.out[8]
-
-        assemblies
-            .join(sam)
-            .set{ch_fake_racon}
-
-        ch_fake_racon
+        assembly_sam_combo
             .combine(no_meta_ch_ONT)
             .set { ch_racon }
+
     } else { ch_racon = Channel.empty() }
 
     //polish assemblies
      if ( params.longread == true) {
         if ( params.medaka_polish == true || params.racon_polish == true){
-            if (params.PacBioHifi_lr == true){
-                POLISH (ASSEMBLY.out[0], ch_PacBiolongreads, params.model, QC_1.out[8], QC_1.out[10])
-            } else if (params.ONT_lr == true){
-                POLISH (ASSEMBLY.out[0], ch_ONTlongreads, params.model, QC_1.out[8], QC_1.out[10])
-            }
+            if (params.PacBioHifi_lr == true && params.ONT_lr == true){
+                POLISH (ASSEMBLY.out[0], ch_PacBiolongreads, params.model, QC_1.out[8], assembly_sam_combo, no_meta_ch_ONT, no_meta_ch_PB)
+            } else if (params.PacBioHifi_lr == false && params.ONT_lr == true){
+                POLISH (ASSEMBLY.out[0], ch_ONTlongreads, params.model, QC_1.out[8], assembly_sam_combo, no_meta_ch_ONT, [])
+            } else if (params.PacBioHifi_lr == true && params.ONT_lr == false){
+                POLISH (ASSEMBLY.out[0], ch_ONTlongreads, params.model, QC_1.out[8], assembly_sam_combo, [], no_meta_ch_PB)}
+
         POLISH.out[0] 
             .set{medaka_racon_polish}
         
