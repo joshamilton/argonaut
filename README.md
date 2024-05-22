@@ -62,7 +62,7 @@ All reads are used for the following steps:
 - [`Minimap2 v2.24`](https://github.com/lh3/minimap2)
 
 8. Assembly Visualization
-- ([`Blobtools `](https://blobtoolkit.genomehubs.org/blobtools2/))  
+- ([`Blobtools v4.3.9`](https://blobtoolkit.genomehubs.org/blobtools2/))  
 
 To the right is a figure detailing the major workflow steps involved in hybrid assembly.
   
