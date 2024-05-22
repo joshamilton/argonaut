@@ -38,8 +38,8 @@ sample,fastq_1,fastq_2,single_end
 maca_jans_pb,SRR11191909.fastq.gz,,TRUE
 ```
 
-!!! PLEASE ADD "ont", "pb", AND/OR "ill" TO YOUR SAMPLES NAMES !!! Failure to do so will result in assemblers not recognizing your read type.  
-
+!!! PLEASE ADD "ont", "pb", AND/OR "ill" TO YOUR SAMPLES NAMES !!!   
+Flye and canu will automatically detect your read type based on your samplesheet sample names. Please ensure that your fastq files have read type indicators (ont, pb, or ill).
 
 |   `sample`    | Custom sample name.  
 |   `fastq_1`   | Full path to FastQ file for ONT long reads or Illumina short reads 1. File must have the extension ".fastq" or ".fastq.qz".  
@@ -66,8 +66,6 @@ fastq                  :  "./Mo_191_p1s.fastq"
 centrifuge_db          :  "./f+b+a+v/"
 busco_lineage          :  "metazoa_odb10"
 summary_txt            :  "./sequencing_summary.txt"
-flye_mode              :  "--nano-raw"
-canu_mode              :  "-nanopore"
 kraken_db              :  "./kraken_db"
 rcf_db                 :  "./recentrifuge/taxdump/"
 model                  :  "r1041_e82_400bps_sup_g615"
@@ -78,15 +76,28 @@ For best results, please provide full paths. Paths have been truncated for reada
 
 For detailed information about parameters, please refer to the [config](../nextflow.config) file.
 
-General tips for your params file:
+### General tips for your params file:
+
 * The input path should point to your ONT samplesheet (or PacBio HiFi samplesheet if no ONT available, or Illumina samplesheet if no long reads). The short input path should point to your Illumina samplesheet. The pb_input path should point to your PacBio HiFi samplesheet.
 * When providing a centrifuge database, please ensure that the path points to a DIRECTORY, not a file.
 * Please ensure that your BUSCO lineage aligns with your organism type. (e.g. for japanese walnut tree: "embryophyta_odb10")
-* If you are using PacBio HiFi data, please change the flye and canu modes to indicate so. The above example indicates ONT long read input.
+* 
 
 [Here](https://github.com/emilytrybulec/argonaut/blob/main/params.yaml) is a full params.yaml example for a test run.
 
 Not all parameters are required, and the default settings can be modified for individualized use. If you would like to change any settings dictating which assemblers run, whether short reads are available, or options like length filtering and scaffolding, please create a config file using the directions [below](#Configurations).
+
+### Inputting your own assembly  
+For users who would like to input an existing genome assembly into the pipeline for downstream processing, please add a line to your params file specifying the path to your *.fasta or *.fa file like so:
+```yaml
+existing_assembly        :  "./assembly.fasta"
+```
+Additionally switch the ex_assembly option to "true" in your config file like so:
+```config
+params{
+  ex_assembly           = true
+}
+```
 
 ## Configurations  
 
