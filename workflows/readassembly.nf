@@ -374,7 +374,7 @@ workflow GENOMEASSEMBLY {
             } else if (params.PacBioHifi_lr == false && params.ONT_lr == true){
                 POLISH (ASSEMBLY.out[0], ch_ONTlongreads, params.model, QC_1.out[8], assembly_sam_combo, no_meta_ch_ONT, [])
             } else if (params.PacBioHifi_lr == true && params.ONT_lr == false){
-                POLISH (ASSEMBLY.out[0], ch_ONTlongreads, params.model, QC_1.out[8], assembly_sam_combo, [], no_meta_ch_PB)}
+                POLISH (ASSEMBLY.out[0], ch_PacBiolongreads, params.model, QC_1.out[8], assembly_sam_combo, [], no_meta_ch_PB)}
 
         POLISH.out[0] 
             .set{medaka_racon_polish}
