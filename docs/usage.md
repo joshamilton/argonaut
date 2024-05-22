@@ -92,12 +92,13 @@ For users who would like to input an existing genome assembly into the pipeline 
 ```yaml
 existing_assembly        :  "./assembly.fasta"
 ```
-Additionally switch the ex_assembly option to "true" in your config file like so:
+Additionally modify your my_config file to indicate that ex_assembly is "true" like so:
 ```config
 params{
   ex_assembly           = true
 }
 ```
+Learn more about your my_config file directly below.
 
 ## Configurations  
 
