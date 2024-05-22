@@ -16,6 +16,8 @@ workflow POLISH {
     ch_versions = Channel.empty() 
 
         if (params.racon_polish == true) {
+            println "polishing assemblies with racon!"
+
             if (params.ONT_lr  == true && params.PacBioHifi_lr == true){
                 RACON (ch_racon, no_meta_ont, no_meta_pb)
             } else if (params.ONT_lr  == true && params.PacBioHifi_lr == false){
@@ -23,10 +25,7 @@ workflow POLISH {
             } else if (params.ONT_lr  == false && params.PacBioHifi_lr == true){
                 RACON (ch_racon, [], no_meta_pb)
             }
-        
-            println "polishing assemblies with racon!"
-            RACON (ch_racon)
-            
+                
             no_meta_polished_assembly = RACON.out.improved_assembly
 
             no_meta_polished_assembly
