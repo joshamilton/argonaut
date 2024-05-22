@@ -27,7 +27,7 @@ workflow QC_2 {
     ch_versions = Channel.empty() 
 
     if ( params.shortread == true ) {
-        BWAMEM2_INDEX(assemblies)
+        BWAMEM2_INDEX(polished_assemblies)
         BWAMEM2_MEM(shortreads, BWAMEM2_INDEX.out.index)
     }
 
@@ -71,16 +71,16 @@ workflow QC_2 {
         SAMTOOLS_INDEX (BWAMEM2_MEM.out.bam)
         ch_sam = SAMTOOLS_INDEX.out.sam }
 
-        if ( params.summary_txt_file == true ) {
+    if ( params.summary_txt_file == true ) {
         ch_summarytxt = summarytxt.map { file -> tuple(file.baseName, file) }
 
         PYCOQC (
             ch_summarytxt, MINIMAP2_ALIGN.out.bam, SAMTOOLS_INDEX.out.bai
         )
         ch_versions = ch_versions.mix(PYCOQC.out.versions)
-        } else {
+    } else {
             ch_summarytxt = Channel.empty()
-        }
+    }
 
         MERQURY (
             polished_assemblies, ch_meryl, genome_size_est, params.tolerable_collision
