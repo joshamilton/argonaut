@@ -22,6 +22,7 @@ process RACON {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def assembly_name = "${assembly}"
     def auto_ont_mode = assembly_name.contains('ont') ? "${ont_reads}" : ''
     def auto_pb_mode = assembly_name.contains('pb') ? "${pb_reads}" : ''
     def auto_hybrid_mode = assembly_name.contains('hybrid') ? "${pb_reads}" : ''
