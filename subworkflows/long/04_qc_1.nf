@@ -21,6 +21,7 @@ workflow QC_1 {
 
     ch_versions = Channel.empty() 
 
+        if (params.longread == true){
         // build index
         MINIMAP2_INDEX(assemblies)
         ch_versions = ch_versions.mix(MINIMAP2_INDEX.out.versions)
@@ -41,6 +42,7 @@ workflow QC_1 {
         assemblies
             .combine(fastq_no_meta)
             .set{ch_combo}
+        }
 
         // run quast
         QUAST(
