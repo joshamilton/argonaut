@@ -60,10 +60,6 @@ workflow QC_1 {
         SAMTOOLS_INDEX (MINIMAP2_ALIGN.out.bam)
         ch_sam = SAMTOOLS_INDEX.out.sam
 
-        assemblies.view()
-        ch_sam.view()
-        fastq_filt.view()
-
         ch_combo
             .join(ch_sam)
             .set{racon}
