@@ -31,7 +31,7 @@ workflow QC_1 {
         //    BWAMEM2_INDEX(assemblies)
         //    BWAMEM2_MEM(shortreads, BWAMEM2_INDEX.out.index) }
 
-        if ( params.longread == true ){
+        //if ( params.longread == true ){
             // build index
             MINIMAP2_INDEX(assemblies)
             ch_versions = ch_versions.mix(MINIMAP2_INDEX.out.versions)
@@ -50,7 +50,7 @@ workflow QC_1 {
             assemblies
                 .combine(fastq_no_meta)
                 .set{ch_combo}
-        } else { ch_combo = Channel.empty() }
+      //  } else { ch_combo = Channel.empty() }
 
         // run quast
         QUAST( assemblies // this has to be aggregated because of how QUAST makes the output directory for reporting stats)
@@ -63,13 +63,14 @@ workflow QC_1 {
         ch_busco_full_table = BUSCO.out.full_table
         ch_versions = ch_versions.mix(BUSCO.out.versions)
 
-        if ( params.longread == true ){
+       // if ( params.longread == true ){
             SAMTOOLS_INDEX (MINIMAP2_ALIGN.out.bam)
             ch_sam = SAMTOOLS_INDEX.out.sam
 
             ch_combo
                 .join(ch_sam)
-                .set{racon} }
+                .set{racon} 
+    //}
 
       //  else if ( params.shortread == true ){ 
       //      SAMTOOLS_INDEX (BWAMEM2_MEM.out.bam)
