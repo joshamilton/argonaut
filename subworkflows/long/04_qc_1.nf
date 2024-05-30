@@ -6,6 +6,8 @@ include { MINIMAP2_ALIGN } from '../../modules/nf-core/minimap2/align/main'
 include { MERYL_COUNT } from '../../modules/nf-core/meryl/count/main' 
 include { MERQURY } from '../../modules/nf-core/merqury/main' 
 include { SAMTOOLS_INDEX } from '../../modules/nf-core/samtools/index/main' 
+include { BWAMEM2_INDEX } from '../../modules/nf-core/bwamem2/index/main' 
+include { BWAMEM2_MEM } from '../../modules/nf-core/bwamem2/mem/main' 
 
 workflow QC_1 {
 
@@ -20,6 +22,12 @@ workflow QC_1 {
     main:
 
     ch_versions = Channel.empty() 
+
+        if (params.shortread == true) {
+        BWAMEM2_INDEX(assemblies)
+        BWAMEM2_MEM(shortreads, BWAMEM2_INDEX.out.index)
+        ch_align_bam = BWAMEM2_MEM.out.bam
+        }
 
         if (params.longread == true){
         // build index
@@ -42,7 +50,7 @@ workflow QC_1 {
         assemblies
             .combine(fastq_no_meta)
             .set{ch_combo}
-        }
+        } else {ch_combo = Channel.empty() }
 
         // run quast
         QUAST(
@@ -57,12 +65,14 @@ workflow QC_1 {
         ch_busco_full_table = BUSCO.out.full_table
         ch_versions = ch_versions.mix(BUSCO.out.versions)
 
-        SAMTOOLS_INDEX (MINIMAP2_ALIGN.out.bam)
+        SAMTOOLS_INDEX (ch_align_bam)
         ch_sam = SAMTOOLS_INDEX.out.sam
 
+        if (params.longread == true){
         ch_combo
             .join(ch_sam)
-            .set{racon}
+            .set{racon} } 
+        else {racon = Channel.empty() }
     
         if ( params.summary_txt_file == true ) {
         // create summary txt channel with meta id and run pycoQC
