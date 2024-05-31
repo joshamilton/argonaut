@@ -27,7 +27,7 @@ workflow QC_4 {
     ch_versions = Channel.empty() 
 
     if ( params.shortread == true ) {
-        BWAMEM2_INDEX(polished_assemblies)
+        BWAMEM2_INDEX(assemblies)
         BWAMEM2_MEM(shortreads, BWAMEM2_INDEX.out.index, params.samtools_sort)
     }
 
