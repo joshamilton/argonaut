@@ -591,13 +591,14 @@ workflow GENOMEASSEMBLY {
         }
     }
 
-    ch_quast.view()
-    ch_busco.view()
-    ch_merqury.view()
-        //.set{ch_output}
+    ch_quast
+        .concat(ch_busco, ch_merqury)
+        .groupTuple()   
+        .view{ "Output channels: $it" }
+        .set{ch_output}
 
-   // OUTPUT (ch_output)
-   // assembly_stats  =   OUTPUT.out.assemblyStats
+    OUTPUT (ch_output)
+    assembly_stats  =   OUTPUT.out.assemblyStats
 
     //
     // MODULE: MultiQC
