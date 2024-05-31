@@ -378,6 +378,10 @@ workflow GENOMEASSEMBLY {
 
         POLISH.out[0] 
             .set{medaka_racon_polish}
+            
+        POLISH.out[0] 
+            .map { file -> tuple(id: file.baseName, file)  }
+            .set { lr_polish_meta }  
         
     ch_versions = ch_versions.mix(POLISH.out.versions) } else {medaka_racon_polish = Channel.empty()}
     } else {
@@ -386,7 +390,7 @@ workflow GENOMEASSEMBLY {
     //align assemblies to short reads and polish with POLCA if short reads are available
     if ( params.longread == true && params.shortread == true) {
         if (params.medaka_polish == true || params.racon_polish == true){
-            POLISH2 (POLISH.out[0], READ_QC2.out[1])
+            POLISH2 (lr_polish_meta, READ_QC2.out[1])
         } else {
             POLISH2 (ASSEMBLY.out[0], READ_QC2.out[1])
         }
