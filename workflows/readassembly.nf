@@ -592,7 +592,9 @@ workflow GENOMEASSEMBLY {
     }
 
     ch_quast
-        .join(ch_busco, ch_merqury)
+        .concat(ch_busco, ch_merqury)
+        .flatten()
+        .join()
         .set{ch_output}
 
     OUTPUT (ch_output)
