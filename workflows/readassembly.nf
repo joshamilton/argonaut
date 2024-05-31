@@ -343,8 +343,6 @@ workflow GENOMEASSEMBLY {
     busco_tsv = QC_1.out[9]
     bam_1 = QC_1.out[1]
 
-    QC_1.out[10].view()
-
     ASSEMBLY.out[0]
         .join(QC_1.out[8])
         .set{assembly_sam_combo}
