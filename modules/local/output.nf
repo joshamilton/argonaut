@@ -2,9 +2,7 @@ process OUTPUT {
     label 'process_low'
 
     input:
-    tuple val(meta), path(ch_quast_tsv)
-    tuple val(meta), path(ch_busco)
-    tuple val(meta), path(ch_merqury)
+    tuple val(meta), path(ch_quast_tsv), path(ch_busco), path(ch_merqury)
 
     output:
     tuple val(meta), path("*.assemblyStats.txt")       , emit: assemblyStats
