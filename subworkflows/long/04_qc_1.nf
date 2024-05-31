@@ -25,7 +25,7 @@ workflow QC_1 {
 
         if (params.shortread == true) {
         BWAMEM2_INDEX(assemblies)
-        BWAMEM2_MEM(shortreads, BWAMEM2_INDEX.out.index)
+        BWAMEM2_MEM(shortreads, BWAMEM2_INDEX.out.index, params.samtools_sort)
         ch_align_bam = BWAMEM2_MEM.out.bam
         }
 
