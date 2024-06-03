@@ -82,8 +82,12 @@ workflow QC_2 {
             ch_summarytxt = Channel.empty()
     }
 
+        assemblies
+            .concat(MERYL_COUNT.out.meryl_db, genome_size_est)
+            .set{ch_input_merqury}
+
         MERQURY (
-            polished_assemblies, ch_meryl, genome_size_est, params.tolerable_collision
+            ch_input_merqury, params.tolerable_collision
         )
         ch_merqury
             .concat(MERQURY.out.assembly_qv)
