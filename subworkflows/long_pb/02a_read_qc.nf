@@ -34,11 +34,10 @@ workflow READ_QC3 {
                 .set { adaptor_trimmed }
 
         if ( params.kraken_db == null ){
-                ch_db = Channel.empty()
-            }
-            else (params.kraken_db != null ){
-                ch_db = Channel.fromPath(params.kraken_db)
-            }
+            ch_db = Channel.empty()
+        } else (params.kraken_db != null ){
+            ch_db = Channel.fromPath(params.kraken_db)
+        }
     
         if (params.kraken_pb == true){
             
