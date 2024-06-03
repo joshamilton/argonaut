@@ -13,8 +13,7 @@ include { RECENTRIFUGE_KR } from '../../modules/local/recentrifuge/kraken'
 workflow READ_QC2 {
 
     take:
-        shortreads  // channel: [ val(meta), [ reads ] ]
-        ch_db 
+        shortreads  // channel: [ val(meta), [ reads ] ] 
            
     main:
     
@@ -31,6 +30,12 @@ workflow READ_QC2 {
 
         //qc adapter trimmed short reads
         FASTQC_2(FASTP.out.reads)
+
+        if ( params.kraken_db == null ){
+            ch_db = Channel.empty()
+        } else (params.kraken_db != null ){
+            ch_db = Channel.fromPath(params.kraken_db)
+        }
 
         if (params.kraken_ill == true){
         //decontamination of trimmed short reads
