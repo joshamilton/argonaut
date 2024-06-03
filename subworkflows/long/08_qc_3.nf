@@ -79,7 +79,7 @@ workflow QC_3 {
         }
 
         assemblies
-            .concat(MERYL_COUNT.out.meryl_db, genome_size_est)
+            .concat(ch_meryl, genome_size_est)
             .set{ch_input_merqury}
 
         MERQURY (
