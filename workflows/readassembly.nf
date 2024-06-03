@@ -421,7 +421,8 @@ workflow GENOMEASSEMBLY {
         .concat(medaka_racon_polish, sr_polish)
         .flatten()
         .map { file -> tuple(id: file.baseName, file) }
-        .set { polished_assemblies_and_no_polish }
+        .set { polished_assemblies_and_no_polish }    
+        .view { "Polished and not polished assemblies: $it" }
 
 
     if ( params.medaka_polish == true || params.racon_polish == true || params.shortread == true) {
