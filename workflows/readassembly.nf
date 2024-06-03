@@ -591,10 +591,6 @@ polished_assemblies_and_no_polish.view { "Polished and not polished assemblies: 
 
     ch_quast
         .concat(ch_busco, ch_merqury)
-        .flatten()
-        .set{ch_output_half}
-
-    ch_output_half
         .groupTuple()   
         .view{ "Output channels: $it" }
         .set{ch_output}
