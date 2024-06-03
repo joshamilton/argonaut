@@ -26,7 +26,7 @@ workflow READ_QC {
 
         if ( params.centrifuge_db == null ){
             ch_db = Channel.empty() }
-        else (params.centrifuge_db != null ){
+        else if (params.centrifuge_db != null ){
             ch_db = Channel.fromPath(params.centrifuge_db)
 
             // if a centrifuge database is provided, run centrifuge and filter out all classified results
