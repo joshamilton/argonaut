@@ -10,7 +10,7 @@ process MERQURY {
     input:
     tuple val(meta), path(assembly)
     path meryl_db
-    path(genome_size_est)
+    path genome_size_est
     val tolerable_collision
 
     output:
