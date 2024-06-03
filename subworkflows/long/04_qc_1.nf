@@ -93,11 +93,15 @@ workflow QC_1 {
         }
 
         assemblies
-            .concat(MERYL_COUNT.out.meryl_db, genome_size_est)
+            .combine(ch_meryl)
             .set{ch_input_merqury}
 
+        ch_input_merqury
+            .combine(genome_size_est)
+            .set{merqury_paths}
+
         MERQURY (
-            ch_input_merqury, params.tolerable_collision
+            merqury_paths, params.tolerable_collision
         )
         ch_merqury = MERQURY.out.assembly_qv
 
