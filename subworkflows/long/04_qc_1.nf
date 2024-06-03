@@ -95,7 +95,6 @@ workflow QC_1 {
         assemblies
             .concat(MERYL_COUNT.out.meryl_db, genome_size_est)
             .set{ch_input_merqury}
-            .view{ "Merqury input: $it" }
 
         MERQURY (
             ch_input_merqury, params.tolerable_collision
