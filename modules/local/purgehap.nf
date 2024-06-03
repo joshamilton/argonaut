@@ -1,5 +1,5 @@
 process ALIGN {
-    tag "$meta"
+    tag "$meta2"
     label 'process_medium'
 
     conda "bioconda::minimap2=2.24 bioconda::samtools=1.14"
@@ -9,7 +9,7 @@ process ALIGN {
 
     input:
     tuple val(meta), path(reads)
-    tuple val(meta), path(reference)
+    tuple val(meta2), path(reference)
     val bam_format
     val cigar_paf_format
     val cigar_bam
