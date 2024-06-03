@@ -104,9 +104,8 @@ workflow GENOMEASSEMBLY {
             ch_data = INPUT_CHECK ( ch_input )
             ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
     
-            ch_centrifuge_db = Channel.fromPath(params.centrifuge_db)
             //decontamination and quality checking of long reads
-            READ_QC (ch_data.reads, ch_centrifuge_db)
+            READ_QC (ch_data.reads)
             ch_versions = ch_versions.mix(READ_QC.out.versions)
             no_meta_fastq = READ_QC.out[5]
 
