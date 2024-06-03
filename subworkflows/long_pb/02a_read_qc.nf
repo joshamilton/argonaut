@@ -14,20 +14,10 @@ workflow READ_QC3 {
     take:
   
         input_pacbio  // channel: [ val(meta), [ reads ] ]
-        ch_db 
            
     main:
     
     ch_versions = Channel.empty()
-
-        //PBBAM_PBMERGE(input_pacbio)
-		//ch_versions = ch_versions.mix(PBBAM_PBMERGE.out.versions)
-		//final_pacBio_bam	= PBBAM_PBMERGE.out.bam
-		//final_pacBio_bam_index	= PBBAM_PBMERGE.out.pbi
-
-        //BAM2FASTX (final_pacBio_bam.join(final_pacBio_bam_index))
-        //ch_versions = ch_versions.mix(BAM2FASTX.out.versions)
-        //bam2fastx_output	= BAM2FASTX.out.reads
 
         NANOPLOT(input_pacbio)
         TOTAL_BASES_LR (NANOPLOT.out.txt)
@@ -43,7 +33,15 @@ workflow READ_QC3 {
                 .map { file -> tuple([id:file.baseName, single_end:true], file)  }
                 .set { adaptor_trimmed }
 
+        if ( params.kraken_db == null ){
+                ch_db = Channel.empty()
+            }
+            else (params.kraken_db != null ){
+                ch_db = Channel.fromPath(params.kraken_db)
+            }
+    
         if (params.kraken_pb == true){
+            
             //decontamination of trimmed short reads
             KRAKEN2_KRAKEN2_PB(adaptor_trimmed, ch_db, params.save_output_fastqs, params.save_reads_assignment)
             filt_pbhifi = KRAKEN2_KRAKEN2_PB.out.unclassified_reads_fastq   
