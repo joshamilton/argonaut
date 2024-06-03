@@ -93,7 +93,7 @@ workflow QC_1 {
         }
 
         assemblies
-            .combine(ch_meryl)
+            .combine(MERYL_COUNT.out.meryl_db)
             .set{ch_input_merqury}
 
         ch_input_merqury
