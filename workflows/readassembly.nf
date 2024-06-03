@@ -18,7 +18,6 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 if (params.input) { ch_input = file(params.input) }
 if (params.shortinput) { ch_shortinput = file(params.shortinput) }
 if (params.pb_input) { ch_pb_input = file(params.pb_input)}
-if (params.centrifuge_db) { ch_db = file(params.centrifuge_db) }
 //if (params.summary_txt) {ch_sequencing_summary = file(params.sequencing_summary) } else { ch_sequencing_summary = []}
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
