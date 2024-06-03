@@ -13,7 +13,6 @@ workflow READ_QC {
     take:
   
         reads  // channel: [ val(meta), [ reads ] ]
-        ch_db 
            
     main:
     
@@ -29,6 +28,7 @@ workflow READ_QC {
             ch_db = Channel.empty() }
         else (params.centrifuge_db != null ){
             ch_db = Channel.fromPath(params.centrifuge_db)
+
             // if a centrifuge database is provided, run centrifuge and filter out all classified results
           
             if (params.centrifuge_ont){
