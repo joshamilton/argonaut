@@ -6,7 +6,7 @@ tag "$meta.id"
 
     input:
     tuple val(meta), path(assembly) //path_to/assembly.fasta
-    tuple val(meta), path(shortreads) //path_to/pe_R1.fa,/path_to/pe_R2.fa
+    tuple val(meta2), path(shortreads) //path_to/pe_R1.fa,/path_to/pe_R2.fa
 
     output:
     path("*.fasta")                    , emit: sr_polished_assembly
