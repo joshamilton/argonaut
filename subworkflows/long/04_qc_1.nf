@@ -92,8 +92,13 @@ workflow QC_1 {
             MERYL_COUNT ( fastq_filt, params.kmer_num )
         }
 
+        assemblies
+            .concat(MERYL_COUNT.out.meryl_db, genome_size_est)
+            .set{ch_input_merqury}
+            .view{ "Merqury input: $it" }
+
         MERQURY (
-            assemblies, MERYL_COUNT.out.meryl_db, genome_size_est, params.tolerable_collision
+            ch_input_merqury, params.tolerable_collision
         )
         ch_merqury = MERQURY.out.assembly_qv
 
