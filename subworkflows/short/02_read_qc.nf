@@ -33,7 +33,7 @@ workflow READ_QC2 {
 
         if ( params.kraken_db == null ){
             ch_db = Channel.empty()
-        } else (params.kraken_db != null ){
+        } else if (params.kraken_db != null ){
             ch_db = Channel.fromPath(params.kraken_db)
         }
 
