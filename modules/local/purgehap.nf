@@ -1,4 +1,4 @@
-process MINIMAP2_ALIGN {
+process ALIGN {
     tag "$meta"
     label 'process_medium'
     time '36h'
