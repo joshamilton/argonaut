@@ -19,12 +19,19 @@ workflow POLISH {
             println "polishing assemblies with racon!"
 
             if (params.ONT_lr  == true && params.PacBioHifi_lr == true){
-                RACON (ch_racon, no_meta_ont, no_meta_pb)
+                ch_racon
+                    .combine(no_meta_pb)
+                    .set{ch_racon_full}
             } else if (params.ONT_lr  == true && params.PacBioHifi_lr == false){
-                RACON (ch_racon, no_meta_ont, [])
+                ch_racon
+                    .combine(no_meta_ont)
+                    .set{ch_racon_full}
             } else if (params.ONT_lr  == false && params.PacBioHifi_lr == true){
-                RACON (ch_racon, [], no_meta_pb)
+                ch_racon
+                    .combine(no_meta_pb)
+                    .set{ch_racon_full}
             }
+            RACON (ch_racon_full)
                 
             no_meta_polished_assembly = RACON.out.improved_assembly
 
