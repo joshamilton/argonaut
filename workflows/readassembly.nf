@@ -324,11 +324,17 @@ workflow GENOMEASSEMBLY {
     } else {
         ch_summtxt = Channel.empty() }
 
-    if ( params.shortread == true && params.longread == true && params.PacBioHifi_lr == true) {
-        QC_1 (all_assemblies, ch_PacBiolongreads, ch_summtxt, READ_QC2.out[0], full_size, ch_flat_lr, no_meta_ch_PB)
+    if ( params.shortread == true && params.longread == true) {
+        if(params.PacBioHifi_lr == true){
+            QC_1 (all_assemblies, ch_PacBiolongreads, ch_summtxt, READ_QC2.out[0], full_size, ch_flat_lr, no_meta_ch_PB)
+        } else {
+            QC_1 (all_assemblies, ch_ONTlongreads, ch_summtxt, READ_QC2.out[0], full_size, ch_flat_lr, no_meta_ch_PB)}
     ch_versions = ch_versions.mix(QC_1.out.versions)
-    } else if ( params.longread == true && params.shortread == false && params.ONT_lr == true) {
-        QC_1 (all_assemblies, ch_ONTlongreads, ch_summtxt, [], full_size, ch_flat_lr, no_meta_ch_ONT)
+    } else if ( params.longread == true && params.shortread == false {
+        if(params.PacBioHifi_lr == true){
+            QC_1 (all_assemblies, ch_PacBiolongreads, ch_summtxt, [], full_size, ch_flat_lr, no_meta_ch_PB)
+        } else {
+            QC_1 (all_assemblies, ch_ONTlongreads, ch_summtxt, [], full_size, ch_flat_lr, no_meta_ch_ONT)}
     ch_versions = ch_versions.mix(QC_1.out.versions)
     } else if ( params.shortread == true && params.longread == false ) {
         QC_1 (all_assemblies, READ_QC2.out[0], ch_summtxt, READ_QC2.out[0], full_size, READ_QC2.out[0], [])
@@ -407,14 +413,20 @@ polished_assemblies_and_no_polish.view { "Polished and not polished assemblies: 
 
 
     if ( params.medaka_polish == true || params.racon_polish == true || params.shortread == true) {
-        if ( params.shortread == true && params.longread == true ) {
-            QC_2 (polished_assemblies, ch_longreads, ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], full_size, QC_1.out[7])
+        if ( params.shortread == true && params.longread == true && params.PacBioHifi_lr == true) {
+            if(params.PacBioHifi_lr == true){
+                QC_2 (polished_assemblies, ch_PacBiolongreads, ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], full_size, QC_1.out[7], no_meta_ch_PB)
+            } else {
+                QC_2 (polished_assemblies, ch_ONTlongreads, ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], full_size, QC_1.out[7], no_meta_ch_ONT)}
             ch_versions = ch_versions.mix(QC_2.out.versions)
         } else if ( params.longread == true && params.shortread == false ) {
-            QC_2 (polished_assemblies, ch_longreads, ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], [], QC_1.out[2], full_size, QC_1.out[7])
+            if(params.PacBioHifi_lr == true){
+                QC_2 (polished_assemblies, ch_PacBiolongreads, ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], [], QC_1.out[2], full_size, QC_1.out[7], no_meta_ch_PB)
+            } else {
+                QC_2 (polished_assemblies, ch_ONTlongreads, ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], [], QC_1.out[2], full_size, QC_1.out[7], no_meta_ch_ONT)}
             ch_versions = ch_versions.mix(QC_2.out.versions)
         } else if ( params.shortread == true && params.longread == false ) {
-            QC_2 (polished_assemblies, READ_QC2.out[0], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], full_size, QC_1.out[7])
+            QC_2 (polished_assemblies, READ_QC2.out[0], ch_summtxt, QC_1.out[3], QC_1.out[4], QC_1.out[5], READ_QC2.out[0], QC_1.out[2], full_size, QC_1.out[7], [])
     } 
     busco_tsv
         .concat(QC_2.out[6]) 
@@ -468,12 +480,18 @@ polished_assemblies_and_no_polish.view { "Polished and not polished assemblies: 
 
     if ( params.purge == true ) {
     if ( params.shortread == true && params.longread == true) {
-        QC_3 (purged_assemblies_common, ch_longreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7])
+        if(params.PacBioHifi_lr == true){
+            QC_3 (purged_assemblies_common, ch_PacBiolongreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7], no_meta_ch_PB))
+        } else {
+            QC_3 (purged_assemblies_common, ch_PacBiolongreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7], no_meta_ch_ONT)}
     ch_versions = ch_versions.mix(QC_3.out.versions)
     } else if ( params.longread == true && params.shortread == false) {
-        QC_3 (purged_assemblies_common, ch_longreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, [], full_size, QC_1.out[7])  
+        if(params.PacBioHifi_lr == true){
+            QC_3 (purged_assemblies_common, ch_PacBiolongreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, [], full_size, QC_1.out[7], no_meta_ch_PB))
+        } else {
+            QC_3 (purged_assemblies_common, ch_PacBiolongreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, [], full_size, QC_1.out[7], no_meta_ch_ONT)}
     } else if ( params.shortread == true && params.longread == false) {
-        QC_3 (purged_assemblies_common, READ_QC2.out[0], ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7])
+        QC_3 (purged_assemblies_common, READ_QC2.out[0], ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7], [])
     } 
     busco_tsv
         .concat(QC_3.out[5]) 
@@ -495,9 +513,17 @@ polished_assemblies_and_no_polish.view { "Polished and not polished assemblies: 
 
         final_assemblies = SCAFFOLD.out[0]
         if ( params.shortread == true && params.longread == true ) {
-            QC_4 (SCAFFOLD.out[0], ch_longreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7]) 
+            if(params.PacBioHifi_lr == true){
+            QC_4 (SCAFFOLD.out[0], ch_longreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7], no_meta_ch_PB))
+            } else {
+            QC_4 (SCAFFOLD.out[0], ch_longreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7], no_meta_ch_ONT)}
+
         } else if ( params.longread == true && params.shortread == false ) {
-            QC_4 (SCAFFOLD.out[0], ch_longreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, [], full_size, QC_1.out[7])  
+            if(params.PacBioHifi_lr == true){
+            QC_4 (SCAFFOLD.out[0], ch_longreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, [], full_size, QC_1.out[7], no_meta_ch_PB))
+            } else {
+            QC_4 (SCAFFOLD.out[0], ch_longreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, [], full_size, QC_1.out[7], no_meta_ch_ONT)}
+
         } else if ( params.shortread == true && params.longread == false ) {
             QC_4 (SCAFFOLD.out[0], READ_QC2.out[0], ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7]) }
 
