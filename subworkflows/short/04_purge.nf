@@ -10,7 +10,11 @@ workflow PURGE2 {
 
     ch_versions = Channel.empty() 
 
-        REDUNDANS_P (assembly, shortreads)
+        assembly
+            .combine(shortreads)
+            .set{ch_purge_input}
+
+        REDUNDANS_P (ch_purge_input)
 
         purged_sr_assembly      = REDUNDANS_P.out.assembly_fasta 
 
