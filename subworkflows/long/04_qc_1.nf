@@ -48,7 +48,15 @@ workflow QC_1 {
         assemblies
             .combine(fastq_no_meta)
             .set{ch_combo}
-        } else {ch_combo = Channel.empty() }
+        
+        SAMTOOLS_INDEX (MINIMAP2_ALIGN.out.bam)
+        ch_sam = SAMTOOLS_INDEX.out.sam
+
+        ch_combo
+            .join(ch_sam)
+            .set{racon} 
+ 
+        } else {racon = Channel.empty() }
 
         // run quast
         QUAST(
@@ -63,14 +71,6 @@ workflow QC_1 {
         ch_busco_full_table = BUSCO.out.full_table
         ch_versions = ch_versions.mix(BUSCO.out.versions)
 
-        SAMTOOLS_INDEX (ch_align_bam)
-        ch_sam = SAMTOOLS_INDEX.out.sam
-
-        if (params.longread == true){
-        ch_combo
-            .join(ch_sam)
-            .set{racon} } 
-        else {racon = Channel.empty() }
     
         if ( params.summary_txt_file == true ) {
         // create summary txt channel with meta id and run pycoQC
