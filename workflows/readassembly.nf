@@ -341,22 +341,6 @@ workflow GENOMEASSEMBLY {
         .join(QC_1.out[8])
         .set{assembly_sam_combo}
 
-    if (params.racon_polish == true && params.ONT_lr == true && params.PacBioHifi_lr == true){
-        assembly_sam_combo
-            .combine(CAT.out.cat_longreads)
-            .set { ch_racon }
-
-    } else if(params.racon_polish == true && params.PacBioHifi_lr == true){
-        assembly_sam_combo
-            .combine(no_meta_ch_PB)
-            .set { ch_racon }
-
-    } else if(params.racon_polish == true && params.ONT_lr == true){
-        assembly_sam_combo
-            .combine(no_meta_ch_ONT)
-            .set { ch_racon }
-
-    } else { ch_racon = Channel.empty() }
 
     //polish assemblies
      if ( params.longread == true) {
