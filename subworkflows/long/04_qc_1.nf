@@ -40,8 +40,6 @@ workflow QC_1 {
         ch_align_bam = MINIMAP2_ALIGN.out.bam
         ch_align_paf = MINIMAP2_ALIGN.out.paf
 
-        ch_align_bam.view() 
-
         fastq_filt
             .map { file -> file }
             .flatten()
