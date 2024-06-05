@@ -53,8 +53,9 @@ workflow READ_QC2 {
         }
 
         filt_shortreads
-            .map { file -> file }
+            .map { it.second }
             .set { filt_sr_no_meta }
+            .view()
 
         //qc decontaminated short reads
         FASTQC_3(filt_shortreads)
