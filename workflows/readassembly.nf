@@ -330,7 +330,7 @@ workflow GENOMEASSEMBLY {
         } else {
             QC_1 (all_assemblies, ch_ONTlongreads, ch_summtxt, READ_QC2.out[0], full_size, ch_flat_lr, no_meta_ch_PB)}
     ch_versions = ch_versions.mix(QC_1.out.versions)
-    } else if ( params.longread == true && params.shortread == false {
+    } else if ( params.longread == true && params.shortread == false ) {
         if(params.PacBioHifi_lr == true){
             QC_1 (all_assemblies, ch_PacBiolongreads, ch_summtxt, [], full_size, ch_flat_lr, no_meta_ch_PB)
         } else {
