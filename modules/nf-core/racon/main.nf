@@ -23,7 +23,6 @@ process RACON {
     """
     racon -t "$task.cpus" \\
         "${reads}" \\
-        $auto_hybrid_mode \\
         "${paf}" \\
         $args \\
         "${assembly}" > \\
