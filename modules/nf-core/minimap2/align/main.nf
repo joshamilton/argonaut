@@ -1,5 +1,5 @@
 process MINIMAP2_ALIGN {
-    tag "$meta"
+    tag "$meta2"
     label 'process_medium'
     time '36h'
     // Note: the versions here need to match the versions used in the mulled container below and minimap2/index
@@ -10,7 +10,7 @@ process MINIMAP2_ALIGN {
 
     input:
     tuple val(meta), path(reads)
-    tuple val(meta), path(reference)
+    tuple val(meta2), path(reference)
     val bam_format
     val cigar_paf_format
     val cigar_bam
@@ -25,7 +25,7 @@ process MINIMAP2_ALIGN {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta2.id}"
     def bam_output = bam_format ? "-a | samtools sort | samtools view -@ ${task.cpus} -b -h -o ${prefix}.bam" : "-o ${prefix}.paf"
     def cigar_paf = cigar_paf_format && !bam_format ? "-c" : ''
     def set_cigar_bam = cigar_bam && bam_format ? "-L" : ''
