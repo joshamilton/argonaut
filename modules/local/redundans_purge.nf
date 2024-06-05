@@ -8,7 +8,7 @@ process REDUNDANS_P {
 
 
     input:
-    tuple val(meta), path(fasta), path(shortreads)
+    tuple val(meta), path(fasta), path(shortread1), path(shortread2)  
 
     output:
     path("*redundans_purge/*redundans_purge_contig.fasta")               , emit: assembly_fasta
@@ -16,7 +16,7 @@ process REDUNDANS_P {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    redundans.py -v -f $fasta -i $shortreads -t $task.cpus --nogapclosing --noscaffolding -o ${prefix}_redundans_purge
+    redundans.py -v -f $fasta -i $shortread1 $shortread2 -t $task.cpus --nogapclosing --noscaffolding -o ${prefix}_redundans_purge
     
     cd ${prefix}_redundans_purge
     mv scaffolds.reduced.fa ${prefix}_redundans_purge_scaf.fasta
