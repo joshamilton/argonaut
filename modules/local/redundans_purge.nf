@@ -8,8 +8,7 @@ process REDUNDANS_P {
 
 
     input:
-    tuple val(meta), path(fasta)
-    tuple val(meta), path(shortreads)
+    tuple val(meta), path(fasta), path(shortreads)
 
     output:
     path("*redundans_purge/*redundans_purge_contig.fasta")               , emit: assembly_fasta
