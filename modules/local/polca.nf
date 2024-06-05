@@ -5,7 +5,7 @@ tag "$meta.id"
     container 'staphb/masurca:4.1.0'
 
     input:
-    tuple val(meta), path(assembly), path(shortreads) //path_to/pe_R1.fa,/path_to/pe_R2.fa
+    tuple val(meta), path(assembly), path(shortreads) 
 
     output:
     path("*.fasta")                    , emit: sr_polished_assembly
