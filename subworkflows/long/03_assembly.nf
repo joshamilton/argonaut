@@ -38,7 +38,11 @@ workflow ASSEMBLY {
         //if statement to run assembly and create channels for each resulting assembly
         if ( params.flye == true ) {
             println "assembling long reads with flye!"
-            FLYE(longreads, genome_size_est)
+            longreads
+                .combine(genome_size_est)
+                .set{ch_flye_input}
+
+            FLYE(ch_flye_input)
             flye_assembly      = FLYE.out.fasta   
 
             flye_assembly
