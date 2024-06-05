@@ -382,9 +382,9 @@ workflow GENOMEASSEMBLY {
     //align assemblies to short reads and polish with POLCA if short reads are available
     if ( params.longread == true && params.shortread == true) {
         if (params.medaka_polish == true || params.racon_polish == true){
-            POLISH2 (lr_polish_meta, filt_sr_nometa)
+            POLISH2 (lr_polish_meta, READ_QC2.out[4])
         } else {
-            POLISH2 (ASSEMBLY.out[0], filt_sr_nometa)
+            POLISH2 (ASSEMBLY.out[0], READ_QC2.out[4])
         }
         POLISH2.out[0]
             .set{sr_polish}
