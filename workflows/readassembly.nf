@@ -347,9 +347,6 @@ workflow GENOMEASSEMBLY {
         .join(QC_1.out[8])
         .set{assembly_sam_combo}
 
-    assembly_sam_combo.view{ "Racon: $it" }
-
-
     //polish assemblies
      if ( params.longread == true) {
         if ( params.medaka_polish == true || params.racon_polish == true){
