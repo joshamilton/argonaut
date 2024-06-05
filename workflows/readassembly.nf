@@ -448,9 +448,9 @@ polished_assemblies_and_no_polish.view { "Polished and not polished assemblies: 
 
     if (params.longread == true && params.purge == true) {
         if(params.PacBioHifi_lr == true){
-            HAPS (polished_assemblies_and_no_polish, ch_longreads, no_meta_ch_PB)
+            HAPS (polished_assemblies_and_no_polish, no_meta_ch_PB)
             } else {
-            HAPS (polished_assemblies_and_no_polish, ch_longreads, no_meta_ch_ONT)}
+            HAPS (polished_assemblies_and_no_polish, no_meta_ch_ONT)}
 
        
         lr_purge = HAPS.out[0]
