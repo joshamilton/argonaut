@@ -467,7 +467,7 @@ polished_assemblies_and_no_polish.view { "Polished and not polished assemblies: 
             .flatten()
             .map { file -> tuple(file.baseName, file) }
             .set{assemblies_sr_meta}
-        PURGE2 (assemblies_sr_meta, READ_QC2.out[1])
+        PURGE2 (assemblies_sr_meta, READ_QC2.out[5])
         sr_purge = PURGE2.out[0]
         sr_purge
             .concat(purged_assemblies_common)
