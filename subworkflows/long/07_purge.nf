@@ -14,7 +14,11 @@ workflow HAPS {
         if (params.low == null && params.mid == null && params.high == null) {
         println "generating assembly histogram with purge haplotigs!"
 
-        ALIGN(reads, assembly, params.bam_format, params.cigar_paf_format, params.cigar_bam)
+        assembly
+            .combine(reads)
+            .set{align_ch}
+
+        ALIGN(align_ch, params.bam_format, params.cigar_paf_format, params.cigar_bam)
 
         assembly
             .join(ALIGN.out.bam)
