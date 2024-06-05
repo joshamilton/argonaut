@@ -53,7 +53,7 @@ workflow READ_QC2 {
         }
 
         filt_shortreads
-            .map { it.second }
+            .map { it[1] }
             .set { filt_sr_no_meta }
 
         filt_sr_no_meta.view()
