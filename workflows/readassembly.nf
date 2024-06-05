@@ -530,7 +530,7 @@ polished_assemblies_and_no_polish.view { "Polished and not polished assemblies: 
             QC_4 (SCAFFOLD.out[0], ch_longreads, ch_summtxt, qc_quast, qc_busco, qc_merqury, [], full_size, QC_1.out[7], no_meta_ch_ONT)}
 
         } else if ( params.shortread == true && params.longread == false ) {
-            QC_4 (SCAFFOLD.out[0], READ_QC2.out[0], ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7]) }
+            QC_4 (SCAFFOLD.out[0], READ_QC2.out[0], ch_summtxt, qc_quast, qc_busco, qc_merqury, READ_QC2.out[0], full_size, QC_1.out[7], []) }
 
         busco_tsv
             .concat(QC_4.out[5]) 
