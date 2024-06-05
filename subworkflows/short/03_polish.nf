@@ -12,7 +12,11 @@ workflow POLISH2 {
 
         println "polishing assemblies with short reads using POLCA!"
 
-        POLCA (flye_assembly, shortreads)
+        flye_assembly
+            .combine(shortreads)
+            .set{ch_polca}
+
+        POLCA (ch_polca)
 
 
     emit:
