@@ -64,6 +64,10 @@ workflow READ_QC2 {
         //unzip decontam short reads
         GUNZIP(filt_shortreads)
 
+        GUNZIP.out.gunzip
+            .map { it[1] }
+            .set { unzip_filt_sr_no_meta }
+
         JELLYFISH_KMER(GUNZIP.out.gunzip, params.kmer_num)
         JELLYFISH_HIST(JELLYFISH_KMER.out.shortkmer, params.kmer_num)
         
@@ -75,6 +79,7 @@ workflow READ_QC2 {
         fastp_report = FASTP.out.json
         genome_size_est = GENOMESCOPE2.out.summary
         filt_sr_no_meta
+        unzip_filt_sr_no_meta
 
     versions = ch_versions                     // channel: [ versions.yml ]
 }
