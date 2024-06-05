@@ -447,10 +447,10 @@ polished_assemblies_and_no_polish.view { "Polished and not polished assemblies: 
     purged_assemblies_common = Channel.empty()
 
     if (params.longread == true && params.purge == true) {
-     if(params.PacBioHifi_lr == true){
-        HAPS (polished_assemblies_and_no_polish, ch_longreads, no_meta_ch_PB)
-        } else {
-        HAPS (polished_assemblies_and_no_polish, ch_longreads, no_meta_ch_ONT)
+        if(params.PacBioHifi_lr == true){
+            HAPS (polished_assemblies_and_no_polish, ch_longreads, no_meta_ch_PB)
+            } else {
+            HAPS (polished_assemblies_and_no_polish, ch_longreads, no_meta_ch_ONT)}
 
        
         lr_purge = HAPS.out[0]
