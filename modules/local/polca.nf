@@ -15,7 +15,7 @@ tag "$meta.id"
     def VERSION = '4.1.0'
     def prefix = task.ext.prefix ?: "polca_${meta.id}"
     """
-    polca.sh -t 6 -a $assembly -r '$shortreads'
+    polca.sh -t 6 -a $assembly -r '$shortread1 $shortread2'
 
     mv *PolcaCorrected.fa ${prefix}.fasta
     
