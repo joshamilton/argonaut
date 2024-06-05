@@ -8,8 +8,7 @@ process FLYE {
         'biocontainers/flye:2.9--py39h6935b12_1' }"
 
     input:
-    tuple val(meta), path(reads)
-    path(genome_size_est)
+    tuple val(meta), path(reads), path(genome_size_est)
 
     output:
     path("*.fasta"), emit: fasta
