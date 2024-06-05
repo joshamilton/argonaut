@@ -21,7 +21,8 @@ workflow QC_3 {
         shortreads
         genome_size_est
         ch_meryl
-        
+        no_meta_fq
+
     main:
 
     ch_versions = Channel.empty() 
@@ -37,8 +38,12 @@ workflow QC_3 {
         ch_versions = ch_versions.mix(MINIMAP2_INDEX.out.versions)
         ch_index = MINIMAP2_INDEX.out.index
 
+        assemblies
+            .combine(no_meta_fq)
+            .set{align_ch}
+
         // align reads
-        MINIMAP2_ALIGN(fastq_filt, assemblies, params.bam_format, params.cigar_paf_format, params.cigar_bam)
+        MINIMAP2_ALIGN(align_ch, params.bam_format, params.cigar_paf_format, params.cigar_bam)
         ch_bam = MINIMAP2_ALIGN.out.bam }
         
         // run quast
