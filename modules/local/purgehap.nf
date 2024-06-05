@@ -1,5 +1,5 @@
 process ALIGN {
-    tag "$meta2.id"
+    tag "$meta.id"
     label 'process_medium'
     time '36h'
     // Note: the versions here need to match the versions used in the mulled container below and minimap2/index
@@ -9,8 +9,7 @@ process ALIGN {
         'biocontainers/mulled-v2-66534bcbb7031a148b13e2ad42583020b9cd25c4:1679e915ddb9d6b4abda91880c4b48857d471bd8-0' }"
 
     input:
-    tuple val(meta), path(reads)
-    tuple val(meta2), path(reference)
+    tuple val(meta), path(reference), path(reads)
     val bam_format
     val cigar_paf_format
     val cigar_bam
@@ -25,7 +24,7 @@ process ALIGN {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta2.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def bam_output = bam_format ? "-a | samtools sort | samtools view -@ ${task.cpus} -b -h -o ${prefix}.bam" : "-o ${prefix}.paf"
     def cigar_paf = cigar_paf_format && !bam_format ? "-c" : ''
     def set_cigar_bam = cigar_bam && bam_format ? "-L" : ''
