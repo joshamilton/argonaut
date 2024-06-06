@@ -25,13 +25,18 @@ workflow HAPS {
             .set{assembly_alignment}
 
         HISTOGRAM(assembly_alignment)
+        ch_gencov = HISTOGRAM.out.gencov
         assemblies_polished_purged      = Channel.empty()
         purged_assemblies               = Channel.empty()
 
         } else if (params.low != null && params.mid != null && params.high != null){
         println "purging assemblies with purge haplotigs!"
 
-        PURGE(params.low, params.mid, params.high, assembly, params.gencov)
+        assembly
+            .join(ch_gencov, by: 0)
+            .set{ch_purge}
+
+        PURGE(params.low, params.mid, params.high, ch_purge)
         purged_assemblies      = PURGE.out.purged           
         
         purged_assemblies
