@@ -78,8 +78,7 @@ process PURGE {
     val low
     val mid
     val high
-    tuple val(meta), path(assembly)
-    path gencov
+    tuple val(meta), path(assembly), path(gencov)
 
     output:
     path("purge_*"), emit: purged
