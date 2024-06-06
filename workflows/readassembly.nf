@@ -406,9 +406,6 @@ workflow GENOMEASSEMBLY {
         .map { file -> tuple(id: file.baseName, file) }
         .set { polished_assemblies_and_no_polish }    
 
-polished_assemblies_and_no_polish.view { "Polished and not polished assemblies: $it" }
-
-
     if ( params.medaka_polish == true || params.racon_polish == true || params.shortread == true) {
         if ( params.shortread == true && params.longread == true && params.PacBioHifi_lr == true) {
             if(params.PacBioHifi_lr == true){
@@ -606,7 +603,6 @@ polished_assemblies_and_no_polish.view { "Polished and not polished assemblies: 
     ch_quast
         .join(ch_busco, by: 0)
         .join(ch_merqury, by:0)
-        .view{ "Output channels: $it" }
         .set{ch_output}
 
     OUTPUT (ch_output)
