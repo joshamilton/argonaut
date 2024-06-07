@@ -25,7 +25,13 @@ workflow READ_QC {
         NANOPLOT(reads)
 
         if ( params.centrifuge_db == null ){
-            ch_db = Channel.empty() }
+            ch_db = Channel.empty() 
+            reads
+                .set{filtered_fastq}
+            filtered_fastq
+                .map { file -> file }
+                .set { fastq_filt }
+            }
         else if (params.centrifuge_db != null ){
             ch_db = Channel.fromPath(params.centrifuge_db)
 
