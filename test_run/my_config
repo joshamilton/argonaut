@@ -116,8 +116,6 @@ params {
     
     high = null
     // -h flag for purge haplotigs
-    gencov = ''
-    // Path to assembly histogram
     
 
     //// SCAFFOLDING OPTIONS /////
