@@ -11,8 +11,12 @@ workflow SCAFFOLD {
     ch_versions = Channel.empty()
         println "scaffolding assemblies with ragtag!"
 
+        assemblies
+            .combine(reference)
+            .set{ch_ragtag}
+
         //optional scaffolding with the same species or most closely related species available
-        RAGTAG (assemblies, reference)
+        RAGTAG (ch_ragtag)
         scaffolded_assemblies = RAGTAG.out.scaffolded_assembly           
 
         scaffolded_assemblies
