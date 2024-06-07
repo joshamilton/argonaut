@@ -7,8 +7,7 @@ process RAGTAG {
         'quay.io/biocontainers/ragtag:2.1.0--pyhb7b1952_0' }"
 
     input:
-    tuple val(meta), path(fasta)
-    path reference
+    tuple val(meta), path(fasta), path(reference)
 
     output:
     path "ragtag*/*.fasta"                           , emit: scaffolded_assembly
