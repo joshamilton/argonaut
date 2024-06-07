@@ -26,6 +26,7 @@ workflow READ_QC {
 
         if ( params.centrifuge_db == null ){
             ch_db = Channel.empty() 
+            centrifuge_out = Channel.empty() 
             reads
                 .set{filtered_fastq}
             filtered_fastq
@@ -41,6 +42,7 @@ workflow READ_QC {
                  CENTRIFUGE_CENTRIFUGE        ( reads, ch_db, params.save_unaligned, params.save_aligned, params.sam_format )
                  CENTRIFUGE_KREPORT           ( CENTRIFUGE_CENTRIFUGE.out.results, ch_db )
                  SEQKIT_GREP(CENTRIFUGE_CENTRIFUGE.out.results, reads)
+                centrifuge_out       = CENTRIFUGE_KREPORT.out.kreport
 
                  fastq_filt           = SEQKIT_GREP.out.filter
 
@@ -68,7 +70,7 @@ workflow READ_QC {
     emit:
         filtered_fastq    // channel: [ val(meta), path(decontaminated fastq) ]
         nanoplot_reads_out   = NANOPLOT.out.html
-        centrifuge_out       = CENTRIFUGE_KREPORT.out.kreport
+        centrifuge_out 
         gce_genome_size
         nanoplot_report_txt  = NANOPLOT.out.txt
         fastq_filt
