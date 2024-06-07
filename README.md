@@ -122,16 +122,51 @@ nextflow run emilytrybulec/argonaut \
 
 ## Pipeline output
 All of the output from the programs run in the pipeline pipeline will be located in the out directory specified in params.yaml. The pipeline produces the following labeled directories depending on configurations:
-* short read qc  
-* long read qc  
-* assembly  
-* polish  
-* purge  
-* scaffold  
-* assembly qc
-* visualization
-* output  
-* pipeline info
+
+```
+├── 01 READ QC
+│   ├── centrifuge
+│   ├── fastp
+│   ├── fastqc
+│   ├── genome size est
+│   │   ├── genomescope2
+│   │   ├── jellyfish
+│   │   ├── ont gce 
+│   │   ├── ont kmerfreq
+│   ├── kraken2
+│   ├── nanoplot
+│   ├── pacbio cutadapt
+├── 02 ASSEMBLY
+│   ├── hybrid
+│   ├── long read
+│   ├── short read
+├── 03 POLISH
+│   ├── hybrid
+│   │   ├── polca
+│   ├── long read
+│   │   ├── medaka
+│   │   ├── racon
+├── 04 PURGE
+│   ├── align
+│   ├── histogram
+│   ├── purge haplotigs
+│   ├── short read redundans
+├── 05 SCAFFOLD
+├── ASSEMBLY QC
+│   ├── busco
+│   ├── bwamem2
+│   ├── merqury
+│   ├── minimap2
+│   ├── quast
+│   ├── samtools
+├── OUTPUT
+│   ├── blobtools visualization
+│   ├── coverage
+│   ├── genome size estimation
+│   ├── *assemblyStats.txt
+├── PIPELINE INFO
+    └── execution_trace_*.txt
+```
 
 Information about interpreting output is located in the [output](docs/output.md) section.
 
