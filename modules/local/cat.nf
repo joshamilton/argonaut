@@ -2,6 +2,10 @@ process CAT {
     label 'process_low'
     tag "$meta.id"
 
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ? 
+        'https://depot.galaxyproject.org/singularity/ubuntu:20.04':
+        'ubuntu:20.04'}"
+        
     input:
     tuple val(meta), path(ont), path(hifi)
 

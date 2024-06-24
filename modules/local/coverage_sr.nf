@@ -1,6 +1,10 @@
 process COVERAGE_SR {
     label 'process_low'
 
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ? 
+        'https://depot.galaxyproject.org/singularity/ubuntu:20.04':
+        'ubuntu:20.04'}"
+        
     input:
     val genome_size
     tuple val(meta), path(total_bases_before)
