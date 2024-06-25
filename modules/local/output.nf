@@ -1,9 +1,9 @@
 process OUTPUT {
     label 'process_low'
 
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ? 
-        'https://depot.galaxyproject.org/singularity/ubuntu:20.04':
-        'ubuntu:20.04'}"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/ubuntu:20.04' :
+        'nf-core/ubuntu:20.04' }"
         
     input:
     tuple val(meta), path(ch_quast_tsv), path(ch_busco), path(ch_merqury)
