@@ -2,7 +2,7 @@ process EXTRACT_LR {
     tag "$meta.id"
     label 'process_low'
 
-    container 'emilytrybulec/genassembly:kmer'
+    container 'docker.io/emilytrybulec/genassembly:kmer'
 
     input:
     tuple val(meta), path(gce2log)

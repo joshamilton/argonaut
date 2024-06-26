@@ -2,7 +2,7 @@ process MASURCA_SR {
     tag "$meta.id"
     label 'process_high_memory', 'error_ignore'
 
-    container 'staphb/masurca'
+    container 'docker.io/staphb/masurca'
     
     input:
     tuple val(meta), path(shortreads) //path_to/pe_R1.fa /path_to/pe_R2.fa

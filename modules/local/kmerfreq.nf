@@ -2,7 +2,7 @@ process KMER_FREQ {
     tag "$meta.id"
     label 'process_high'
 
-    container 'emilytrybulec/genassembly:kmer'
+    container 'docker.io/emilytrybulec/genassembly:kmer'
 
     input:
     tuple val(meta), path(ontfile)

@@ -1,7 +1,7 @@
 process MASURCA_SR_ADV {
     label 'process_high_memory', 'error_ignore'
 
-    container 'staphb/masurca'
+    container 'docker.io/staphb/masurca'
     
     input:
     path config

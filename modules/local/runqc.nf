@@ -2,7 +2,7 @@ process RUN_QC {
     tag "$meta.id"
     label 'process_low'
 
-    container 'kathrin1414/runqc'
+    container 'docker.io/kathrin1414/runqc'
 
     input:
     path dataset_xml

@@ -2,7 +2,7 @@ process POLCA {
 tag "$meta.id"
     label 'process_medium'
 
-    container 'staphb/masurca:4.1.0'
+    container 'docker.io/staphb/masurca:4.1.0'
 
     input:
     tuple val(meta), path(assembly), path(shortread1), path(shortread2)  
