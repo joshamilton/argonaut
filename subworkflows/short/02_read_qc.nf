@@ -24,6 +24,7 @@ workflow READ_QC2 {
 
         //qc raw short reads
         FASTQC(shortreads)
+        shortreads.view()
 
         //adapter trimming
         FASTP(shortreads, params.adapter_fasta, params.save_trimmed_fail, params.save_merged, params.dedup, params.quality_trimming, params.length_cutoff)
