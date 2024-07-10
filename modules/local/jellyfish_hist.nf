@@ -2,9 +2,7 @@ process JELLYFISH_HIST {
     tag "$meta.id"
     label 'process_medium'
 
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/jellyfish:2.2.6--0' :
-        'biocontainers/jellyfish:2.2.6--0' }"
+    container 'biocontainers/jellyfish:2.2.6--0'
 
 
     input:

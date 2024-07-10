@@ -3,9 +3,7 @@ process QUAST {
     label 'process_medium'
 
     conda "bioconda::quast=5.2.0"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quast:5.2.0--py39pl5321h2add14b_1' :
-        'quay.io/biocontainers/quast:5.2.0--py39pl5321h2add14b_1' }"
+    container 'quay.io/biocontainers/quast:5.2.0--py39pl5321h2add14b_1'
 
     // found on https://github.com/Arcadia-Science/hifi2genome/blob/a969c2b78a519814c712c3d77fdd598cd5655c8f/modules/local/nf-core-modified/quast/main.nf
     // modified from nf-core module to copy the report.tsv file

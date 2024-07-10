@@ -2,9 +2,7 @@ process JELLYFISH_KMER {
     tag "$meta.id"
     label 'process_high_memory'
 
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/jellyfish:2.2.6--0' :
-        'biocontainers/jellyfish:2.2.6--0' }"
+    container 'biocontainers/jellyfish:2.2.6--0'
 
     input:
     tuple val(meta), path(shortreads)

@@ -2,6 +2,8 @@ process BLOBTOOLS_CONFIG {
     tag "$meta.id"
     label 'process_medium'
 
+    container 'nf-core/ubuntu:20.04'
+
     input:
     tuple val(meta), path(assembly)
 

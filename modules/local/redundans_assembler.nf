@@ -2,9 +2,7 @@ process REDUNDANS_A {
     tag "$meta.id"
     label 'process_medium'
 
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/redundans:2.01--py310pl5321h43eeafb_0' :
-        'biocontainers/redundans:2.01--py310pl5321h43eeafb_0' }"
+    container 'biocontainers/redundans:2.01--py310pl5321h43eeafb_0'
 
 
     input:

@@ -2,9 +2,7 @@ process RECENTRIFUGE_C {
 tag "$meta.id"
     label 'process_medium'
 
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/recentrifuge:1.9.1--pyhdfd78af_0' :
-        'biocontainers/recentrifuge:1.9.1--pyhdfd78af_0' }"
+    container 'biocontainers/recentrifuge:1.9.1--pyhdfd78af_0'
 
     input:
     tuple val(meta), path(centrifuge_output) //path_to/centrifuge/output/files
