@@ -2,7 +2,7 @@ process GCE {
     tag "$meta.id"
     label 'process_medium', 'error_ignore'
 
-    container 'docker.io/emilytrybulec/genassembly:kmer'
+    container '404346466940.dkr.ecr.us-east-1.amazonaws.com/genassembly:kmer'
 
     input:
     tuple val(meta), path(kmerstat)
